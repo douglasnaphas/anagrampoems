@@ -138,4 +138,4 @@ override.tf.json
 # vim
 # swap files
 *.sw?
-.sw?
+.sw?.vscode/
