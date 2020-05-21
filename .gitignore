@@ -140,3 +140,5 @@ override.tf.json
 *.sw?
 .sw?.vscode/
 .vscode/
+
+.DS_Store
