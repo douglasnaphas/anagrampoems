@@ -8,19 +8,24 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "cdk-bootstrap": "npx cdk bootstrap",
+    "deploy-role-all-branches": "bash scripts/deploy-role-all-branches.sh",
+    "deploy-role-master": "bash scripts/deploy-role-master.sh"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "20.12.7",
+    "aws-cdk": "2.140.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
-    "aws-cdk": "2.140.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.4.5"
   },
   "dependencies": {
+    "@cdk-turnkey/stackname": "^2.1.0",
     "aws-cdk-lib": "2.140.0",
+    "aws-github-oidc-role": "^0.1.4",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21"
   }
