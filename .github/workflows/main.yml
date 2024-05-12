@@ -41,7 +41,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.DEPLOYMENT_ROLE_ARN }}
-          aws-region: us-east-1
+          aws-region: us-east-2
       - name: Deploy the webapp stack to the staging account
         working-directory: infra
         run: |
