@@ -1,0 +1,48 @@
+name: CI
+concurrency: ci-${{ github.ref }}
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+jobs:
+  webapp-staging:
+    runs-on: ubuntu-latest
+    environment: test
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install web
+        working-directory: web
+        run: |
+          npm install
+      - name: Test web
+        working-directory: web
+        run: |
+          npm test
+      - name: Install infra
+        working-directory: infra
+        run: |
+          npm install
+      - name: Build infra
+        working-directory: infra
+        run: npm run build
+      - name: Test infra
+        working-directory: infra
+        run: |
+          npm test
+      - name: Build web artifact
+        working-directory: web
+        run: |
+          rm -rf node_modules
+          npm install --production
+      - name: Configure AWS Credentials, test env
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.DEPLOYMENT_ROLE_ARN }}
+          aws-region: us-east-1
+      - name: Deploy the webapp stack to the staging account
+        working-directory: infra
+        run: |
+          npm run deploy-webapp

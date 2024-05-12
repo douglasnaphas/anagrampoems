@@ -11,7 +11,8 @@
     "cdk": "cdk",
     "cdk-bootstrap": "npx cdk bootstrap",
     "deploy-role-all-branches": "bash scripts/deploy-role-all-branches.sh",
-    "deploy-role-master": "bash scripts/deploy-role-master.sh"
+    "deploy-role-master": "bash scripts/deploy-role-master.sh",
+    "deploy-webapp": "bash scripts/deploy-webapp.sh"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
