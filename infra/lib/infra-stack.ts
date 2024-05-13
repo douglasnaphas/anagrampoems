@@ -10,12 +10,7 @@ export class InfraStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     const webFn = new lambda.Function(this, "WebFn", {
-      code: lambda.Code.fromAsset("../web", {
-        bundling: {
-          image: lambda.Runtime.NODEJS_20_X.bundlingImage,
-          command: ["bash", "-c", "npm install && npm run build"],
-        },
-      }),
+      code: lambda.Code.fromAsset("../web/dist"),
       handler: "lambda.handler",
       runtime: lambda.Runtime.NODEJS_20_X,
     });
