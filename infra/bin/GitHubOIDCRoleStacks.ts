@@ -24,6 +24,39 @@ export const GitHubOidcRoleStacks = (app: App, repository: string) => {
     CHARACTERS_PROHIBITED_IN_CLOUDFORMATION_STACK_NAMES,
     "-"
   )}`;
+  const PROD_ENV_SUFFIX = "prod-env";
+  const TEST_ENV_SUFFIX = "test-env";
+  const DEV_ENV_SUFFIX = "dev-env";
+  new GitHubOidcRoleStack(app, stacknamePrefix + `-${PROD_ENV_SUFFIX}`, {
+    gitHubEnvironment: "prod",
+    repository,
+    managedPolicyList: [],
+    policyStatements,
+    roleName:
+      `github-actions` +
+      `@${repository.split("/").slice(-1)}` +
+      `@${PROD_ENV_SUFFIX}`,
+  });
+  new GitHubOidcRoleStack(app, stacknamePrefix + `-${TEST_ENV_SUFFIX}`, {
+    gitHubEnvironment: "test",
+    repository,
+    managedPolicyList: [],
+    policyStatements,
+    roleName:
+      `github-actions` +
+      `@${repository.split("/").slice(-1)}` +
+      `@${TEST_ENV_SUFFIX}`,
+  });
+  new GitHubOidcRoleStack(app, stacknamePrefix + `-${DEV_ENV_SUFFIX}`, {
+    gitHubEnvironment: "test",
+    repository,
+    managedPolicyList: [],
+    policyStatements,
+    roleName:
+      `github-actions` +
+      `@${repository.split("/").slice(-1)}` +
+      `@${DEV_ENV_SUFFIX}`,
+  });
   new GitHubOidcRoleStack(app, stacknamePrefix + `-master`, {
     ref: "refs/heads/master",
     repository,
