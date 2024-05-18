@@ -16,6 +16,7 @@ export const GitHubOidcRoleStacks = (app: App, repository: string) => {
         "ssm:GetParameter",
         "ssm:GetParameters",
         "ssm:PutParameter",
+        "sts:AssumeRole",
       ],
       resources: ["*"],
     }),
