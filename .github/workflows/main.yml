@@ -35,8 +35,6 @@ jobs:
       - name: Build web artifact
         working-directory: web
         run: |
-          rm -rf node_modules
-          npm install
           npm run build
       - name: Configure AWS Credentials, test env
         uses: aws-actions/configure-aws-credentials@v4
