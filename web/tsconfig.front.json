@@ -19,9 +19,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-
-    "outDir": "./build"
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src/**/*", "express-app.ts", "lambda.ts"],
+  "references": [{ "path": "./tsconfig.front.node.json" }]
 }
