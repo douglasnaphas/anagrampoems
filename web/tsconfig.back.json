@@ -2,14 +2,16 @@
   "compilerOptions": {
     "target": "ES2018",
     "module": "CommonJS",
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "DOM"],
     "outDir": "./build",
     "rootDir": "./",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "Node"
   },
-  "include": ["lambda.ts", "express-app.ts"],
-  "exclude": ["node_modules", "**/*.test.ts", "src", "vite.config.*"]
+  "include": ["lambda.ts", "express-app.ts", "src/entry-server.tsx", "**/*.svg", "src/**/*"],
+  "exclude": ["node_modules", "**/*.test.ts", "vite.config.*"]
 }
