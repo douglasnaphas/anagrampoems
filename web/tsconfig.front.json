@@ -20,6 +20,6 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
   },
-  "include": ["src/**/*", "express-app.ts", "lambda.ts"],
+  "include": ["src/**/*"],
   "references": [{ "path": "./tsconfig.front.node.json" }]
 }
