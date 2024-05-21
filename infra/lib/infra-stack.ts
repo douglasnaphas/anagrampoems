@@ -24,5 +24,10 @@ export class InfraStack extends cdk.Stack {
       methods: [apigwv2.HttpMethod.ANY],
       integration: defaultApiIntegration,
     });
+    const apiHostName =
+      api.apiId + ".execute-api." + this.region + "." + this.urlSuffix;
+    new cdk.CfnOutput(this, "APIHostname", {
+      value: apiHostName,
+    });
   }
 }
