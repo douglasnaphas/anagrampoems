@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-plugin-svgr/client" />
 import { useState } from 'react'
-import reactLogo from 'react.svg'
+import reactLogo from './react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import React from 'react'
