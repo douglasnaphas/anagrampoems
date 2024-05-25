@@ -36,6 +36,7 @@ jobs:
         working-directory: web
         run: |
           npm run build
+          ls -R
       - name: Configure AWS Credentials, test env
         uses: aws-actions/configure-aws-credentials@v4
         with:
