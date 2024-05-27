@@ -4,6 +4,8 @@ import { Construct } from "constructs";
 import { HttpLambdaIntegration } from "aws-cdk-lib/aws-apigatewayv2-integrations";
 import * as apigwv2 from "aws-cdk-lib/aws-apigatewayv2";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as s3 from "aws-cdk-lib/aws-s3";
+import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 import path = require("path");
 
 export class InfraStack extends cdk.Stack {
@@ -29,5 +31,19 @@ export class InfraStack extends cdk.Stack {
     new cdk.CfnOutput(this, "APIHostname", {
       value: apiHostName,
     });
+
+    // frontend
+    const frontendBucket = new s3.Bucket(this, "FrontendBucket", {
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+    });
+    const deployedFrontend = new s3deploy.BucketDeployment(
+      this,
+      "DeployedFrontend",
+      {
+        sources: [s3deploy.Source.asset("../frontend/dist")],
+        destinationBucket: frontendBucket,
+      }
+    );
   }
 }
