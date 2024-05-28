@@ -24,7 +24,7 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         run: |
-          npm run install-build
+          npm run build
       - name: Install infra
         working-directory: infra
         run: |
