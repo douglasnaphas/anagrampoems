@@ -1,0 +1,22 @@
+{
+  "name": "anagrampoems-web-express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 'no tests yet'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/douglasnaphas/anagrampoems.git"
+  },
+  "author": "Douglas Naphas <douglasnaphas@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/douglasnaphas/anagrampoems/issues"
+  },
+  "homepage": "https://github.com/douglasnaphas/anagrampoems#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
