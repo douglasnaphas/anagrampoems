@@ -13,14 +13,18 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - name: Install web
-        working-directory: web
+      - name: Install frontend
+        working-directory: frontend
         run: |
           npm install
-      - name: Test web
-        working-directory: web
+      - name: Test frontend
+        working-directory: frontend
         run: |
           npm test
+      - name: Build frontend
+        working-directory: frontend
+        run: |
+          npm run install-build
       - name: Install infra
         working-directory: infra
         run: |
@@ -32,11 +36,6 @@ jobs:
         working-directory: infra
         run: |
           npm test
-      - name: Build web artifact
-        working-directory: web
-        run: |
-          npm run build
-          ls -R
       - name: Configure AWS Credentials, test env
         uses: aws-actions/configure-aws-credentials@v4
         with:
