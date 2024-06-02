@@ -3,4 +3,4 @@ const app = require("./express-app");
 
 const handler = serverless(app);
 
-export { handler };
+module.exports = { handler };

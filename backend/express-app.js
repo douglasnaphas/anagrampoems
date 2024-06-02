@@ -6,4 +6,4 @@ app.get("/hello", (req, res) => {
   res.send("Hello from Express on AWS Lambda!");
 });
 
-export default app;
+module.exports = app;
