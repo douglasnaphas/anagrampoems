@@ -41,7 +41,7 @@ export class InfraStack extends cdk.Stack {
       this,
       "DeployedFrontend",
       {
-        sources: [s3deploy.Source.asset("../../frontend/dist")],
+        sources: [s3deploy.Source.asset("../frontend/dist")],
         destinationBucket: frontendBucket,
       }
     );
