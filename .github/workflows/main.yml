@@ -25,6 +25,10 @@ jobs:
         working-directory: frontend
         run: |
           npm run build
+      - name: Prepare backend Lambda code
+        working-directory: backend
+        run: |
+          npm run install-build
       - name: Install infra
         working-directory: infra
         run: |
