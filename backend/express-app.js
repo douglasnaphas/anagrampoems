@@ -1,19 +1,13 @@
 const express = require("express");
-
 const app = express();
+const router = express.Router();
 
-app.use("*", (req, res, next) => {
-  console.log("received a request");
-  console.log(req);
-  return next();
-});
-
-app.get("/", (req, res) => {
+router.get("/", (req, res) => {
   return res.send("/ from Express on AWS Lambda!");
 });
-
-app.get("/hello", (req, res) => {
+router.get("/hello", (req, res) => {
   return res.send("Hello from Express on AWS Lambda!");
 });
+app.use("/backend", router);
 
 module.exports = app;
