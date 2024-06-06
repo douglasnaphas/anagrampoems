@@ -6,6 +6,8 @@ import * as apigwv2 from "aws-cdk-lib/aws-apigatewayv2";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
+import { aws_cloudfront as cloudfront } from "aws-cdk-lib";
+import { aws_cloudfront_origins as origins } from "aws-cdk-lib";
 import path = require("path");
 
 export class InfraStack extends cdk.Stack {
@@ -21,10 +23,10 @@ export class InfraStack extends cdk.Stack {
     const api = new apigwv2.HttpApi(this, "API", {
       defaultIntegration: new HttpLambdaIntegration("WebIntegration", webFn),
     });
-    const apiHostName =
+    const apiUrl = (api: apigwv2.HttpApi) =>
       api.apiId + ".execute-api." + this.region + "." + this.urlSuffix;
     new cdk.CfnOutput(this, "APIHostname", {
-      value: apiHostName,
+      value: apiUrl(api),
     });
 
     // frontend
@@ -40,5 +42,36 @@ export class InfraStack extends cdk.Stack {
         destinationBucket: frontendBucket,
       }
     );
+
+    // distro, for frontend and backend
+    const distroProps: any = {
+      enableLogging: true,
+      logFilePrefix: "distribution-access-logs/",
+      logIncludesCookies: true,
+      defaultBehavior: {
+        origin: new origins.S3Origin(frontendBucket),
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+      },
+      defaultRootObject: "index.html",
+    };
+    const distro = new cloudfront.Distribution(this, "Distro", distroProps);
+    distro.addBehavior("/backend/*", new origins.HttpOrigin(apiUrl(api)), {
+      allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+      viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+      originRequestPolicy: new cloudfront.OriginRequestPolicy(
+        this,
+        "BackendORP",
+        {
+          cookieBehavior: cloudfront.OriginRequestCookieBehavior.all(),
+          queryStringBehavior:
+            cloudfront.OriginRequestQueryStringBehavior.all(),
+        }
+      ),
+    });
+    new cdk.CfnOutput(this, "DistributionDomainName", {
+      value: distro.distributionDomainName,
+    });
   }
 }
