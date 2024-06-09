@@ -3,3 +3,8 @@
   padding: 2rem;
   text-align: center;
 }
+
+.custom-textfield {
+  width: calc(100% - 16px);
+  max-width: 300px;
+}

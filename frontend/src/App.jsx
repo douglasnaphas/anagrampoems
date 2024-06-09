@@ -18,6 +18,7 @@ function App() {
           id="standard-basic"
           label="Enter a name, word, or phrase"
           variant="standard"
+          className="custom-textfield"
         />
       </Box>
     </>
