@@ -18,10 +18,10 @@ function App() {
         />
       </Box>
       <Grid container>
-        <Grid item xs={6}>
+        <Grid item xs={6} className="grid-item left-align">
           <h2>Lines</h2>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={6} className="grid-item right-align">
           <h2>Dictionary</h2>
         </Grid>
       </Grid>

@@ -8,3 +8,15 @@
   width: calc(100% - 16px);
   max-width: 300px;
 }
+
+.grid-item {
+  flex: 1
+}
+
+.left-align {
+  text-align: left;
+}
+
+.righ-align {
+  text-align: right;
+}
