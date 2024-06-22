@@ -1,0 +1,23 @@
+{
+  "name": "itest",
+  "version": "1.0.0",
+  "description": "Integration tests for Anagram Poems.",
+  "main": "index.js",
+  "scripts": {
+    "itest": "bash itest.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/douglasnaphas/anagrampoems.git"
+  },
+  "author": "Douglas Naphas <douglasnaphas@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/douglasnaphas/anagrampoems/issues"
+  },
+  "homepage": "https://github.com/douglasnaphas/anagrampoems#readme",
+  "dependencies": {
+    "commander": "^12.1.0",
+    "puppeteer": "^22.12.0"
+  }
+}

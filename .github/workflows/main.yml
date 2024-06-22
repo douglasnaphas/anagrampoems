@@ -49,3 +49,27 @@ jobs:
         working-directory: infra
         run: |
           npm run deploy-webapp
+  itest-staging:
+    runs-on: ubuntu-latest
+    environment: test
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install itest
+        working-directory: itest
+        run: |
+          npm install
+      - name: Configure AWS Credentials, test env
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.DEPLOYMENT_ROLE_ARN }}
+          aws-region: us-east-2
+      - name: Run itest
+        env:
+          AWS_REGION: us-east-2
+          AWS_DEFAULT_REGION: us-east-2
+        working-directory: itest
+        run: |
+          npm run itest
