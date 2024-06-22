@@ -1,4 +1,15 @@
+BEGIN {
+  print "{"
+}
 {
+    # Remove carriage returns so appending to output doesn't overwrite
+    gsub(/\r/, "")
+
+    # Indent
+    output = "  "
+
+    output = output "\"" $0 "\": "
+
     # Initialize an array to count occurrences of each letter
     split("abcdefghijklmnopqrstuvwxyz", letters, "")
     for (i = 1; i <= length(letters); i++) {
@@ -14,7 +25,7 @@
     }
 
     # Print the counts array
-    output = "["
+    output = output "["
     for (i = 0; i < length(letters); i++) {
         letter = letters[i + 1]
         output = output counts[letter]
@@ -23,8 +34,12 @@
         }
     }
     output = output "]"
-    print output
+    printf("%s,", output)
+    printf("\n")
 
     # Clear the counts array for the next line
     delete counts
+}
+END {
+  print "}"
 }
