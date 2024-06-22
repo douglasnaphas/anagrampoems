@@ -1,12 +1,16 @@
 BEGIN {
-  print "{"
+  printf("{")
 }
 {
     # Remove carriage returns so appending to output doesn't overwrite
     gsub(/\r/, "")
 
-    # Indent
-    output = "  "
+    if(NR == 1) {
+      output = "\n  "
+    }
+    else {
+      output = ",\n  "
+    }
 
     output = output "\"" $0 "\": "
 
@@ -34,12 +38,11 @@ BEGIN {
         }
     }
     output = output "]"
-    printf("%s,", output)
-    printf("\n")
+    printf("%s", output)
 
     # Clear the counts array for the next line
     delete counts
 }
 END {
-  print "}"
+  printf("\n}\n")
 }
