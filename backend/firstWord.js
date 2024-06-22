@@ -12,7 +12,7 @@ const firstWord = (req, res, next) => {
     const words = data.split("\n");
     const firstWord = words[0];
 
-    res.send(firstWord);
+    return res.send(firstWord);
   });
 };
 
