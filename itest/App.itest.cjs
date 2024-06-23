@@ -10,9 +10,10 @@ program
 const slowDown = 90;
 const timeout = 10000 + (program.opts().slow ? slowDown + 2000 : 0); // ms
 const site = program.opts().site;
-const failTest = async (err, msg, browsers) => {
-  console.log("test failed: " + msg);
-  console.log(err);
+const browsers = []; // so we can close them all when failing a test
+const failTest = async (err, msg) => {
+  console.error("test failed: " + msg);
+  console.error(err);
   if (browsers && browsers.length) {
     for (let b = 0; b < browsers.length; b++) {
       if (browsers[b].close) {
@@ -34,7 +35,6 @@ const waitOptions = { timeout /*, visible: true */ };
   //////////////////////////////////////////////////////////////////////////////
   // Actual test
 
-  const browsers = []; // so we can close them all when failing a test
   const browser = await puppeteer.launch(browserOptions);
   browsers.push(browser);
   const page = await browser.newPage();
@@ -54,8 +54,7 @@ const waitOptions = { timeout /*, visible: true */ };
       page.click("#bust-grams"),
     ]);
   } catch (err) {
-    console.error("failed to click Bust Grams and navigate");
-    console.error(err);
+    await failTest(err, "failed to click Bust Grams and navigate");
   }
 
   // Get the current URL
@@ -67,7 +66,10 @@ const waitOptions = { timeout /*, visible: true */ };
   if (queryString === "?key=kate") {
     console.log('Assertion passed: Query string is "key=kate"');
   } else {
-    console.error(`Assertion failed: Query string is "${queryString}"`);
+    await failTest(
+      "failure after clicking Bust Grams",
+      `Assertion failed: Query string is "${queryString}"`
+    );
   }
 
   ////////////////////////////////////////////////////////////////////////////////
