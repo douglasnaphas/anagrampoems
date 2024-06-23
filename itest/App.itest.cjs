@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 
 const puppeteer = require("puppeteer");
-const commander = require("commander");
+const program = require("commander");
 
-commander
-  .version("1.0.0")
+program
   .option("-s, --site <URL>", "Site to run against")
   .option("-L, --slow", "Run headfully in slow mode")
   .parse(process.argv);
 const slowDown = 90;
-const timeout = 10000 + (commander.opts().slow ? slowDown + 2000 : 0); // ms
-const site = commander.opts().site;
+const timeout = 10000 + (program.opts().slow ? slowDown + 2000 : 0); // ms
+const site = program.opts().site;
 const failTest = async (err, msg, browsers) => {
   console.log("test failed: " + msg);
   console.log(err);
