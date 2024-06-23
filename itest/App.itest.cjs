@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const puppeteer = require("puppeteer");
-const program = require("commander");
+const { program } = require("commander");
 
 program
   .option("-s, --site <URL>", "Site to run against")
