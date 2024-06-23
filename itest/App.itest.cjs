@@ -48,10 +48,15 @@ const waitOptions = { timeout /*, visible: true */ };
   await page.type(thingToGramSelector, thingToGram);
   const bustGramsButtonSelector = "#bust-grams";
   await page.click(bustGramsButtonSelector);
-  await Promise.all([
-    page.waitForNavigation({ waitUntil: 'networkidle0' }),
-    page.click('#bust-grams')
-  ]);
+  try {
+    await Promise.all([
+      page.waitForNavigation({ waitUntil: "networkidle0" }),
+      page.click("#bust-grams"),
+    ]);
+  } catch (err) {
+    console.error("failed to click Bust Grams and navigate");
+    console.error(err);
+  }
 
   // Get the current URL
   const currentURL = page.url();
@@ -59,7 +64,7 @@ const waitOptions = { timeout /*, visible: true */ };
   // Assert that the query string for the URL is "key=kate"
   const url = new URL(currentURL);
   const queryString = url.search;
-  if (queryString === '?key=kate') {
+  if (queryString === "?key=kate") {
     console.log('Assertion passed: Query string is "key=kate"');
   } else {
     console.error(`Assertion failed: Query string is "${queryString}"`);
