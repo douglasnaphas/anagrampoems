@@ -3,10 +3,17 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import "./App.css";
 
 function App() {
+  // State to hold the input value
+  const [inputValue, setInputValue] = useState("");
+
+  // Handler for input change
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
   return (
     <>
       <h1>Anagram Poems</h1>
@@ -16,9 +23,13 @@ function App() {
           label="Enter a name, word, or phrase"
           variant="standard"
           className="custom-textfield"
+          value={inputValue}
+          onChange={handleInputChange}
         />
         <div>
-          <Button id="bust-grams">Bust grams</Button>
+          <Button href={`/?key=${inputValue}`} id="bust-grams">
+            Bust grams
+          </Button>
         </div>
       </Box>
       <Grid container>
