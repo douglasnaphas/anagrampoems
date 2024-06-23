@@ -40,6 +40,31 @@ const waitOptions = { timeout /*, visible: true */ };
   const page = await browser.newPage();
   await page.goto(site);
 
+  // Enter "kate" and bust grams
+  const thingToGramSelector = "#thing-to-gram";
+  await page.waitForSelector(thingToGramSelector);
+  await page.click(thingToGramSelector);
+  const thingToGram = "kate";
+  await page.type(thingToGramSelector, thingToGram);
+  const bustGramsButtonSelector = "#bust-grams";
+  await page.click(bustGramsButtonSelector);
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'networkidle0' }),
+    page.click('#bust-grams')
+  ]);
+
+  // Get the current URL
+  const currentURL = page.url();
+
+  // Assert that the query string for the URL is "key=kate"
+  const url = new URL(currentURL);
+  const queryString = url.search;
+  if (queryString === '?key=kate') {
+    console.log('Assertion passed: Query string is "key=kate"');
+  } else {
+    console.error(`Assertion failed: Query string is "${queryString}"`);
+  }
+
   ////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////
   // Clean up

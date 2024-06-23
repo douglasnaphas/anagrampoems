@@ -12,13 +12,13 @@ function App() {
       <h1>Anagram Poems</h1>
       <Box component="form" noValidate autoComplete="off">
         <TextField
-          id="standard-basic"
+          id="thing-to-gram"
           label="Enter a name, word, or phrase"
           variant="standard"
           className="custom-textfield"
         />
         <div>
-          <Button>Bust grams</Button>
+          <Button id="bust-grams">Bust grams</Button>
         </div>
       </Box>
       <Grid container>
