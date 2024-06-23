@@ -47,11 +47,10 @@ const waitOptions = { timeout /*, visible: true */ };
   const thingToGram = "kate";
   await page.type(thingToGramSelector, thingToGram);
   const bustGramsButtonSelector = "#bust-grams";
-  await page.click(bustGramsButtonSelector);
   try {
     await Promise.all([
       page.waitForNavigation({ waitUntil: "networkidle0" }),
-      page.click("#bust-grams"),
+      page.click(bustGramsButtonSelector),
     ]);
   } catch (err) {
     await failTest(err, "failed to click Bust Grams and navigate");
