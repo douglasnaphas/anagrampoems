@@ -51,6 +51,7 @@ jobs:
           npm run deploy-webapp
   itest-staging:
     runs-on: ubuntu-latest
+    needs: [webapp-staging]
     environment: test
     permissions:
       id-token: write
