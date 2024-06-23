@@ -22,7 +22,11 @@ const failTest = async (err, msg, browsers) => {
   }
   process.exit(1);
 };
-
+const browserOptions = {
+  headless: program.opts().slow ? false : true,
+  args: ["--no-sandbox"],
+};
+browserOptions.slowMo = slowDown;
 const waitOptions = { timeout /*, visible: true */ };
 
 (async () => {
