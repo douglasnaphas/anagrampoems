@@ -71,6 +71,25 @@ const waitOptions = { timeout /*, visible: true */ };
     );
   }
 
+  // The page should show kate's grams
+  // Assert that there is an element with the exact text "take"
+  const elementWithExactTextTake = await page.evaluate(() => {
+    const elements = document.querySelectorAll("*");
+    for (const element of elements) {
+      if (element.textContent.trim() === "take") {
+        return true;
+      }
+    }
+    return false;
+  });
+
+  if (!elementWithExactTextTake) {
+    await failTest(
+      "could not find gram text",
+      'Assertion failed: No element with the exact text "take" on the page'
+    );
+  }
+
   ////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////
   // Clean up
