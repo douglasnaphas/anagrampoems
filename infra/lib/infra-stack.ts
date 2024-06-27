@@ -20,6 +20,7 @@ export class InfraStack extends cdk.Stack {
       handler: "lambda.handler",
       runtime: lambda.Runtime.NODEJS_20_X,
       timeout: cdk.Duration.seconds(30),
+      memorySize: 3000,
     });
     const api = new apigwv2.HttpApi(this, "API", {
       defaultIntegration: new HttpLambdaIntegration("WebIntegration", webFn),
