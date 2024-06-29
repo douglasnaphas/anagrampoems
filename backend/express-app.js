@@ -13,6 +13,7 @@ router.get("/hello", (req, res) => {
 });
 router.get("/first-word", firstWord);
 router.get("/words", words);
+router.get("/common-words", commonWords);
 app.use("/backend", router);
 
 module.exports = app;
