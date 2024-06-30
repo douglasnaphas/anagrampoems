@@ -5,6 +5,11 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import "./App.css";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import { Typography } from "@mui/material";
 
 function App() {
   // State to hold the input value
@@ -34,10 +39,14 @@ function App() {
       </Box>
       <Grid container>
         <Grid item xs={6} className="grid-item left-align">
-          <h2>Lines</h2>
+          <Typography variant="h2" component="h2">
+            Lines
+          </Typography>
         </Grid>
         <Grid item xs={6} className="grid-item right-align">
-          <h2>Dictionary</h2>
+          <Typography variant="h2" component="h2">
+            Dictionary
+          </Typography>
         </Grid>
       </Grid>
     </>
