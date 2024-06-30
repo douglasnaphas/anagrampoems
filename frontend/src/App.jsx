@@ -18,7 +18,6 @@ function App() {
 
   const getSearchParams = () => {
     const params = new URLSearchParams(window.location.search);
-    console.log(`got key ${key}`);
     return params.get("key");
   };
   const fetchCommonWords = async (key) => {
