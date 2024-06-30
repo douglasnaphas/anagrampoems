@@ -40,6 +40,10 @@ const waitOptions = { timeout /*, visible: true */ };
   const page = await browser.newPage();
   await page.goto(site);
 
+  // Log in
+  const loginButtonSelector = "#login";
+  await page.waitForSelector(loginButtonSelector);
+
   // Enter "kate" and bust grams
   const thingToGramSelector = "#thing-to-gram";
   await page.waitForSelector(thingToGramSelector);
