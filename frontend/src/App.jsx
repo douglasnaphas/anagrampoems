@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -14,11 +14,35 @@ import { Typography } from "@mui/material";
 function App() {
   // State to hold the input value
   const [inputValue, setInputValue] = useState("");
+  const [commonWords, setCommonWords] = useState([]);
 
-  // Handler for input change
+  const getSearchParams = () => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("key");
+  };
+  const fetchCommonWords = async (key) => {
+    try {
+      const response = await fetch(`/backend/common-words?key=${key}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setCommonWords(data);
+    } catch (error) {
+      console.error("Error fetching words:", error);
+    }
+  };
+  useEffect(() => {
+    const key = getSearchParams();
+    if (key) {
+      fetchCommonWords(key);
+    }
+  }, []);
+
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
+
   return (
     <>
       <Typography variant="h1" component="h1">
@@ -49,6 +73,11 @@ function App() {
           <Typography variant="h2" component="h2">
             Dictionary
           </Typography>
+          <ul>
+            {words.map((word, index) => (
+              <li key={`${index}-${word}`}>{word}</li>
+            ))}
+          </ul>
         </Grid>
       </Grid>
     </>
