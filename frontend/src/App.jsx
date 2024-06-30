@@ -18,6 +18,7 @@ function App() {
 
   const getSearchParams = () => {
     const params = new URLSearchParams(window.location.search);
+    console.log(`got key ${key}`);
     return params.get("key");
   };
   const fetchCommonWords = async (key) => {
@@ -34,6 +35,7 @@ function App() {
   };
   useEffect(() => {
     const key = getSearchParams();
+    console.log(`found key ${key}`);
     if (key) {
       fetchCommonWords(key);
     }
