@@ -74,7 +74,7 @@ function App() {
             Dictionary
           </Typography>
           <ul>
-            {words.map((word, index) => (
+            {commonWords.map((word, index) => (
               <li key={`${index}-${word}`}>{word}</li>
             ))}
           </ul>
