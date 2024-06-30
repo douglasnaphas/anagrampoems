@@ -21,7 +21,9 @@ function App() {
   };
   return (
     <>
-      <h1>Anagram Poems</h1>
+      <Typography variant="h1" component="h1">
+        Anagram Poems
+      </Typography>
       <Box component="form" noValidate autoComplete="off">
         <TextField
           id="thing-to-gram"
