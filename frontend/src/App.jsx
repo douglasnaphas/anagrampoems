@@ -50,7 +50,7 @@ function App() {
         Anagram Poems
       </Typography>
       <div>
-        <Button id="login-button" href="/backend/login">
+        <Button id="login" href="/backend/login">
           Log in
         </Button>
       </div>
