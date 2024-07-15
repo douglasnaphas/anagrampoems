@@ -8,11 +8,43 @@ import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 import { aws_cloudfront as cloudfront } from "aws-cdk-lib";
 import { aws_cloudfront_origins as origins } from "aws-cdk-lib";
+import { aws_cognito as cognito } from "aws-cdk-lib";
+import { RemovalPolicy } from "aws-cdk-lib";
 import path = require("path");
 
 export class InfraStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    // user pool
+    const userPool = new cognito.UserPool(this, "UserPool", {
+      selfSignUpEnabled: true,
+      userVerification: {
+        emailSubject: "Anagram Poems: verify your new account",
+        emailStyle: cognito.VerificationEmailStyle.LINK,
+      },
+      signInAliases: {
+        username: false,
+        email: true,
+        phone: false,
+        preferredUsername: false,
+      },
+      autoVerify: { email: true, phone: false },
+      mfa: cognito.Mfa.OPTIONAL,
+      accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
+      passwordPolicy: {
+        requireDigits: false,
+        requireLowercase: false,
+        requireSymbols: false,
+        requireUppercase: false,
+      },
+      standardAttributes: {
+        email: {
+          required: true,
+          mutable: true,
+        },
+      },
+    });
 
     // backend
     const webFn = new lambda.Function(this, "WebFn", {
