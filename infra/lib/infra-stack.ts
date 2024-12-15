@@ -105,8 +105,14 @@ export class InfraStack extends cdk.Stack {
     });
 
     // Cognito app client
+    const writeAttributes = new cognito.ClientAttributes()
+      .withStandardAttributes({ email: true })
+      .withCustomAttributes();
+    const readAttributes = writeAttributes;
     const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
       userPool,
+      writeAttributes: writeAttributes,
+      readAttributes: readAttributes,
       generateSecret: false,
       authFlows: {
         userPassword: true,
