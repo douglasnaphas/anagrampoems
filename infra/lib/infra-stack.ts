@@ -103,9 +103,6 @@ export class InfraStack extends cdk.Stack {
     // const userPoolDomain = userPool.addDomain("UserPoolDomain", {
     //   cognitoDomain: { domainPrefix },
     // });
-    new cdk.CfnOutput(this, "ThisAccountPrefix", {
-      value: this.account.slice(0, 4),
-    });
 
     // Cognito app client
     const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
