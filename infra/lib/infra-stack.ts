@@ -100,9 +100,9 @@ export class InfraStack extends cdk.Stack {
       .digest("hex")
       .toLowerCase()
       .slice(0, domainPrefixLength);
-    const userPoolDomain = userPool.addDomain("UserPoolDomain", {
-      cognitoDomain: { domainPrefix },
-    });
+    // const userPoolDomain = userPool.addDomain("UserPoolDomain", {
+    //   cognitoDomain: { domainPrefix },
+    // });
 
     // Cognito app client
     const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
@@ -131,9 +131,9 @@ export class InfraStack extends cdk.Stack {
     });
 
     // Output the User Pool Domain URL
-    new cdk.CfnOutput(this, "CognitoDomainUrl", {
-      value: `https://${userPoolDomain.domainName}.auth.${this.region}.amazoncognito.com`,
-    });
+    // new cdk.CfnOutput(this, "CognitoDomainUrl", {
+    //   value: `https://${userPoolDomain.domainName}.auth.${this.region}.amazoncognito.com`,
+    // });
 
     // backend
     const webFn = new lambda.Function(this, "WebFn", {
@@ -145,7 +145,7 @@ export class InfraStack extends cdk.Stack {
       environment: {
         IDP_URL:
           "https://" +
-          userPoolDomain.domainName +
+          // userPoolDomain.domainName +
           ".auth." +
           this.region +
           ".amazoncognito.com/login?response_type=code&client_id=" +
