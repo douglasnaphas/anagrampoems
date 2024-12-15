@@ -49,11 +49,6 @@ function App() {
       <Typography variant="h1" component="h1">
         Anagram Poems
       </Typography>
-      <div>
-        <Button id="login" href="/backend/login">
-          Log in
-        </Button>
-      </div>
       <Box component="form" noValidate autoComplete="off">
         <TextField
           id="thing-to-gram"

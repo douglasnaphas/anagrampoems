@@ -40,13 +40,6 @@ const waitOptions = { timeout /*, visible: true */ };
   const page = await browser.newPage();
   await page.goto(site);
 
-  // Log in
-  const loginButtonSelector = "#login";
-  await page.waitForSelector(loginButtonSelector);
-  // from Cognito hosted UI
-  const usernameSelector = `input#signInFormUsername[type='text']`;
-  await page.waitForSelector(usernameSelector);
-
   // Enter "kate" and bust grams
   const thingToGramSelector = "#thing-to-gram";
   await page.waitForSelector(thingToGramSelector);
