@@ -16,19 +16,19 @@
     "deploy-role-test-env": "bash scripts/deploy-role-test-env.sh"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.12",
-    "@types/node": "20.12.7",
-    "aws-cdk": "2.140.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "22.10.2",
+    "aws-cdk": "2.173.1",
     "jest": "^29.7.0",
-    "ts-jest": "^29.1.2",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "~5.4.5"
+    "typescript": "~5.7.2"
   },
   "dependencies": {
     "@cdk-turnkey/stackname": "^2.1.0",
-    "aws-cdk-lib": "2.140.0",
+    "aws-cdk-lib": "2.173.1",
     "aws-github-oidc-role": "^0.1.5",
-    "constructs": "^10.0.0",
+    "constructs": "^10.4.2",
     "source-map-support": "^0.5.21"
   }
 }
