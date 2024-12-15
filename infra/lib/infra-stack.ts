@@ -65,7 +65,7 @@ export class InfraStack extends cdk.Stack {
         username: false,
         email: true,
         phone: false,
-        preferredUsername: false,
+        preferredUsername: true,
       },
       autoVerify: { email: true, phone: false },
       mfa: cognito.Mfa.OPTIONAL,
@@ -82,13 +82,10 @@ export class InfraStack extends cdk.Stack {
           required: true,
           mutable: false,
         },
-      },
-      customAttributes: {
-        username: new cognito.StringAttribute({
+        preferredUsername: {
+          required: true,
           mutable: false,
-          minLen: 1,
-          maxLen: 16,
-        }),
+        },
       },
     });
 
@@ -105,14 +102,8 @@ export class InfraStack extends cdk.Stack {
     });
 
     // Cognito app client
-    const writeAttributes = new cognito.ClientAttributes()
-      .withStandardAttributes({ email: true })
-      .withCustomAttributes('username');
-    const readAttributes = writeAttributes;
     const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
       userPool,
-      writeAttributes: writeAttributes,
-      readAttributes: readAttributes,
       generateSecret: false,
       authFlows: {
         userPassword: true,
