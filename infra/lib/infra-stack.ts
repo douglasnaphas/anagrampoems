@@ -100,9 +100,9 @@ export class InfraStack extends cdk.Stack {
       .digest("hex")
       .toLowerCase()
       .slice(0, domainPrefixLength);
-    // const userPoolDomain = userPool.addDomain("UserPoolDomain", {
-    //   cognitoDomain: { domainPrefix },
-    // });
+    const userPoolDomain = userPool.addDomain("UserPoolDomain", {
+      cognitoDomain: { domainPrefix },
+    });
 
     // Cognito app client
     const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
