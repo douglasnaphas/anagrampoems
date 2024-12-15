@@ -62,7 +62,7 @@ export class InfraStack extends cdk.Stack {
         emailStyle: cognito.VerificationEmailStyle.LINK,
       },
       signInAliases: {
-        username: false,
+        username: true,
         email: true,
         phone: false,
         preferredUsername: true,
