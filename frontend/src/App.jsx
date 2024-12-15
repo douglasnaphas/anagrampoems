@@ -45,6 +45,9 @@ function App() {
     setInputValue(event.target.value);
   };
 
+  const handleBustGramsClick = () => {
+  };
+
   return (
     <>
       <Typography variant="h1" component="h1">
@@ -61,9 +64,9 @@ function App() {
         />
         <div>
           <Button
-            href={`/?key=${inputValue}`}
             id="bust-grams"
             disabled={!isLoggedIn}
+            onClick={handleBustGramsClick}
           >
             Bust grams
           </Button>
