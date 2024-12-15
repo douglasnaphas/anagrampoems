@@ -11,6 +11,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "express": "^4.21.2",
+    "qs": "^6.13.1",
     "serverless-http": "^3.2.0"
   },
   "devDependencies": {

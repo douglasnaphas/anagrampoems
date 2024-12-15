@@ -143,6 +143,19 @@ export class InfraStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_20_X,
       timeout: cdk.Duration.seconds(30),
       memorySize: 3000,
+      environment: {
+        IDP_URL:
+          "https://" +
+          userPoolDomain.domainName +
+          ".auth." +
+          this.region +
+          ".amazoncognito.com/login?response_type=code&client_id=" +
+          userPoolClient.userPoolClientId +
+          "&redirect_uri=" +
+          "https://" +
+          webappDomainName +
+          "/backend/get-cookies",
+      },
     });
     const api = new apigwv2.HttpApi(this, "API", {
       defaultIntegration: new HttpLambdaIntegration("WebIntegration", webFn),
