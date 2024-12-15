@@ -15,6 +15,7 @@ function App() {
   // State to hold the input value
   const [inputValue, setInputValue] = useState("");
   const [commonWords, setCommonWords] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const getSearchParams = () => {
     const params = new URLSearchParams(window.location.search);
@@ -59,9 +60,18 @@ function App() {
           onChange={handleInputChange}
         />
         <div>
-          <Button href={`/?key=${inputValue}`} id="bust-grams">
+          <Button
+            href={`/?key=${inputValue}`}
+            id="bust-grams"
+            disabled={!isLoggedIn}
+          >
             Bust grams
           </Button>
+          {!isLoggedIn && (
+            <Typography id="requires-login-text" variant="body2" color="error">
+              Requires login
+            </Typography>
+          )}
         </div>
       </Box>
       <Grid container>
