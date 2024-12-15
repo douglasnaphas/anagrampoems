@@ -65,7 +65,7 @@ export class InfraStack extends cdk.Stack {
         username: true,
         email: true,
         phone: false,
-        preferredUsername: true,
+        preferredUsername: false,
       },
       autoVerify: { email: true, phone: false },
       mfa: cognito.Mfa.OPTIONAL,
@@ -79,10 +79,6 @@ export class InfraStack extends cdk.Stack {
       },
       standardAttributes: {
         email: {
-          required: true,
-          mutable: false,
-        },
-        preferredUsername: {
           required: true,
           mutable: false,
         },
