@@ -145,7 +145,7 @@ export class InfraStack extends cdk.Stack {
       environment: {
         IDP_URL:
           "https://" +
-          // userPoolDomain.domainName +
+          userPoolDomain.domainName +
           ".auth." +
           this.region +
           ".amazoncognito.com/login?response_type=code&client_id=" +
