@@ -45,7 +45,10 @@ function App() {
     setInputValue(event.target.value);
   };
 
-  const handleBustGramsClick = () => {
+  const handleBustGramsClick = () => {};
+
+  const handleLogin = () => {
+    window.location.href = "/backend/login";
   };
 
   return (
@@ -71,9 +74,18 @@ function App() {
             Bust grams
           </Button>
           {!isLoggedIn && (
-            <Typography id="requires-login-text" variant="body2" color="error">
-              Requires login
-            </Typography>
+            <>
+              <Typography
+                id="requires-login-text"
+                variant="body2"
+                color="error"
+              >
+                Requires login
+              </Typography>
+              <Button onClick={handleLogin} variant="contained" color="primary">
+                Login
+              </Button>
+            </>
           )}
         </div>
       </Box>
