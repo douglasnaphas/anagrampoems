@@ -96,12 +96,15 @@ export class InfraStack extends cdk.Stack {
     const domainPrefixLength = 12;
     const domainPrefix = crypto
       .createHash("sha256")
-      .update(stackname(`domain-prefix`, { hash: 5 }) + this.account)
+      .update(stackname(`domain-prefix`, { hash: 5 }) /*+ `${this.account}`*/)
       .digest("hex")
       .toLowerCase()
       .slice(0, domainPrefixLength);
     const userPoolDomain = userPool.addDomain("UserPoolDomain", {
       cognitoDomain: { domainPrefix },
+    });
+    new cdk.CfnOutput(this, "ThisAccountPrefix", {
+      value: this.account.slice(0, 4),
     });
 
     // Cognito app client
@@ -145,7 +148,7 @@ export class InfraStack extends cdk.Stack {
       environment: {
         IDP_URL:
           "https://" +
-          userPoolDomain.domainName +
+          // userPoolDomain.domainName +
           ".auth." +
           this.region +
           ".amazoncognito.com/login?response_type=code&client_id=" +
