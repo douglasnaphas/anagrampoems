@@ -43,52 +43,23 @@ const waitOptions = { timeout /*, visible: true */ };
   // Enter "kate" and bust grams
   const thingToGramSelector = "#thing-to-gram";
   await page.waitForSelector(thingToGramSelector);
-  await page.click(thingToGramSelector);
-  const thingToGram = "kate";
-  await page.type(thingToGramSelector, thingToGram);
   const bustGramsButtonSelector = "#bust-grams";
-  try {
-    await Promise.all([
-      page.waitForNavigation({ waitUntil: "networkidle0" }),
-      page.click(bustGramsButtonSelector),
-    ]);
-  } catch (err) {
-    await failTest(err, "failed to click Bust Grams and navigate");
-  }
 
-  // Get the current URL
-  const currentURL = page.url();
+  // The Bust Grams button should be disabled without login
+  const isBustGramsButtonDisabled = await page.evaluate((selector) => {
+    const button = document.querySelector(selector);
+    return button.disabled;
+  }, bustGramsButtonSelector);
+  expect(isBustGramsButtonDisabled).toBe(true);
 
-  // Assert that the query string for the URL is "key=kate"
-  const url = new URL(currentURL);
-  const queryString = url.search;
-  if (queryString === "?key=kate") {
-    console.log('Assertion passed: Query string is "key=kate"');
-  } else {
-    await failTest(
-      "failure after clicking Bust Grams",
-      `Assertion failed: Query string is "${queryString}"`
-    );
-  }
-
-  // The page should show kate's grams
-  // Assert that there is an element with the exact text "take"
-  const elementWithExactTextTake = await page.evaluate(() => {
-    const elements = document.querySelectorAll("*");
-    for (const element of elements) {
-      if (element.textContent.trim() === "take") {
-        return true;
-      }
-    }
-    return false;
-  });
-
-  if (!elementWithExactTextTake) {
-    await failTest(
-      "could not find gram text",
-      'Assertion failed: No element with the exact text "take" on the page'
-    );
-  }
+  // There should be an explanation that login is required
+  const requiresLoginTextSelector = "#requires-login-text"; // Adjust the selector as needed
+  await page.waitForSelector(requiresLoginTextSelector);
+  const requiresLoginText = await page.evaluate((selector) => {
+    const element = document.querySelector(selector);
+    return element.textContent;
+  }, requiresLoginTextSelector);
+  expect(requiresLoginText).toBe("Requires login");
 
   ////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////
