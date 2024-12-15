@@ -96,7 +96,7 @@ export class InfraStack extends cdk.Stack {
     const domainPrefixLength = 12;
     const domainPrefix = crypto
       .createHash("sha256")
-      .update(stackname(`domain-prefix`) + this.account)
+      .update(stackname(`domain-prefix`, { hash: 5 }) + this.account)
       .digest("hex")
       .toLowerCase()
       .slice(0, domainPrefixLength);
