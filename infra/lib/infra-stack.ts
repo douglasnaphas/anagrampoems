@@ -44,7 +44,7 @@ export class InfraStack extends cdk.Stack {
       logFilePrefix: "distribution-access-logs/",
       logIncludesCookies: true,
       defaultBehavior: {
-        origin: new origins.S3Origin(frontendBucket),
+        origin: origins.S3BucketOrigin.withOriginAccessControl(frontendBucket),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
       },
