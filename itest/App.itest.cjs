@@ -72,6 +72,21 @@ const waitOptions = { timeout /*, visible: true */ };
     );
   }
 
+   // Check for Login button
+  const loginButtonSelector = 'button';
+  const loginButtonText = await page.evaluate((selector) => {
+    const buttons = Array.from(document.querySelectorAll(selector));
+    const loginButton = buttons.find(button => button.textContent.trim() === 'Login');
+    return loginButton ? loginButton.textContent : null;
+  }, loginButtonSelector);
+
+  if (loginButtonText !== 'Login') {
+    await failTest(
+      "Home page test error",
+      "Expected 'Login' button not found"
+    );
+  }
+
   ////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////
   // Clean up
