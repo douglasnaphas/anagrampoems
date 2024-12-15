@@ -10,12 +10,12 @@
   "author": "Douglas Naphas <douglasnaphas@gmail.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "express": "^4.19.2",
+    "express": "^4.21.2",
     "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "superagent": "^9.0.2",
+    "superagent": "^10.1.1",
     "supertest": "^7.0.0"
   }
 }
