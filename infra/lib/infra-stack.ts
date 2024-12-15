@@ -11,57 +11,18 @@ import { aws_cloudfront_origins as origins } from "aws-cdk-lib";
 import { aws_cognito as cognito } from "aws-cdk-lib";
 import { RemovalPolicy } from "aws-cdk-lib";
 import path = require("path");
+const crypto = require("crypto");
+const stackname = require("@cdk-turnkey/stackname");
+
+export interface InfraStackProps extends cdk.StackProps {
+  fromAddress?: string;
+  domainName?: string;
+  zoneId?: string;
+}
 
 export class InfraStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props?: InfraStackProps) {
     super(scope, id, props);
-
-    // user pool
-    const userPool = new cognito.UserPool(this, "UserPool", {
-      selfSignUpEnabled: true,
-      userVerification: {
-        emailSubject: "Anagram Poems: verify your new account",
-        emailStyle: cognito.VerificationEmailStyle.LINK,
-      },
-      signInAliases: {
-        username: false,
-        email: true,
-        phone: false,
-        preferredUsername: false,
-      },
-      autoVerify: { email: true, phone: false },
-      mfa: cognito.Mfa.OPTIONAL,
-      accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
-      passwordPolicy: {
-        requireDigits: false,
-        requireLowercase: false,
-        requireSymbols: false,
-        requireUppercase: false,
-      },
-      standardAttributes: {
-        email: {
-          required: true,
-          mutable: true,
-        },
-      },
-    });
-
-    // backend
-    const webFn = new lambda.Function(this, "WebFn", {
-      code: lambda.Code.fromAsset("../backend"),
-      handler: "lambda.handler",
-      runtime: lambda.Runtime.NODEJS_20_X,
-      timeout: cdk.Duration.seconds(30),
-      memorySize: 3000,
-    });
-    const api = new apigwv2.HttpApi(this, "API", {
-      defaultIntegration: new HttpLambdaIntegration("WebIntegration", webFn),
-    });
-    const apiUrl = (api: apigwv2.HttpApi) =>
-      api.apiId + ".execute-api." + this.region + "." + this.urlSuffix;
-    new cdk.CfnOutput(this, "APIHostname", {
-      value: apiUrl(api),
-    });
 
     // frontend
     const frontendBucket = new s3.Bucket(this, "FrontendBucket", {
@@ -90,6 +51,108 @@ export class InfraStack extends cdk.Stack {
       defaultRootObject: "index.html",
     };
     const distro = new cloudfront.Distribution(this, "Distro", distroProps);
+
+    const webappDomainName = props?.domainName || distro.distributionDomainName;
+
+    // Cognito user pool
+    const userPool = new cognito.UserPool(this, "UserPool", {
+      selfSignUpEnabled: true,
+      userVerification: {
+        emailSubject: "Anagram Poems: verify your new account",
+        emailStyle: cognito.VerificationEmailStyle.LINK,
+      },
+      signInAliases: {
+        username: false,
+        email: true,
+        phone: false,
+        preferredUsername: false,
+      },
+      autoVerify: { email: true, phone: false },
+      mfa: cognito.Mfa.OPTIONAL,
+      accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
+      passwordPolicy: {
+        requireDigits: false,
+        requireLowercase: false,
+        requireSymbols: false,
+        requireUppercase: false,
+        minLength: 8,
+      },
+      standardAttributes: {
+        email: {
+          required: true,
+          mutable: false,
+        },
+      },
+      customAttributes: {
+        username: new cognito.StringAttribute({
+          mutable: false,
+          minLen: 1,
+          maxLen: 16,
+        }),
+      },
+    });
+
+    // Cognito user pool domain
+    const domainPrefixLength = 12;
+    const domainPrefix = crypto
+      .createHash("sha256")
+      .update(stackname(`domain-prefix`) + this.account)
+      .digest("hex")
+      .toLowerCase()
+      .slice(0, domainPrefixLength);
+    const userPoolDomain = new cognito.UserPoolDomain(this, "UserPoolDomain", {
+      userPool,
+      cognitoDomain: { domainPrefix },
+    });
+
+    // Cognito app client
+    const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
+      userPool,
+      generateSecret: false,
+      authFlows: {
+        userPassword: true,
+        userSrp: true,
+        adminUserPassword: true,
+      },
+      oAuth: {
+        flows: {
+          authorizationCodeGrant: true,
+        },
+        scopes: [
+          cognito.OAuthScope.EMAIL,
+          cognito.OAuthScope.OPENID,
+          cognito.OAuthScope.PROFILE,
+        ],
+        callbackUrls: ["https://" + webappDomainName + "/backend/get-cookies"],
+        logoutUrls: ["https://" + webappDomainName + "/backend/logout"],
+      },
+      supportedIdentityProviders: [
+        cognito.UserPoolClientIdentityProvider.COGNITO,
+      ],
+    });
+
+    // Output the User Pool Domain URL
+    new cdk.CfnOutput(this, "CognitoDomainUrl", {
+      value: `https://${userPoolDomain.domainName}.auth.${this.region}.amazoncognito.com`,
+    });
+
+    // backend
+    const webFn = new lambda.Function(this, "WebFn", {
+      code: lambda.Code.fromAsset("../backend"),
+      handler: "lambda.handler",
+      runtime: lambda.Runtime.NODEJS_20_X,
+      timeout: cdk.Duration.seconds(30),
+      memorySize: 3000,
+    });
+    const api = new apigwv2.HttpApi(this, "API", {
+      defaultIntegration: new HttpLambdaIntegration("WebIntegration", webFn),
+    });
+    const apiUrl = (api: apigwv2.HttpApi) =>
+      api.apiId + ".execute-api." + this.region + "." + this.urlSuffix;
+    new cdk.CfnOutput(this, "APIHostname", {
+      value: apiUrl(api),
+    });
+
     distro.addBehavior("/backend/*", new origins.HttpOrigin(apiUrl(api)), {
       allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
       viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
