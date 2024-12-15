@@ -74,7 +74,7 @@ function App() {
           <Typography variant="h2" component="h2">
             Dictionary
           </Typography>
-          <ul>
+          <ul className="dictionary">
             {commonWords.map((word, index) => (
               <li key={`${index}-${word}`}>{word}</li>
             ))}
