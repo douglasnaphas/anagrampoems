@@ -55,39 +55,39 @@ export class InfraStack extends cdk.Stack {
     const webappDomainName = props?.domainName || distro.distributionDomainName;
 
     // Cognito user pool
-    const userPool = new cognito.UserPool(this, "UserPool", {
-      selfSignUpEnabled: true,
-      userVerification: {
-        emailSubject: "Anagram Poems: verify your new account",
-        emailStyle: cognito.VerificationEmailStyle.LINK,
-      },
-      signInAliases: {
-        username: true,
-        email: true,
-        phone: false,
-        preferredUsername: true,
-      },
-      autoVerify: { email: true, phone: false },
-      mfa: cognito.Mfa.OPTIONAL,
-      accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
-      passwordPolicy: {
-        requireDigits: false,
-        requireLowercase: false,
-        requireSymbols: false,
-        requireUppercase: false,
-        minLength: 8,
-      },
-      standardAttributes: {
-        email: {
-          required: true,
-          mutable: false,
-        },
-        preferredUsername: {
-          required: true,
-          mutable: false,
-        },
-      },
-    });
+    // const userPool = new cognito.UserPool(this, "UserPool", {
+    //   selfSignUpEnabled: true,
+    //   userVerification: {
+    //     emailSubject: "Anagram Poems: verify your new account",
+    //     emailStyle: cognito.VerificationEmailStyle.LINK,
+    //   },
+    //   signInAliases: {
+    //     username: true,
+    //     email: true,
+    //     phone: false,
+    //     preferredUsername: true,
+    //   },
+    //   autoVerify: { email: true, phone: false },
+    //   mfa: cognito.Mfa.OPTIONAL,
+    //   accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
+    //   passwordPolicy: {
+    //     requireDigits: false,
+    //     requireLowercase: false,
+    //     requireSymbols: false,
+    //     requireUppercase: false,
+    //     minLength: 8,
+    //   },
+    //   standardAttributes: {
+    //     email: {
+    //       required: true,
+    //       mutable: false,
+    //     },
+    //     preferredUsername: {
+    //       required: true,
+    //       mutable: false,
+    //     },
+    //   },
+    // });
 
     // Cognito user pool domain
     const domainPrefixLength = 12;
@@ -97,35 +97,35 @@ export class InfraStack extends cdk.Stack {
       .digest("hex")
       .toLowerCase()
       .slice(0, domainPrefixLength);
-    const userPoolDomain = userPool.addDomain("UserPoolDomain", {
-      cognitoDomain: { domainPrefix },
-    });
+    // const userPoolDomain = userPool.addDomain("UserPoolDomain", {
+    //   cognitoDomain: { domainPrefix },
+    // });
 
     // Cognito app client
-    const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
-      userPool,
-      generateSecret: false,
-      authFlows: {
-        userPassword: true,
-        userSrp: true,
-        adminUserPassword: true,
-      },
-      oAuth: {
-        flows: {
-          authorizationCodeGrant: true,
-        },
-        scopes: [
-          cognito.OAuthScope.EMAIL,
-          cognito.OAuthScope.OPENID,
-          cognito.OAuthScope.PROFILE,
-        ],
-        callbackUrls: ["https://" + webappDomainName + "/backend/get-cookies"],
-        logoutUrls: ["https://" + webappDomainName + "/backend/logout"],
-      },
-      supportedIdentityProviders: [
-        cognito.UserPoolClientIdentityProvider.COGNITO,
-      ],
-    });
+    // const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
+    //   userPool,
+    //   generateSecret: false,
+    //   authFlows: {
+    //     userPassword: true,
+    //     userSrp: true,
+    //     adminUserPassword: true,
+    //   },
+    //   oAuth: {
+    //     flows: {
+    //       authorizationCodeGrant: true,
+    //     },
+    //     scopes: [
+    //       cognito.OAuthScope.EMAIL,
+    //       cognito.OAuthScope.OPENID,
+    //       cognito.OAuthScope.PROFILE,
+    //     ],
+    //     callbackUrls: ["https://" + webappDomainName + "/backend/get-cookies"],
+    //     logoutUrls: ["https://" + webappDomainName + "/backend/logout"],
+    //   },
+    //   supportedIdentityProviders: [
+    //     cognito.UserPoolClientIdentityProvider.COGNITO,
+    //   ],
+    // });
 
     // Output the User Pool Domain URL
     // new cdk.CfnOutput(this, "CognitoDomainUrl", {
@@ -142,11 +142,11 @@ export class InfraStack extends cdk.Stack {
       environment: {
         IDP_URL:
           "https://" +
-          userPoolDomain.domainName +
+          // userPoolDomain.domainName +
           ".auth." +
           this.region +
           ".amazoncognito.com/login?response_type=code&client_id=" +
-          userPoolClient.userPoolClientId +
+          // userPoolClient.userPoolClientId +
           "&redirect_uri=" +
           "https://" +
           webappDomainName +
