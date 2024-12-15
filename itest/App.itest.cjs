@@ -3,6 +3,7 @@
 const puppeteer = require("puppeteer");
 const { program } = require("commander");
 
+
 program
   .option("-s, --site <URL>", "Site to run against")
   .option("-L, --slow", "Run headfully in slow mode")
@@ -50,7 +51,12 @@ const waitOptions = { timeout /*, visible: true */ };
     const button = document.querySelector(selector);
     return button.disabled;
   }, bustGramsButtonSelector);
-  expect(isBustGramsButtonDisabled).toBe(true);
+  if(!isBustGramsButtonDisabled){
+    await failTest(
+      "Home page test error",
+      "Expected Bust Grams button to be disabled"
+    );
+  }
 
   // There should be an explanation that login is required
   const requiresLoginTextSelector = "#requires-login-text"; // Adjust the selector as needed
@@ -59,7 +65,12 @@ const waitOptions = { timeout /*, visible: true */ };
     const element = document.querySelector(selector);
     return element.textContent;
   }, requiresLoginTextSelector);
-  expect(requiresLoginText).toBe("Requires login");
+  if (requiresLoginText != "Requires login") {
+    await failTest(
+      "Home page test error",
+      "Expected 'Requires login' text not found"
+    );
+  }
 
   ////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////
