@@ -75,9 +75,11 @@ function App() {
             Dictionary
           </Typography>
           <ul className="dictionary">
-            {commonWords.map((word, index) => (
-              <li key={`${index}-${word}`}>{word}</li>
-            ))}
+            {commonWords
+              .sort((a, b) => b.length - a.length || a.localeCompare(b))
+              .map((word, index) => (
+                <li key={`${index}-${word}`}>{word}</li>
+              ))}
           </ul>
         </Grid>
       </Grid>
