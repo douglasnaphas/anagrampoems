@@ -64,6 +64,9 @@ function App() {
           </Button>
         </div>
       </Box>
+      <Typography variant="h5" component="h5" align="center">
+        {inputValue}
+      </Typography>
       <Grid container>
         <Grid item xs={6} className="grid-item left-align">
           <Typography variant="h2" component="h2">
