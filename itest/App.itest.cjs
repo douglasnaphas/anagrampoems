@@ -72,7 +72,7 @@ const waitOptions = { timeout /*, visible: true */ };
     );
   }
 
-   // Check for Login button
+  // Check for Login button
   const loginButtonSelector = 'button';
   const loginButtonText = await page.evaluate((selector) => {
     const buttons = Array.from(document.querySelectorAll(selector));
