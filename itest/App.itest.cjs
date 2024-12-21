@@ -17,8 +17,8 @@ program
 const slowDown = 90;
 const timeout = 10000 + (program.opts().slow ? slowDown + 2000 : 0); // ms
 const site = program.opts().site;
-const idpUrl = commander.opts().idpUrl;
-const userPoolId = commander.opts().userPoolId;
+const idpUrl = program.opts().idpUrl;
+const userPoolId = program.opts().userPoolId;
 const browsers = []; // so we can close them all when failing a test
 const failTest = async (err, msg) => {
   console.error("test failed: " + msg);
