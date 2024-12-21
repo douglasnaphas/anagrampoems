@@ -12,6 +12,7 @@
     "cdk-bootstrap": "npx cdk bootstrap",
     "deploy-role-all-branches": "bash scripts/deploy-role-all-branches.sh",
     "deploy-role-master": "bash scripts/deploy-role-master.sh",
+    "deploy-role-test-env": "bash scripts/deploy-role-test-env.sh",
     "deploy-webapp": "bash scripts/deploy-webapp.sh",
     "synth-webapp": "bash scripts/synth-webapp.sh",
     "deploy-role-test-env": "bash scripts/deploy-role-test-env.sh"
