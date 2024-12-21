@@ -7,6 +7,7 @@ const {
   CognitoIdentityProviderClient,
   AdminCreateUserCommand,
 } = require("@aws-sdk/client-cognito-identity-provider");
+const crypto = require("crypto");
 
 program
   .option("-s, --site <URL>", "Site to run against")
