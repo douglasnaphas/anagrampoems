@@ -84,6 +84,9 @@ export class InfraStack extends cdk.Stack {
         },
       },
     });
+    new cdk.CfnOutput(this, "UserPoolId", {
+      value: userPool.userPoolId,
+    });
 
     // Cognito user pool domain
     const domainPrefixLength = 12;
@@ -121,6 +124,9 @@ export class InfraStack extends cdk.Stack {
       supportedIdentityProviders: [
         cognito.UserPoolClientIdentityProvider.COGNITO,
       ],
+    });
+    new cdk.CfnOutput(this, "UserPoolClientId", {
+      value: userPoolClient.userPoolClientId,
     });
 
     // Output the User Pool Domain URL

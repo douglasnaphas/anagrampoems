@@ -2,15 +2,23 @@
 
 const puppeteer = require("puppeteer");
 const { program } = require("commander");
-
+const stackname = require("@cdk-turnkey/stackname");
+const {
+  CognitoIdentityProviderClient,
+  AdminCreateUserCommand,
+} = require("@aws-sdk/client-cognito-identity-provider");
 
 program
   .option("-s, --site <URL>", "Site to run against")
   .option("-L, --slow", "Run headfully in slow mode")
+  .option("-I, --idp-url <URL>", "The URL expected after clicking 'Log in'")
+  .option("--user-pool-id <ID>", "The User Pool Id for the web app")
   .parse(process.argv);
 const slowDown = 90;
 const timeout = 10000 + (program.opts().slow ? slowDown + 2000 : 0); // ms
 const site = program.opts().site;
+const idpUrl = commander.opts().idpUrl;
+const userPoolId = commander.opts().userPoolId;
 const browsers = []; // so we can close them all when failing a test
 const failTest = async (err, msg) => {
   console.error("test failed: " + msg);
@@ -32,6 +40,61 @@ browserOptions.slowMo = slowDown;
 const waitOptions = { timeout /*, visible: true */ };
 
 (async () => {
+  ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+  // Setup
+
+  // Create a user who can log in
+  const randString = (options) => {
+    const { numLetters } = options;
+    const alphabet = (
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+      "abcdefghijklmnopqrstuvwxyz" +
+      "0123456789"
+    ).split("");
+    let str = "";
+    for (let i = 0; i < numLetters; i++) {
+      str =
+        str +
+        alphabet[
+          parseInt(crypto.randomBytes(3).toString("hex"), 16) % alphabet.length
+        ];
+    }
+    return str;
+  };
+  const cognitoIdentityProviderClient = new CognitoIdentityProviderClient();
+  const adminCreateUserInput = {
+    // AdminCreateUserRequest
+    UserPoolId: userPoolId, // required
+    Username: randString({ numLetters: 8 }), // required
+    MessageAction: "SUPPRESS",
+    TemporaryPassword: randString({ numLetters: 8 }),
+    UserAttributes: [
+      // AttributeListType
+      {
+        // AttributeType
+        Name: "email",
+        Value: `${randString({ numLetters: 8 })}@example.com`,
+      },
+    ],
+    ValidationData: [
+      {
+        Name: "email_verified", // required
+        Value: "True",
+      },
+    ],
+  };
+  const adminCreateUserResponse =
+    await cognitoIdentityProviderClient.send(
+      new AdminCreateUserCommand(adminCreateUserInput)
+    );
+  if (!adminCreateUserResponse || !adminCreateUserResponse.User) {
+    await failTest(
+      adminCreateUserResponse,
+      "Failed to create a user in AWS SDK v3 setup"
+    );
+  }
+
   //////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////
   // Actual test
@@ -51,7 +114,7 @@ const waitOptions = { timeout /*, visible: true */ };
     const button = document.querySelector(selector);
     return button.disabled;
   }, bustGramsButtonSelector);
-  if(!isBustGramsButtonDisabled){
+  if (!isBustGramsButtonDisabled) {
     await failTest(
       "Home page test error",
       "Expected Bust Grams button to be disabled"
@@ -73,18 +136,17 @@ const waitOptions = { timeout /*, visible: true */ };
   }
 
   // Check for Login button
-  const loginButtonSelector = 'button';
+  const loginButtonSelector = "button";
   const loginButtonText = await page.evaluate((selector) => {
     const buttons = Array.from(document.querySelectorAll(selector));
-    const loginButton = buttons.find(button => button.textContent.trim() === 'Login');
+    const loginButton = buttons.find(
+      (button) => button.textContent.trim() === "Login"
+    );
     return loginButton ? loginButton.textContent : null;
   }, loginButtonSelector);
 
-  if (loginButtonText !== 'Login') {
-    await failTest(
-      "Home page test error",
-      "Expected 'Login' button not found"
-    );
+  if (loginButtonText !== "Login") {
+    await failTest("Home page test error", "Expected 'Login' button not found");
   }
 
   ////////////////////////////////////////////////////////////////////////////////

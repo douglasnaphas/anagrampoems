@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/douglasnaphas/anagrampoems#readme",
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.716.0",
+    "@cdk-turnkey/stackname": "^2.1.0",
     "commander": "^12.1.0",
     "puppeteer": "^22.12.0"
   },
