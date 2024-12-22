@@ -85,10 +85,9 @@ const waitOptions = { timeout /*, visible: true */ };
       },
     ],
   };
-  const adminCreateUserResponse =
-    await cognitoIdentityProviderClient.send(
-      new AdminCreateUserCommand(adminCreateUserInput)
-    );
+  const adminCreateUserResponse = await cognitoIdentityProviderClient.send(
+    new AdminCreateUserCommand(adminCreateUserInput)
+  );
   if (!adminCreateUserResponse || !adminCreateUserResponse.User) {
     await failTest(
       adminCreateUserResponse,
@@ -137,18 +136,51 @@ const waitOptions = { timeout /*, visible: true */ };
   }
 
   // Check for Login button
-  const loginButtonSelector = "button";
+  const buttonsSelector = "button";
   const loginButtonText = await page.evaluate((selector) => {
     const buttons = Array.from(document.querySelectorAll(selector));
     const loginButton = buttons.find(
       (button) => button.textContent.trim() === "Login"
     );
     return loginButton ? loginButton.textContent : null;
-  }, loginButtonSelector);
+  }, buttonsSelector);
 
   if (loginButtonText !== "Login") {
     await failTest("Home page test error", "Expected 'Login' button not found");
   }
+
+  // Click the Login button
+  const loginButtonSelector = "#login-button";
+  await page.waitForSelector(loginButtonSelector);
+  await Promise.all([
+    page.click(loginButtonSelector),
+    page.waitForNavigation(),
+  ]);
+  if (page.url() !== idpUrl) {
+    failTest(
+      new Error("wrong IDP URL"),
+      `expected IDP URL ${idpUrl}, got ${page.url()}`,
+      browsers
+    );
+  }
+  // Enter username
+  const usernameSelector = `input#signInFormUsername[type='text']`;
+  await page.waitForSelector(usernameSelector);
+  await page.type(usernameSelector, adminCreateUserInput.Username);
+  // Enter temp password
+  const passwordSelector = `input#signInFormPassword[type='password']`;
+  await page.type(passwordSelector, adminCreateUserInput.TemporaryPassword);
+  const submitButtonSelector = `input[name='signInSubmitButton'][type='Submit']`;
+  await page.click(submitButtonSelector);
+  // Change password
+  const password = randString({ numLetters: 8 });
+  const newPasswordSelector = `input#new_password[type='password']`;
+  await page.waitForSelector(newPasswordSelector);
+  await page.type(newPasswordSelector, password);
+  const confirmPasswordSelector = `input#confirm_password[type='password']`;
+  await page.type(confirmPasswordSelector, password);
+  const resetPassWordButtonSelector = `button[name="reset_password"][type='submit']`;
+  await page.click(resetPassWordButtonSelector);
 
   ////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////

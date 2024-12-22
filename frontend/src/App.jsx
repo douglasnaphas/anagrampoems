@@ -82,7 +82,12 @@ function App() {
               >
                 Requires login
               </Typography>
-              <Button onClick={handleLogin} variant="contained" color="primary">
+              <Button
+                id="login-button"
+                onClick={handleLogin}
+                variant="contained"
+                color="primary"
+              >
                 Login
               </Button>
             </>
