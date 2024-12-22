@@ -189,6 +189,20 @@ const waitOptions = { timeout /*, visible: true */ };
       page.waitForNavigation(),
     ]);
 
+    // The username should be displayed
+    const usernameDisplaySelector = "#username-display";
+    await page.waitForSelector(usernameDisplaySelector);
+    const usernameDisplay = await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      return element.textContent;
+    }, usernameDisplaySelector);
+    if (usernameDisplay != adminCreateUserInput.Username) {
+      await failTest(
+        "Home page test error",
+        "Expected username not found"
+      );
+    }
+
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
     // Clean up
