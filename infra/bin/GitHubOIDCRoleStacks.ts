@@ -14,6 +14,7 @@ export const GitHubOidcRoleStacks = (app: App, repository: string) => {
         "cloudformation:ExecuteChangeSet",
         "cloudformation:GetTemplate",
         "cognito-idp:AdminCreateUser",
+        "cognito-idp:DescribeUserPool",
         "ssm:GetParameter",
         "ssm:GetParameters",
         "ssm:PutParameter",
