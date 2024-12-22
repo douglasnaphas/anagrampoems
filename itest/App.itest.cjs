@@ -184,7 +184,10 @@ const waitOptions = { timeout /*, visible: true */ };
     const confirmPasswordSelector = `input#confirm_password[type='password']`;
     await page.type(confirmPasswordSelector, password);
     const resetPassWordButtonSelector = `button[name="reset_password"][type='submit']`;
-    await page.click(resetPassWordButtonSelector);
+    await Promise.all([
+      page.click(resetPassWordButtonSelector),
+      page.waitForNavigation(),
+    ]);
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
