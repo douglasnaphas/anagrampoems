@@ -1,4 +1,4 @@
-const logger = require("../logger");
+const logger = require("./logger");
 /**
  * @return middleware satisfying:
  *   pre: res.locals.id_token is set to a JWT
