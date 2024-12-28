@@ -5,7 +5,7 @@ const firstWord = require("./firstWord");
 const words = require("./words");
 const commonWords = require("./commonWords");
 const login = require("./login");
-const getCookies = require("./getCookies");
+const getCookies = require("./getCookies/getCookies");
 
 router.get("/", (req, res) => {
   return res.send("/ from Express on AWS Lambda!");
