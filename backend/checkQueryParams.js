@@ -5,7 +5,7 @@
  * req.query
  */
 function checkQueryParams(paramNames) {
-  const responses = require("../responses");
+  const responses = require("./responses");
   const middleware = (req, res, next) => {
     if (!paramNames) return next();
     if (!Array.isArray(paramNames)) {
