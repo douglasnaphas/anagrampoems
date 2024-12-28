@@ -1,0 +1,38 @@
+const Configs = require("../Configs");
+const Logger = require("../Logger");
+const { CognitoIdentityProviderClient, DescribeUserPoolClientCommand } = require("@aws-sdk/client-cognito-identity-provider");
+
+/**
+ * @return middleware satisfying:
+ *   post: res.locals.clientSecret is the client secret for the application's
+ *         Cognito user pool client.
+ *   500 on error.
+ * @param {*} awsSdk AWS SDK with CognioIdentityServiceProvider (class)
+ *   providing an object with a method describeUserPoolClient, like
+ *   https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoIdentityServiceProvider.html#describeUserPoolClient-property
+ */
+function getCognitoClientSecret(local) {
+  const middleware = async (req, res, next) => {
+    if (local && !res.locals[local]) return next();
+    const responses = require("../responses");
+    const params = {
+      ClientId: Configs.CognitoClientID(),
+      UserPoolId: Configs.CognitoUserPoolID(),
+    };
+    const client = new CognitoIdentityProviderClient();
+
+    try {
+      const command = new DescribeUserPoolClientCommand(params);
+      const response = await client.send(command);
+      res.locals.clientSecret = response.UserPoolClient.ClientSecret;
+      next();
+    } catch (error) {
+      Logger.error(error);
+      res.status(500).send(responses.serverError());
+    }
+  };
+
+  return middleware;
+}
+
+module.exports = getCognitoClientSecret;

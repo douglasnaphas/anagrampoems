@@ -153,6 +153,17 @@ export class InfraStack extends cdk.Stack {
           "https://" +
           webappDomainName +
           "/backend/get-cookies",
+        JWKS_URL:
+          "https://cognito-idp." +
+          this.region +
+          ".amazonaws.com/" +
+          userPool.userPoolId +
+          "/.well-known/jwks.json",
+        USER_POOL_CLIENT_ID: userPoolClient.userPoolClientId,
+        USER_POOL_ID: userPool.userPoolId,
+        USER_POOL_DOMAIN: userPoolDomain.domainName,
+        REDIRECT_URI: "https://" + webappDomainName + "/backend/get-cookies",
+        REGION: this.region,
       },
     });
     const api = new apigwv2.HttpApi(this, "API", {
