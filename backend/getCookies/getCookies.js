@@ -22,7 +22,7 @@ const dbParamsPutLoginCookieInfo = require("./dbParamsPutLoginCookieInfo");
 const getCookies = [
   checkQueryParams(["code"]),
   validateQueryCode,
-  getCognitoClientSecret(awsSdk),
+  getCognitoClientSecret(),
   exchangeCodeForTokens(axios, Configs),
   getAPJwksFromAws(axios),
   checkJwt({ jwk2Pem, jwt, tokenType: "id", verifyJwt, refreshAccessToken }),
@@ -31,9 +31,9 @@ const getCookies = [
   generateOpaqueCookie({ randomCapGenerator }),
   setLoginCookie(),
   dbParamsPutLoginCookieInfo(),
-  runPut(awsSdk, "dbParamsPutLoginCookieInfo"),
+  runPut("dbParamsPutLoginCookieInfo"),
   dbParamsSaveUserTokenInfo(),
-  runPut(awsSdk, "dbParamsSaveUserTokenInfo"),
+  runPut("dbParamsSaveUserTokenInfo"),
   (req, res, next) => {
     return res.redirect(res.locals.postLoginURI);
   },

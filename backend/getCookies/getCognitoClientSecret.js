@@ -7,9 +7,6 @@ const { CognitoIdentityProviderClient, DescribeUserPoolClientCommand } = require
  *   post: res.locals.clientSecret is the client secret for the application's
  *         Cognito user pool client.
  *   500 on error.
- * @param {*} awsSdk AWS SDK with CognioIdentityServiceProvider (class)
- *   providing an object with a method describeUserPoolClient, like
- *   https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoIdentityServiceProvider.html#describeUserPoolClient-property
  */
 function getCognitoClientSecret(local) {
   const middleware = async (req, res, next) => {
