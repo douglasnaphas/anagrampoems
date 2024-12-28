@@ -8,7 +8,6 @@
  */
 function dbParamsPutLoginCookieInfo() {
   const schema = require("../schema");
-  const Configs = require("../Configs");
   const responses = require("../responses");
   const middleware = (req, res, next) => {
     if (
