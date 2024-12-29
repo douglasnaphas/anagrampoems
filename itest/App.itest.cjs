@@ -105,29 +105,7 @@ const waitOptions = { timeout /*, visible: true */ };
     const page = await browser.newPage();
     await page.goto(site);
 
-    // Enter "kate" and bust grams
-    const thingToGramSelector = "#thing-to-gram";
-    await page.waitForSelector(thingToGramSelector);
-    await page.type(thingToGramSelector, "kate");
-    const bustGramsButtonSelector = "#bust-grams-button";
-    await page.waitForSelector(bustGramsButtonSelector);
-    await page.click(bustGramsButtonSelector);
-
-    // Verify that the keyWord is displayed under "Lines"
-    const keyWordSelector = ".left-align .pill";
-    await page.waitForSelector(keyWordSelector);
-    const keyWordText = await page.evaluate((selector) => {
-      const element = document.querySelector(selector);
-      return element.textContent;
-    }, keyWordSelector);
-    if (keyWordText !== "kate") {
-      await failTest(
-        "Home page test error",
-        "Expected keyWord 'kate' not found under Lines"
-      );
-    }
-
-    // The Bust Grams button should be disabled without login
+    // The Create Poem button should be disabled without login
     const createPoemButtonSelector = "#create-poem-button";
     const isCreatePoemButtonDisabled = await page.evaluate((selector) => {
       const button = document.querySelector(selector);

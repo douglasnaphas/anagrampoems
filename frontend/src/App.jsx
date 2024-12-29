@@ -80,18 +80,36 @@ function App() {
         </Box>
       )}
       <div>
-        <Button
-          id="create-poem-button"
-          disabled={!isLoggedIn}
-          onClick={handleBustGramsClick}
-        >
-          Create poem
-        </Button>
+        <Box component="form" noValidate autoComplete="off">
+          <TextField
+            id="thing-to-gram"
+            label="Enter a name, word, or phrase"
+            variant="standard"
+            className="custom-textfield"
+            value={inputValue}
+            onChange={handleInputChange}
+          />
+          <Button
+            id="create-poem-button"
+            disabled={!isLoggedIn}
+            onClick={handleBustGramsClick}
+          >
+            Create poem
+          </Button>
+          {!isLoggedIn && (
+            <>
+              <Typography
+                id="requires-login-text"
+                variant="body2"
+                color="error"
+              >
+                Requires login
+              </Typography>
+            </>
+          )}
+        </Box>
         {!isLoggedIn && (
           <>
-            <Typography id="requires-login-text" variant="body2" color="error">
-              Requires login
-            </Typography>
             <Button
               id="login-button"
               onClick={handleLogin}
@@ -103,30 +121,6 @@ function App() {
           </>
         )}
       </div>
-      <Typography variant="h2" component="h2" align="center">
-        Try it out
-      </Typography>
-      <Box component="form" noValidate autoComplete="off">
-        <TextField
-          id="thing-to-gram"
-          label="Enter a name, word, or phrase"
-          variant="standard"
-          className="custom-textfield"
-          value={inputValue}
-          onChange={handleInputChange}
-        />
-        <Button
-          id="bust-grams-button"
-          onClick={handleBustGramsClick}
-          variant="contained"
-          color="secondary"
-        >
-          Bust Grams
-        </Button>
-      </Box>
-      <Grid container>
-        <Editor dictionary={words} keyWord={inputValue} />
-      </Grid>
     </>
   );
 }
