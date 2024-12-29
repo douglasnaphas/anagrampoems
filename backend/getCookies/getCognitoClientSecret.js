@@ -1,6 +1,9 @@
 const Configs = require("../Configs");
 const Logger = require("../Logger");
-const { CognitoIdentityProviderClient, DescribeUserPoolClientCommand } = require("@aws-sdk/client-cognito-identity-provider");
+const {
+  CognitoIdentityProviderClient,
+  DescribeUserPoolClientCommand,
+} = require("@aws-sdk/client-cognito-identity-provider");
 
 /**
  * @return middleware satisfying:
@@ -27,7 +30,7 @@ function getCognitoClientSecret(local) {
       return next();
     } catch (error) {
       console.log(error);
-      return res.status(500).send(responses.serverError());
+      return res.status(500).send(responses.SERVER_ERROR);
     }
   };
 
