@@ -72,8 +72,12 @@ function App() {
       </Typography>
       {userInfo && (
         <Box position="absolute" top={0} right={0} p={2} textAlign="right">
-          <Typography variant="body1">{userInfo.username}</Typography>
-          <Typography variant="body2">{userInfo.user_email}</Typography>
+          <Typography variant="body1" id="username-display">
+            {userInfo.username}
+          </Typography>
+          <Typography variant="body2" id="user-email-display">
+            {userInfo.user_email}
+          </Typography>
         </Box>
       )}
       <Box component="form" noValidate autoComplete="off">
