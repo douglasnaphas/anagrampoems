@@ -16,7 +16,6 @@ function App() {
   // State to hold the input value
   const [inputValue, setInputValue] = useState("");
   const [words, setWords] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
 
   const fetchWords = async (key) => {
@@ -92,13 +91,13 @@ function App() {
           <Box mt={2}>
             <Button
               id="create-poem-button"
-              disabled={!isLoggedIn}
+              disabled={!userInfo}
               onClick={handleBustGramsClick}
             >
               Create poem
             </Button>
           </Box>
-          {!isLoggedIn && (
+          {!userInfo && (
             <>
               <Typography
                 id="requires-login-text"
@@ -110,7 +109,7 @@ function App() {
             </>
           )}
         </Box>
-        {!isLoggedIn && (
+        {!userInfo && (
           <>
             <Button
               id="login-button"
