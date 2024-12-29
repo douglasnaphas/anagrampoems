@@ -10,7 +10,7 @@
 }
 
 .grid-item {
-  flex: 1
+  flex: 1;
 }
 
 .left-align {
@@ -19,4 +19,13 @@
 
 .righ-align {
   text-align: right;
+}
+
+.lines {
+  list-style-type: none;
+  padding: 0;
+}
+
+.lines li {
+  margin-bottom: 0.5rem;
 }

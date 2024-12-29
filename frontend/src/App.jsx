@@ -125,7 +125,7 @@ function App() {
         </Button>
       </Box>
       <Grid container>
-        <Editor dictionary={commonWords} />
+        <Editor dictionary={commonWords} keyWord={inputValue} />
       </Grid>
     </>
   );
