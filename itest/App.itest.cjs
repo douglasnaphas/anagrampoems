@@ -197,9 +197,24 @@ const waitOptions = { timeout /*, visible: true */ };
       return element.textContent;
     }, usernameDisplaySelector);
     if (usernameDisplay != adminCreateUserInput.Username) {
+      await failTest("Home page test error", "Expected username not found");
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    // Log out
+
+    // There should be a log out button
+    const logoutButtonSelector = "#logout-button";
+    await page.waitForSelector(logoutButtonSelector);
+    const logoutButtonText = await page.evaluate((selector) => {
+      const button = document.querySelector(selector);
+      return button.textContent;
+    }, logoutButtonSelector);
+    if (logoutButtonText !== "Log out") {
       await failTest(
         "Home page test error",
-        "Expected username not found"
+        "Expected 'Log out' button not found"
       );
     }
 
