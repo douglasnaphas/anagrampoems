@@ -15,18 +15,18 @@ import Editor from "./Editor";
 function App() {
   // State to hold the input value
   const [inputValue, setInputValue] = useState("");
-  const [commonWords, setCommonWords] = useState([]);
+  const [words, setWords] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
 
-  const fetchCommonWords = async (key) => {
+  const fetchWords = async (key) => {
     try {
-      const response = await fetch(`/backend/common-words?key=${key}`);
+      const response = await fetch(`/backend/many-words?key=${key}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      setCommonWords(data);
+      setWords(data);
     } catch (error) {
       console.error("Error fetching words:", error);
     }
@@ -53,7 +53,7 @@ function App() {
 
   const handleBustGramsClick = () => {
     if (inputValue) {
-      fetchCommonWords(inputValue);
+      fetchWords(inputValue);
     }
   };
 
@@ -125,7 +125,7 @@ function App() {
         </Button>
       </Box>
       <Grid container>
-        <Editor dictionary={commonWords} keyWord={inputValue} />
+        <Editor dictionary={words} keyWord={inputValue} />
       </Grid>
     </>
   );

@@ -5,6 +5,7 @@ exports.router = router;
 const firstWord = require("./firstWord");
 const words = require("./words");
 const commonWords = require("./commonWords");
+const manyWords = require("./manyWords");
 const login = require("./login");
 const getCookies = require("./getCookies/getCookies");
 const cookieParser = require("cookie-parser");
@@ -23,6 +24,7 @@ router.get("/hello", (req, res) => {
 router.get("/first-word", firstWord);
 router.get("/words", words);
 router.get("/common-words", commonWords);
+router.get("/many-words", manyWords);
 router.get("/login", login);
 router.get("/get-cookies", getCookies);
 
