@@ -204,17 +204,35 @@ const waitOptions = { timeout /*, visible: true */ };
     ////////////////////////////////////////////////////////////////////////////////
     // Log out
 
-    // There should be a log out button
-    const logoutButtonSelector = "#logout-button";
-    await page.waitForSelector(logoutButtonSelector);
-    const logoutButtonText = await page.evaluate((selector) => {
-      const button = document.querySelector(selector);
-      return button.textContent;
-    }, logoutButtonSelector);
-    if (logoutButtonText !== "Log out") {
+    // There should be a log out link
+    const logoutLinkSelector = "a#logout-link";
+    await page.waitForSelector(logoutLinkSelector);
+    const logoutLinkText = await page.evaluate((selector) => {
+      const link = document.querySelector(selector);
+      return link.textContent;
+    }, logoutLinkSelector);
+    if (logoutLinkText !== "Log out") {
       await failTest(
         "Home page test error",
-        "Expected 'Log out' button not found"
+        "Expected 'Log out' link not found"
+      );
+    }
+
+    // Click the log out link
+    await Promise.all([
+      page.click(logoutLinkSelector),
+      page.waitForNavigation(),
+    ]);
+
+    // Verify that the username is not displayed on the page
+    const isUsernameDisplayVisible = await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      return element ? element.offsetParent !== null : false;
+    }, usernameDisplaySelector);
+    if (isUsernameDisplayVisible) {
+      await failTest(
+        "Home page test error",
+        "Username should not be displayed after logging out"
       );
     }
 
