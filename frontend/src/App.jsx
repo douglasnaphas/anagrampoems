@@ -83,6 +83,33 @@ function App() {
           </a>
         </Box>
       )}
+      <div>
+        <Button
+          id="create-poem-button"
+          disabled={!isLoggedIn}
+          onClick={handleBustGramsClick}
+        >
+          Create poem
+        </Button>
+        {!isLoggedIn && (
+          <>
+            <Typography id="requires-login-text" variant="body2" color="error">
+              Requires login
+            </Typography>
+            <Button
+              id="login-button"
+              onClick={handleLogin}
+              variant="contained"
+              color="primary"
+            >
+              Login
+            </Button>
+          </>
+        )}
+      </div>
+      <Typography variant="h2" component="h2" align="center">
+        Try it out
+      </Typography>
       <Box component="form" noValidate autoComplete="off">
         <TextField
           id="thing-to-gram"
@@ -92,43 +119,15 @@ function App() {
           value={inputValue}
           onChange={handleInputChange}
         />
-        <div>
-          <Button
-            id="bust-grams"
-            disabled={!isLoggedIn}
-            onClick={handleBustGramsClick}
-          >
-            Bust grams
-          </Button>
-          {!isLoggedIn && (
-            <>
-              <Typography
-                id="requires-login-text"
-                variant="body2"
-                color="error"
-              >
-                Requires login
-              </Typography>
-              <Button
-                id="login-button"
-                onClick={handleLogin}
-                variant="contained"
-                color="primary"
-              >
-                Login
-              </Button>
-            </>
-          )}
-        </div>
       </Box>
       <Grid container>
         <Grid item xs={6} className="grid-item left-align">
-          <Typography variant="h2" component="h2">
+          <Typography variant="h3" component="h3">
             Lines
           </Typography>
         </Grid>
         <Grid item xs={6} className="grid-item right-align">
-          <Typography variant="h2" component="h2">
+          <Typography variant="h3" component="h3">
             Dictionary
           </Typography>
           <ul className="dictionary">

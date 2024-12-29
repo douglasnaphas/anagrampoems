@@ -111,14 +111,15 @@ const waitOptions = { timeout /*, visible: true */ };
     const bustGramsButtonSelector = "#bust-grams";
 
     // The Bust Grams button should be disabled without login
-    const isBustGramsButtonDisabled = await page.evaluate((selector) => {
+    const createPoemButtonSelector = "#create-poem-button";
+    const isCreatePoemButtonDisabled = await page.evaluate((selector) => {
       const button = document.querySelector(selector);
       return button.disabled;
-    }, bustGramsButtonSelector);
-    if (!isBustGramsButtonDisabled) {
+    }, createPoemButtonSelector);
+    if (!isCreatePoemButtonDisabled) {
       await failTest(
         "Home page test error",
-        "Expected Bust Grams button to be disabled"
+        "Expected Create Poem button to be disabled"
       );
     }
 
