@@ -17,8 +17,6 @@ const schema = {
   // relating to the compound sort key
   USERINFO_PREFIX: "userinfo",
   // indexes
-  // EMAIL_NICKNAME_INDEX I believe is not used
-  /* not used */ EMAIL_NICKNAME_INDEX: "user_email-nickname-index", // gets users
   OPAQUE_COOKIE_INDEX: "opaque_cookie_index",
   // attribute names
   // users

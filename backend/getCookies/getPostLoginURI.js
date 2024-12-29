@@ -3,8 +3,8 @@ const getPostLoginURI = () => {
     res.locals.postLoginURI = "/?";
     res.locals.postLoginURI =
       res.locals.postLoginURI +
-      `nickname=${encodeURIComponent(
-        res.locals.nickname
+      `username=${encodeURIComponent(
+        res.locals["cognito:username"]
       )}&email=${encodeURIComponent(res.locals.email)}` +
       "#/logging-in";
     return next();

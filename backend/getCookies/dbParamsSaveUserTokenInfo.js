@@ -1,11 +1,11 @@
 /**
  * Return middleware satisfying:
  * pre:
- *   1) res.locals has string properties nickname, email, sub,
+ *   1) res.locals has string properties email, sub,
  *     cognito:username, and opaqueCookie (500 if missing)
  * post: res.locals['dbParamsSaveUserTokenInfo'] is set to an object that will
  *   work as params to DynamoDB's transactWrite, to:
- *   1) create an item (sub, cognito:username) -> (nickname, email, opaqueCookie)
+ *   1) create an item (sub, cognito:username) -> (email, opaqueCookie)
  */
 function dbParamsSaveUserTokenInfo() {
   const schema = require("../schema");
@@ -13,7 +13,6 @@ function dbParamsSaveUserTokenInfo() {
   const responses = require("../responses");
   const middleware = (req, res, next) => {
     if (
-      !res.locals.nickname ||
       !res.locals.email ||
       !res.locals.sub ||
       !res.locals["cognito:username"] ||
@@ -36,7 +35,6 @@ function dbParamsSaveUserTokenInfo() {
           schema.USERINFO_PREFIX +
           schema.SEPARATOR +
           res.locals["cognito:username"],
-        [schema.USER_NICKNAME]: res.locals.nickname,
         [schema.USER_EMAIL]: res.locals.email,
         [schema.OPAQUE_COOKIE]: res.locals.opaqueCookie,
       },
