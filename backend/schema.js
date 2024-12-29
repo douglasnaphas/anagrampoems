@@ -20,8 +20,8 @@ const schema = {
   OPAQUE_COOKIE_INDEX: "opaque_cookie_index",
   // attribute names
   // users
-  USER_NICKNAME: "user_nickname",
   USER_EMAIL: "user_email",
+  USERNAME: "username",
   // opaque cookie
   OPAQUE_COOKIE: "opaque_cookie",
   OPAQUE_COOKIE_ISSUED_MILLISECONDS: "cookie_issued_ms",

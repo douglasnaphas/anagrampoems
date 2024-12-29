@@ -37,6 +37,7 @@ function dbParamsSaveUserTokenInfo() {
           res.locals["cognito:username"],
         [schema.USER_EMAIL]: res.locals.email,
         [schema.OPAQUE_COOKIE]: res.locals.opaqueCookie,
+        [schema.USERNAME]: res.locals["cognito:username"],
       },
     };
     return next();

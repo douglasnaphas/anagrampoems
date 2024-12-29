@@ -29,6 +29,7 @@ function dbParamsPutLoginCookieInfo() {
           `${res.locals.opaqueCookie}`,
         [schema.SORT_KEY]: `${schema.OPAQUE_COOKIE}`,
         [schema.USER_EMAIL]: `${res.locals.email}`,
+        [schema.USERNAME]: `${res.locals["cognito:username"]}`,
         [schema.OPAQUE_COOKIE_ISSUED_DATE]: `${res.locals.opaqueCookieIssuedDate}`,
         [schema.OPAQUE_COOKIE_ISSUED_MILLISECONDS]: `${res.locals.opaqueCookieIssuedMs}`,
         [schema.OPAQUE_COOKIE_EXPIRATION_DATE]: `${res.locals.opaqueCookieExpirationDate}`,
