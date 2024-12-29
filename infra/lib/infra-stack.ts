@@ -105,7 +105,7 @@ export class InfraStack extends cdk.Stack {
     // Cognito app client
     const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
       userPool,
-      generateSecret: false,
+      generateSecret: true,
       authFlows: {
         userPassword: true,
         userSrp: true,
