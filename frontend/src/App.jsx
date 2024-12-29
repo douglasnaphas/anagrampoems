@@ -19,10 +19,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
 
-  const getSearchParams = () => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get("key");
-  };
   const fetchCommonWords = async (key) => {
     try {
       const response = await fetch(`/backend/common-words?key=${key}`);
@@ -48,11 +44,6 @@ function App() {
     }
   };
   useEffect(() => {
-    const key = getSearchParams();
-    console.log(`found key ${key}`);
-    if (key) {
-      fetchCommonWords(key);
-    }
     whoami();
   }, []);
 
@@ -60,7 +51,11 @@ function App() {
     setInputValue(event.target.value);
   };
 
-  const handleBustGramsClick = () => {};
+  const handleBustGramsClick = () => {
+    if (inputValue) {
+      fetchCommonWords(inputValue);
+    }
+  };
 
   const handleLogin = () => {
     window.location.href = "/backend/login";
