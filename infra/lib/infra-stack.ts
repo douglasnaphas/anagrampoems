@@ -117,6 +117,7 @@ export class InfraStack extends cdk.Stack {
         },
         scopes: [
           cognito.OAuthScope.EMAIL,
+          cognito.OAuthScope.COGNITO_ADMIN,
           cognito.OAuthScope.OPENID,
           cognito.OAuthScope.PROFILE,
         ],
