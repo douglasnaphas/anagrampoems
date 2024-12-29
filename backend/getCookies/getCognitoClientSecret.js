@@ -19,13 +19,15 @@ function getCognitoClientSecret(local) {
     const client = new CognitoIdentityProviderClient();
 
     try {
+      console.log("Getting client secret...");
       const command = new DescribeUserPoolClientCommand(params);
       const response = await client.send(command);
       res.locals.clientSecret = response.UserPoolClient.ClientSecret;
-      next();
+      console.log("Got client secret.");
+      return next();
     } catch (error) {
       console.log(error);
-      res.status(500).send(responses.serverError());
+      return res.status(500).send(responses.serverError());
     }
   };
 
