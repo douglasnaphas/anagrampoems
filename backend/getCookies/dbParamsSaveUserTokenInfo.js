@@ -31,7 +31,7 @@ function dbParamsSaveUserTokenInfo() {
       TableName: schema.TABLE_NAME,
       Item: {
         [schema.PARTITION_KEY]:
-          schema.PKEY_PREFIX_SUB + schema.SEPARATOR + res.locals.sub,
+          schema.ITEM_TYPE.SUBJECT + schema.SEPARATOR + res.locals.sub,
         [schema.SORT_KEY]:
           schema.USERINFO_PREFIX +
           schema.SEPARATOR +

@@ -23,7 +23,10 @@ function dbParamsPutLoginCookieInfo() {
     res.locals.dbParamsPutLoginCookieInfo = {
       TableName: schema.TABLE_NAME,
       Item: {
-        [schema.PARTITION_KEY]: `${res.locals.opaqueCookie}`,
+        [schema.PARTITION_KEY]:
+          `${schema.ITEM_TYPE.LOGIN_COOKIE}` +
+          `${schema.SEPARATOR}` +
+          `${res.locals.opaqueCookie}`,
         [schema.SORT_KEY]: `${schema.OPAQUE_COOKIE}`,
         [schema.USER_EMAIL]: `${res.locals.email}`,
         [schema.OPAQUE_COOKIE_ISSUED_DATE]: `${res.locals.opaqueCookieIssuedDate}`,
