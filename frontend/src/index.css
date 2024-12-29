@@ -86,7 +86,7 @@ button:focus-visible {
   display: inline-block;
   padding: 0.5rem 1rem;
   margin: 0.5rem;
-  background-color: #e0e0e0;
-  border-radius: 25px;
+  background-color: #f0f0f0; /* Lighter gray */
+  border-radius: 0; /* Squared edges */
   font-size: 1rem;
 }
