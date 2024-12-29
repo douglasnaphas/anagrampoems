@@ -28,4 +28,13 @@
 
 .lines li {
   margin-bottom: 0.5rem;
+  text-align: left; /* Ensure list items are left-aligned */
+}
+
+.center-align {
+  text-align: center;
+}
+
+.dictionary li {
+  text-align: left; /* Ensure dictionary items are left-aligned */
 }

@@ -5,21 +5,21 @@ import { Typography } from "@mui/material";
 const Editor = ({ dictionary, keyWord }) => {
   return (
     <>
-      <Grid item xs={6} className="grid-item left-align">
-        <Typography variant="h3" component="h3">
+      <Grid item xs={6} className="grid-item">
+        <Typography variant="h3" component="h3" className="center-align">
           Lines
         </Typography>
-        <ul className="lines">
+        <ul className="lines left-align">
           <li key="keyWord" className="pill">
             {keyWord}
           </li>
         </ul>
       </Grid>
-      <Grid item xs={6} className="grid-item right-align">
-        <Typography variant="h3" component="h3">
+      <Grid item xs={6} className="grid-item">
+        <Typography variant="h3" component="h3" className="center-align">
           Dictionary
         </Typography>
-        <ul className="dictionary">
+        <ul className="dictionary left-align">
           {dictionary
             .sort((a, b) => b.length - a.length || a.localeCompare(b))
             .map((word, index) => (
