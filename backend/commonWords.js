@@ -15,6 +15,7 @@ const commonWords = (req, res, next) => {
     return next(err); // Pass the error to the next middleware
   }
   const wordMap = JSON.parse(wordsFileContents); // {"word":[0,0,0,1,...],...}
-  return res.send(Array.from(wordSet(key, wordMap)));
+  const keyLowerCase = key.toLowerCase();
+  return res.send(Array.from(wordSet(keyLowerCase, wordMap)));
 };
 module.exports = commonWords;

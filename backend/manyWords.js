@@ -7,6 +7,7 @@ const manyWords = (req, res, next) => {
   if (!key || key.length > 100) {
     return res.status(400).send("bad request");
   }
+  const keyLowerCase = key.toLowerCase();
   const filePath = path.join(__dirname, "words_alpha.json");
   let wordsFileContents;
   try {
@@ -15,6 +16,6 @@ const manyWords = (req, res, next) => {
     return next(err); // Pass the error to the next middleware
   }
   const wordMap = JSON.parse(wordsFileContents); // {"word":[0,0,0,1,...],...}
-  return res.send(Array.from(wordSet(key, wordMap)));
+  return res.send(Array.from(wordSet(keyLowerCase, wordMap)));
 };
 module.exports = manyWords;
