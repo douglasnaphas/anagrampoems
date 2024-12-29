@@ -5,6 +5,7 @@ const schema = require("./schema");
 
 const postPoems = async (req, res, next) => {
     if (!req.body.key) {
+        console.log("no req.body.key, req:", req);
         return res.status(400).send(responses.BAD_REQUEST);
     }
 
