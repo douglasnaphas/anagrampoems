@@ -196,6 +196,37 @@ const waitOptions = { timeout /*, visible: true */ };
       await failTest("Home page test error", "Expected username not found");
     }
 
+    // Create a poem
+    const inputValue = "Douglas Naphas";
+    const thingToGramSelector = "#thing-to-gram";
+    await page.type(thingToGramSelector, inputValue);
+    await Promise.all([
+      page.click(createPoemButtonSelector),
+      page.waitForNavigation(),
+    ]);
+    // Expect the search param poem to be in the URL and have a value of
+    // "Douglas Naphas", but URL encoded
+    const url = page.url();
+    const urlParams = new URLSearchParams(url);
+    const poem = urlParams.get("poem");
+    if (!poem || poem !== encodeURIComponent(inputValue)) {
+      await failTest(
+        "Home page test error",
+        "Expected poem in URL not found or incorrect"
+      );
+    }
+    // Expect the text "Douglas Naphas" to be displayed under Your Poems,
+    // in a ul with id "poems-list"
+    const poemsListSelector = "#poems-list";
+    await page.waitForSelector(poemsListSelector);
+    const poemsListText = await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      return element.textContent;
+    }, poemsListSelector);
+    if (!poemsListText.includes(inputValue)) {
+      await failTest("Home page test error", "Expected poem not found in list");
+    }
+
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
     // Log out

@@ -149,10 +149,10 @@ function App() {
           </>
         )}
       </div>
-      <Typography variant="h2" component="h2">
+      <Typography variant="h2" component="h2" id="your-poems">
         Your Poems
       </Typography>
-      <ul className="dictionary left-align">
+      <ul className="dictionary left-align" id="poems-list">
         {poems.map((poem, index) => (
           <li key={`${index}-${poem}`} className="pill">
             <a href={`?poem=${encodeURIComponent(poem)}`}>{poem}</a>
