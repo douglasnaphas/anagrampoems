@@ -16,6 +16,7 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const [commonWords, setCommonWords] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
 
   const getSearchParams = () => {
     const params = new URLSearchParams(window.location.search);
@@ -33,12 +34,25 @@ function App() {
       console.error("Error fetching words:", error);
     }
   };
+  const whoami = async () => {
+    try {
+      const response = await fetch("/backend/whoami");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setUserInfo(data);
+    } catch (error) {
+      console.error("Error fetching whoami:", error);
+    }
+  };
   useEffect(() => {
     const key = getSearchParams();
     console.log(`found key ${key}`);
     if (key) {
       fetchCommonWords(key);
     }
+    whoami();
   }, []);
 
   const handleInputChange = (event) => {
@@ -56,6 +70,12 @@ function App() {
       <Typography variant="h1" component="h1">
         Anagram Poems
       </Typography>
+      {userInfo && (
+        <Box position="absolute" top={0} right={0} p={2} textAlign="right">
+          <Typography variant="body1">{userInfo.username}</Typography>
+          <Typography variant="body2">{userInfo.user_email}</Typography>
+        </Box>
+      )}
       <Box component="form" noValidate autoComplete="off">
         <TextField
           id="thing-to-gram"
