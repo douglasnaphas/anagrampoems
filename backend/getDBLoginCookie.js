@@ -31,6 +31,7 @@ function getDBLoginCookie() {
 
       res.locals.username = data.Item.username;
       res.locals.user_email = data.Item.user_email;
+      res.locals.loginCookie = loginCookie;
       return next();
     } catch (err) {
       console.log("getDBLoginCookies error", err);

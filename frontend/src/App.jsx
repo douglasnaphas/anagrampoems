@@ -78,6 +78,9 @@ function App() {
           <Typography variant="body2" id="user-email-display">
             {userInfo.user_email}
           </Typography>
+          <a href="/backend/logout" id="logout-link">
+            Log out
+          </a>
         </Box>
       )}
       <Box component="form" noValidate autoComplete="off">

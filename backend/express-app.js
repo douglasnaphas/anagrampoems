@@ -12,6 +12,7 @@ const Configs = require("./Configs");
 const validateLoginCookie = require("./validateLoginCookie");
 const getDBLoginCookie = require("./getDBLoginCookie");
 const whoami = require("./whoami");
+const logout = require("./logout");
 
 router.get("/", (req, res) => {
   return res.send("/ from Express on AWS Lambda!");
@@ -28,8 +29,10 @@ router.get("/get-cookies", getCookies);
 // authenticated requests
 router.use(cookieParser());
 router.use(validateLoginCookie);
-router.use(getDBLoginCookie()); // sets res.locals.username, user_email
+router.use(getDBLoginCookie());
+// ^^ sets res.locals.username, user_email, loginCookie
 router.get("/whoami", whoami);
+router.get("logout", logout);
 app.use("/backend", router);
 
 module.exports = app;
