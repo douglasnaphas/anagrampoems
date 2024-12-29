@@ -21,7 +21,7 @@ function App() {
 
   const fetchWords = async (key) => {
     try {
-      const response = await fetch(`/backend/many-words?key=${key}`);
+      const response = await fetch(`/backend/common-words?key=${key}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
