@@ -4,7 +4,7 @@ const schema = require("./schema");
 
 function getDBLoginCookie() {
   const middleware = async (req, res, next) => {
-    const responses = require("../responses");
+    const responses = require("./responses");
     const loginCookie = req.cookies["login"];
     const client = new DynamoDBClient();
     const ddbDocClient = DynamoDBDocumentClient.from(client);
