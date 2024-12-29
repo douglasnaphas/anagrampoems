@@ -11,7 +11,6 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { Typography } from "@mui/material";
 import Editor from "./Editor";
-import { useLocation } from "react-router-dom";
 
 function App() {
   // State to hold the input value
@@ -19,7 +18,6 @@ function App() {
   const [userInfo, setUserInfo] = useState(null);
   const [poems, setPoems] = useState([]);
   const [selectedPoem, setSelectedPoem] = useState(null);
-  const location = useLocation();
 
   const whoami = async () => {
     try {
@@ -59,7 +57,7 @@ function App() {
       const decodedPoem = decodeURIComponent(poem);
       setSelectedPoem(decodedPoem);
     }
-  }, [location]);
+  }, []);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -121,7 +119,7 @@ function App() {
             <Button
               id="create-poem-button"
               disabled={!userInfo}
-              onClick={handleBustGramsClick}
+              onClick={handleCreatePoem}
             >
               Create poem
             </Button>
