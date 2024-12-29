@@ -24,7 +24,7 @@ function getCognitoClientSecret(local) {
       res.locals.clientSecret = response.UserPoolClient.ClientSecret;
       next();
     } catch (error) {
-      Logger.error(error);
+      console.log(error);
       res.status(500).send(responses.serverError());
     }
   };
