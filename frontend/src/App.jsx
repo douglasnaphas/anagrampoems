@@ -10,6 +10,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { Typography } from "@mui/material";
+import Editor from "./Editor";
 
 function App() {
   // State to hold the input value
@@ -119,25 +120,17 @@ function App() {
           value={inputValue}
           onChange={handleInputChange}
         />
+        <Button
+          id="bust-grams-button"
+          onClick={handleBustGramsClick}
+          variant="contained"
+          color="secondary"
+        >
+          Bust Grams
+        </Button>
       </Box>
       <Grid container>
-        <Grid item xs={6} className="grid-item left-align">
-          <Typography variant="h3" component="h3">
-            Lines
-          </Typography>
-        </Grid>
-        <Grid item xs={6} className="grid-item right-align">
-          <Typography variant="h3" component="h3">
-            Dictionary
-          </Typography>
-          <ul className="dictionary">
-            {commonWords
-              .sort((a, b) => b.length - a.length || a.localeCompare(b))
-              .map((word, index) => (
-                <li key={`${index}-${word}`}>{word}</li>
-              ))}
-          </ul>
-        </Grid>
+        <Editor dictionary={commonWords} />
       </Grid>
     </>
   );
