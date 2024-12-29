@@ -11,25 +11,16 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { Typography } from "@mui/material";
 import Editor from "./Editor";
+import { useLocation } from "react-router-dom";
 
 function App() {
   // State to hold the input value
   const [inputValue, setInputValue] = useState("");
-  const [words, setWords] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
+  const [poems, setPoems] = useState([]);
+  const [selectedPoem, setSelectedPoem] = useState(null);
+  const location = useLocation();
 
-  const fetchWords = async (key) => {
-    try {
-      const response = await fetch(`/backend/common-words?key=${key}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      setWords(data);
-    } catch (error) {
-      console.error("Error fetching words:", error);
-    }
-  };
   const whoami = async () => {
     try {
       const response = await fetch("/backend/whoami");
@@ -45,14 +36,52 @@ function App() {
   useEffect(() => {
     whoami();
   }, []);
+  const getPoems = async () => {
+    try {
+      const response = await fetch("/backend/poems");
+      if (!response.ok) {
+        throw new Error("Network response was not ok to GET /backend/poems");
+      }
+      const getPoemsData = await response.json();
+      setPoems(getPoemsData);
+    } catch (error) {
+      console.error("Error fetching GET /backend/poems:", error);
+    }
+  };
+  useEffect(() => {
+    getPoems();
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const poem = params.get("poem");
+    if (poem) {
+      const decodedPoem = decodeURIComponent(poem);
+      setSelectedPoem(decodedPoem);
+    }
+  }, [location]);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
-  const handleBustGramsClick = () => {
-    if (inputValue) {
-      fetchWords(inputValue);
+  const handleCreatePoem = async () => {
+    // post to /backend/poems
+    // include the input value in the body
+    try {
+      const response = await fetch("/backend/poems", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ key: inputValue }),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok to /backend/poems");
+      }
+      const createPoemData = await response.json();
+    } catch (error) {
+      console.error("Error fetching POST /backend/poems:", error);
     }
   };
 
@@ -122,6 +151,16 @@ function App() {
           </>
         )}
       </div>
+      <Typography variant="h2" component="h2">
+        Your Poems
+      </Typography>
+      <ul className="dictionary left-align">
+        {poems.map((poem, index) => (
+          <li key={`${index}-${poem}`} className="pill">
+            <a href={`?poem=${encodeURIComponent(poem)}`}>{poem}</a>
+          </li>
+        ))}
+      </ul>
     </>
   );
 }
