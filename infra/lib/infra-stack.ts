@@ -10,6 +10,7 @@ import { aws_cloudfront as cloudfront } from "aws-cdk-lib";
 import { aws_cloudfront_origins as origins } from "aws-cdk-lib";
 import { aws_cognito as cognito } from "aws-cdk-lib";
 import { aws_dynamodb as dynamodb } from "aws-cdk-lib";
+import { aws_iam as iam } from "aws-cdk-lib";
 import { RemovalPolicy } from "aws-cdk-lib";
 import path = require("path");
 const crypto = require("crypto");
@@ -188,6 +189,18 @@ export class InfraStack extends cdk.Stack {
     new cdk.CfnOutput(this, "APIHostname", {
       value: apiUrl(api),
     });
+
+    // Let the backend handler read from and write to the DynamoDB table
+    table.grantReadWriteData(webFn);
+    // Let the backend handler describe the user pool client
+    webFn.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["cognito-idp:DescribeUserPoolClient"],
+        resources: [
+          `arn:aws:cognito-idp:${userPool.stack.region}:${userPool.stack.account}:userpool/${userPool.userPoolId}`,
+        ],
+      })
+    );
 
     distro.addBehavior("/backend/*", new origins.HttpOrigin(apiUrl(api)), {
       allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
