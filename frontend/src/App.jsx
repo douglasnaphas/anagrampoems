@@ -63,26 +63,6 @@ function App() {
     setInputValue(event.target.value);
   };
 
-  const handleCreatePoem = async () => {
-    // post to /backend/poems
-    // include the input value in the body
-    try {
-      const response = await fetch("/backend/poems", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ key: inputValue }),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok to /backend/poems");
-      }
-      const createPoemData = await response.json();
-    } catch (error) {
-      console.error("Error fetching POST /backend/poems:", error);
-    }
-  };
-
   const handleLogin = () => {
     window.location.href = "/backend/login";
   };
@@ -106,7 +86,13 @@ function App() {
         </Box>
       )}
       <div>
-        <Box component="form" noValidate autoComplete="off">
+        <Box
+          component="form"
+          noValidate
+          autoComplete="off"
+          action="/backend/poems"
+          method="POST"
+        >
           <TextField
             id="thing-to-gram"
             label="Enter a name, word, or phrase"
@@ -114,12 +100,13 @@ function App() {
             className="custom-textfield"
             value={inputValue}
             onChange={handleInputChange}
+            name="key"
           />
           <Box mt={2}>
             <Button
               id="create-poem-button"
               disabled={!userInfo}
-              onClick={handleCreatePoem}
+              type="submit"
             >
               Create poem
             </Button>
