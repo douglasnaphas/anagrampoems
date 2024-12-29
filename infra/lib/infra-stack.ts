@@ -9,6 +9,7 @@ import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 import { aws_cloudfront as cloudfront } from "aws-cdk-lib";
 import { aws_cloudfront_origins as origins } from "aws-cdk-lib";
 import { aws_cognito as cognito } from "aws-cdk-lib";
+import { aws_dynamodb as dynamodb } from "aws-cdk-lib";
 import { RemovalPolicy } from "aws-cdk-lib";
 import path = require("path");
 const crypto = require("crypto");
@@ -133,6 +134,19 @@ export class InfraStack extends cdk.Stack {
     // new cdk.CfnOutput(this, "CognitoDomainUrl", {
     //   value: `https://${userPoolDomain.domainName}.auth.${this.region}.amazoncognito.com`,
     // });
+
+    // persistence
+    // DynamoDB table
+    const schema = require("../../backend/schema.js");
+    const table = new dynamodb.Table(this, "Table", {
+      partitionKey: {
+        name: schema.PARTITION_KEY,
+        type: dynamodb.AttributeType.STRING,
+      },
+      sortKey: { name: schema.SORT_KEY, type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
 
     // backend
     const webFn = new lambda.Function(this, "WebFn", {
