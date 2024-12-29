@@ -20,6 +20,10 @@ const setLoginCookie = require("./setLoginCookie");
 const dbParamsPutLoginCookieInfo = require("./dbParamsPutLoginCookieInfo");
 
 const getCookies = [
+  (req, res, next) => {
+    console.log("GET /get-cookies");
+    return next();
+  },
   checkQueryParams(["code"]),
   validateQueryCode,
   getCognitoClientSecret(),
