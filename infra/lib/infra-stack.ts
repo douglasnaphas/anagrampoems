@@ -158,6 +158,7 @@ export class InfraStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(30),
       memorySize: 3000,
       environment: {
+        TABLE_NAME: table.tableName,
         IDP_URL:
           "https://" +
           userPoolDomain.domainName +
