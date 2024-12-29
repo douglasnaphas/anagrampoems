@@ -8,7 +8,6 @@ const jwk2Pem = require("jwk-to-pem");
 const checkJwt = require("./checkJwt");
 const jwt = require("jsonwebtoken");
 const getUserInfo = require("./getUserInfo");
-const getPostLoginURI = require("./getPostLoginURI");
 const Configs = require("../Configs");
 const dbParamsSaveUserTokenInfo = require("./dbParamsSaveUserTokenInfo");
 const runPut = require("./runPut");
@@ -31,7 +30,6 @@ const getCookies = [
   getAPJwksFromAws(axios),
   checkJwt({ jwk2Pem, jwt, tokenType: "id", verifyJwt, refreshAccessToken }),
   getUserInfo(jwt),
-  getPostLoginURI(),
   generateOpaqueCookie({ randomCapGenerator }),
   setLoginCookie(),
   dbParamsPutLoginCookieInfo(),
@@ -39,7 +37,7 @@ const getCookies = [
   dbParamsSaveUserTokenInfo(),
   runPut("dbParamsSaveUserTokenInfo"),
   (req, res, next) => {
-    return res.redirect(res.locals.postLoginURI);
+    return res.redirect("/");
   },
 ];
 module.exports = getCookies;
