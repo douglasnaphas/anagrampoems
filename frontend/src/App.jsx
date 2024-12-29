@@ -89,13 +89,15 @@ function App() {
             value={inputValue}
             onChange={handleInputChange}
           />
-          <Button
-            id="create-poem-button"
-            disabled={!isLoggedIn}
-            onClick={handleBustGramsClick}
-          >
-            Create poem
-          </Button>
+          <Box mt={2}>
+            <Button
+              id="create-poem-button"
+              disabled={!isLoggedIn}
+              onClick={handleBustGramsClick}
+            >
+              Create poem
+            </Button>
+          </Box>
           {!isLoggedIn && (
             <>
               <Typography
