@@ -45,7 +45,6 @@ const postPoems = async (req, res, next) => {
   try {
     const command = new PutCommand(keyLinePutParams);
     await ddbDocClient.send(command);
-    return res.redirect(`/?poem=${encodeURIComponent(key)}`);
   } catch (err) {
     console.error("postPoems error creating key line", err);
     return res.status(500).send(responses.SERVER_ERROR);
