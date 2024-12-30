@@ -209,7 +209,7 @@ const waitOptions = { timeout /*, visible: true */ };
     const url = page.url();
     const urlParams = new URLSearchParams(new URL(url).search);
     const poem = urlParams.get("poem");
-    if (!poem || poem !== encodeURIComponent(inputValue)) {
+    if (!poem || poem !== inputValue) {
       await failTest(
         "Home page test error",
         `Expected poem in URL not found or incorrect, expected ${inputValue}, got ${poem}` +
