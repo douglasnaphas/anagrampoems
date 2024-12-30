@@ -38,3 +38,7 @@
 .dictionary li {
   text-align: left; /* Ensure dictionary items are left-aligned */
 }
+
+.selected-poem {
+  background-color: yellow; /* Change this to your desired color */
+}

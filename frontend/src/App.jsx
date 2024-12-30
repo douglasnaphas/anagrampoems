@@ -67,6 +67,10 @@ function App() {
     window.location.href = "/backend/login";
   };
 
+  const handlePoemClick = (poem) => {
+    setSelectedPoem(poem);
+  };
+
   return (
     <>
       <Typography variant="h1" component="h1">
@@ -141,8 +145,13 @@ function App() {
       </Typography>
       <ul className="dictionary left-align" id="poems-list">
         {poems.map((poem, index) => (
-          <li key={`${index}-${poem}`} className="pill">
-            <a href={`?poem=${encodeURIComponent(poem)}`}>{poem}</a>
+          <li
+            key={`${index}-${poem}`}
+            className={`pill ${selectedPoem === poem ? "selected-poem" : ""}`}
+          >
+            <a href={`?poem=${encodeURIComponent(poem)}`} onClick={() => handlePoemClick(poem)}>
+              {poem}
+            </a>
           </li>
         ))}
       </ul>
