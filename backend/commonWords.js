@@ -16,6 +16,7 @@ const commonWords = (req, res, next) => {
   }
   const wordMap = JSON.parse(wordsFileContents); // {"word":[0,0,0,1,...],...}
   const keyLowerCase = key.toLowerCase();
+  res.set("Cache-Control", "public, max-age=3600"); // Cache for 1 hour
   return res.send(Array.from(wordSet(keyLowerCase, wordMap)));
 };
 module.exports = commonWords;

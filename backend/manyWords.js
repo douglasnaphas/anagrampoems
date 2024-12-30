@@ -16,6 +16,8 @@ const manyWords = (req, res, next) => {
     return next(err); // Pass the error to the next middleware
   }
   const wordMap = JSON.parse(wordsFileContents); // {"word":[0,0,0,1,...],...}
+  res.set("Cache-Control", "public, max-age=3600"); // Cache for 1 hour
   return res.send(Array.from(wordSet(keyLowerCase, wordMap)));
 };
+
 module.exports = manyWords;
