@@ -80,40 +80,42 @@ const Editor = ({ keyWord }) => {
         >
           Dictionary
         </Typography>
-        <Typography
-          variant="h3"
-          component="h3"
-          className="center-align"
-          id="common-words-heading"
-        >
-          Common words
-        </Typography>
-        <ul className="dictionary left-align">
-          {commonWords
-            .sort((a, b) => b.length - a.length || a.localeCompare(b))
-            .map((word, index) => (
-              <li key={`${index}-${word}`} className="pill">
-                {word}
-              </li>
-            ))}
-        </ul>
-        <Typography
-          variant="h3"
-          component="h3"
-          className="center-align"
-          id="many-words-heading"
-        >
-          Many words
-        </Typography>
-        <ul className="dictionary left-align">
-          {manyWords
-            .sort((a, b) => b.length - a.length || a.localeCompare(b))
-            .map((word, index) => (
-              <li key={`${index}-${word}`} className="pill">
-                {word}
-              </li>
-            ))}
-        </ul>
+        <div className="scrollable-dictionary">
+          <Typography
+            variant="h3"
+            component="h3"
+            className="center-align"
+            id="common-words-heading"
+          >
+            Common words
+          </Typography>
+          <ul className="dictionary left-align">
+            {commonWords
+              .sort((a, b) => b.length - a.length || a.localeCompare(b))
+              .map((word, index) => (
+                <li key={`${index}-${word}`} className="pill">
+                  {word}
+                </li>
+              ))}
+          </ul>
+          <Typography
+            variant="h3"
+            component="h3"
+            className="center-align"
+            id="many-words-heading"
+          >
+            Many words
+          </Typography>
+          <ul className="dictionary left-align">
+            {manyWords
+              .sort((a, b) => b.length - a.length || a.localeCompare(b))
+              .map((word, index) => (
+                <li key={`${index}-${word}`} className="pill">
+                  {word}
+                </li>
+              ))}
+          </ul>
+        </div>
       </Grid>
     </Grid>
   );

@@ -39,6 +39,11 @@
   text-align: left; /* Ensure dictionary items are left-aligned */
 }
 
+.scrollable-dictionary {
+  max-height: 400px; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
 .selected-poem {
   background-color: yellow; /* Change this to your desired color */
 }
