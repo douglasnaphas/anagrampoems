@@ -55,7 +55,7 @@ const Editor = ({ keyWord }) => {
   }, [keyWord]);
 
   return (
-    <>
+    <Grid container spacing={2}>
       <Grid item xs={6} className="grid-item">
         <Typography
           variant="h2"
@@ -115,7 +115,7 @@ const Editor = ({ keyWord }) => {
             ))}
         </ul>
       </Grid>
-    </>
+    </Grid>
   );
 };
 
