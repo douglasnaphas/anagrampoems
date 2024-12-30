@@ -20,11 +20,16 @@ const Editor = ({ keyWord }) => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setCommonWords(data);
+        if (data && Array.isArray(data)) {
+          setCommonWords(data);
+        } else {
+          console.error("Invalid data format for common words:", data);
+        }
       } catch (error) {
         console.error("Error fetching common words:", error);
       }
     };
+
     const fetchManyWords = async () => {
       try {
         const response = await fetch(
@@ -35,11 +40,16 @@ const Editor = ({ keyWord }) => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setManyWords(data);
+        if (data && Array.isArray(data)) {
+          setManyWords(data);
+        } else {
+          console.error("Invalid data format for many words:", data);
+        }
       } catch (error) {
         console.error("Error fetching many words:", error);
       }
     };
+
     fetchCommonWords();
     fetchManyWords();
   }, [keyWord]);
