@@ -55,6 +55,8 @@ function App() {
     const poem = params.get("poem");
     if (poem) {
       const decodedPoem = decodeURIComponent(poem);
+      console.log("poem is", poem);
+      console.log("setting selected poem", decodedPoem);
       setSelectedPoem(decodedPoem);
     }
   }, []);
@@ -107,11 +109,7 @@ function App() {
             name="key"
           />
           <Box mt={2}>
-            <Button
-              id="create-poem-button"
-              disabled={!userInfo}
-              type="submit"
-            >
+            <Button id="create-poem-button" disabled={!userInfo} type="submit">
               Create poem
             </Button>
           </Box>
@@ -149,7 +147,10 @@ function App() {
             key={`${index}-${poem}`}
             className={`pill ${selectedPoem === poem ? "selected-poem" : ""}`}
           >
-            <a href={`?poem=${encodeURIComponent(poem)}`} onClick={() => handlePoemClick(poem)}>
+            <a
+              href={`?poem=${encodeURIComponent(poem)}`}
+              onClick={() => handlePoemClick(poem)}
+            >
               {poem}
             </a>
           </li>
