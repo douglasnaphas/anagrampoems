@@ -80,6 +80,9 @@ const Editor = ({ keyWord }) => {
         >
           Dictionary
         </Typography>
+        <div id="controls">
+          
+        </div>
         <div className="scrollable-dictionary">
           <Typography
             variant="h3"

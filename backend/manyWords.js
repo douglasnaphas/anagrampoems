@@ -8,7 +8,10 @@ const manyWords = (req, res, next) => {
     return res.status(400).send("bad request");
   }
   const keyLowerCase = key.toLowerCase();
-  const filePath = path.join(__dirname, "words_alpha.json");
+  const filePath = path.join(
+    __dirname,
+    "words_alpha-minus-google-10000-english-usa.json"
+  );
   let wordsFileContents;
   try {
     wordsFileContents = fs.readFileSync(filePath, "utf8");
