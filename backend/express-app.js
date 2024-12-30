@@ -37,7 +37,7 @@ router.use(getDBLoginCookie());
 // ^^ sets res.locals.username, user_email, loginCookie
 router.get("/whoami", whoami);
 router.get("logout", logout);
-router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: true }));
 router.post("/poems", postPoems);
 app.use("/backend", router);
 
