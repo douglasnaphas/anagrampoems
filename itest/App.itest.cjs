@@ -206,7 +206,7 @@ const waitOptions = { timeout /*, visible: true */ };
     ]);
     // Expect the search param poem to be in the URL and have a value of
     // "Douglas Naphas", but URL encoded
-    const url = await page.url();
+    const url = page.url();
     const urlParams = new URLSearchParams(url);
     const poem = urlParams.get("poem");
     if (!poem || poem !== encodeURIComponent(inputValue)) {
