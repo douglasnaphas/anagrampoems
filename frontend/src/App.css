@@ -40,7 +40,7 @@
 }
 
 .scrollable-dictionary {
-  max-height: 400px; /* Adjust the height as needed */
+  max-height: 800px; /* Adjust the height as needed */
   overflow-y: auto;
 }
 
