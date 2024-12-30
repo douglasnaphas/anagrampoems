@@ -16,6 +16,7 @@ const getDBLoginCookie = require("./getDBLoginCookie");
 const whoami = require("./whoami");
 const logout = require("./logout");
 const postPoems = require("./postPoems");
+const getPoems = require("./getPoems");
 
 router.get("/", (req, res) => {
   return res.send("/ from Express on AWS Lambda!");
@@ -39,6 +40,7 @@ router.get("/whoami", whoami);
 router.get("logout", logout);
 router.use(bodyParser.urlencoded({ extended: true }));
 router.post("/poems", postPoems);
+router.get("/poems", getPoems);
 app.use("/backend", router);
 
 module.exports = app;
