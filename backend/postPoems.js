@@ -39,6 +39,7 @@ const postPoems = async (req, res, next) => {
       [schema.PARTITION_KEY]: `user#${username}`,
       [schema.SORT_KEY]: `poem-line#${key}`,
       line_text: key,
+      line_order: 1,
     },
   };
 
