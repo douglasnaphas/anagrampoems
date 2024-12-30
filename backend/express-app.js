@@ -9,6 +9,7 @@ const manyWords = require("./manyWords");
 const login = require("./login");
 const getCookies = require("./getCookies/getCookies");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 const Configs = require("./Configs");
 const validateLoginCookie = require("./validateLoginCookie");
 const getDBLoginCookie = require("./getDBLoginCookie");
@@ -36,6 +37,7 @@ router.use(getDBLoginCookie());
 // ^^ sets res.locals.username, user_email, loginCookie
 router.get("/whoami", whoami);
 router.get("logout", logout);
+router.use(bodyParser.json());
 router.post("/poems", postPoems);
 app.use("/backend", router);
 
