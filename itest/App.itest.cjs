@@ -212,7 +212,8 @@ const waitOptions = { timeout /*, visible: true */ };
     if (!poem || poem !== encodeURIComponent(inputValue)) {
       await failTest(
         "Home page test error",
-        "Expected poem in URL not found or incorrect"
+        `Expected poem in URL not found or incorrect, expected ${inputValue}, got ${poem}` +
+          `, encoded inputValue is ${encodeURIComponent(inputValue)}`
       );
     }
     // Expect the text "Douglas Naphas" to be displayed under Your Poems,
