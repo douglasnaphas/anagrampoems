@@ -4,54 +4,54 @@ const responses = require("./responses");
 const schema = require("./schema");
 
 const postPoems = async (req, res, next) => {
-    if (!req.body.key) {
-        return res.status(400).send(responses.BAD_REQUEST);
-    }
+  if (!req.body.key) {
+    return res.status(400).send(responses.BAD_REQUEST);
+  }
 
-    const key = decodeURIComponent(req.body.key);
-    const username = res.locals.username;
+  const key = decodeURIComponent(req.body.key);
+  const username = res.locals.username;
 
-    const client = new DynamoDBClient();
-    const ddbDocClient = DynamoDBDocumentClient.from(client);
+  const client = new DynamoDBClient();
+  const ddbDocClient = DynamoDBDocumentClient.from(client);
 
-    const params = {
-        TableName: schema.TABLE_NAME,
-        Item: {
-            [schema.PARTITION_KEY]: `user#${username}`,
-            [schema.SORT_KEY]: `poem#${key}`,
-        },
-    };
+  const params = {
+    TableName: schema.TABLE_NAME,
+    Item: {
+      [schema.PARTITION_KEY]: `user#${username}`,
+      [schema.SORT_KEY]: `poem#${key}`,
+    },
+  };
 
-    try {
-        const command = new PutCommand(params);
-        await ddbDocClient.send(command);
-    } catch (err) {
-        console.error("postPoems error creating poem", err);
-        return res.status(500).send(responses.SERVER_ERROR);
-    }
+  try {
+    const command = new PutCommand(params);
+    await ddbDocClient.send(command);
+  } catch (err) {
+    console.error("postPoems error creating poem", err);
+    return res.status(500).send(responses.SERVER_ERROR);
+  }
 
-    // Create an item in the DynamoDB table with PK user#<username> and SK
-    // poem-line#<key>. The item should have an attribute "line_text" with the
-    // value of the key parameter.
-    const keyLinePutParams = {
-        TableName: schema.TABLE_NAME,
-        Item: {
-            [schema.PARTITION_KEY]: `user#${username}`,
-            [schema.SORT_KEY]: `poem-line#${key}`,
-            line_text: key,
-        },
-    };
+  // Create an item in the DynamoDB table with PK user#<username> and SK
+  // poem-line#<key>. The item should have an attribute "line_text" with the
+  // value of the key parameter.
+  const keyLinePutParams = {
+    TableName: schema.TABLE_NAME,
+    Item: {
+      [schema.PARTITION_KEY]: `user#${username}`,
+      [schema.SORT_KEY]: `poem-line#${key}`,
+      line_text: key,
+    },
+  };
 
-    try {
-        const command = new PutCommand(keyLinePutParams);
-        await ddbDocClient.send(command);
-        return res.redirect(`/?poem=${encodeURIComponent(key)}`);
-    } catch (err) {
-        console.error("postPoems error creating key line", err);
-        return res.status(500).send(responses.SERVER_ERROR);
-    }
-
+  try {
+    const command = new PutCommand(keyLinePutParams);
+    await ddbDocClient.send(command);
     return res.redirect(`/?poem=${encodeURIComponent(key)}`);
+  } catch (err) {
+    console.error("postPoems error creating key line", err);
+    return res.status(500).send(responses.SERVER_ERROR);
+  }
+
+  return res.redirect(`/?poem=${encodeURIComponent(key)}`);
 };
 
 module.exports = postPoems;
