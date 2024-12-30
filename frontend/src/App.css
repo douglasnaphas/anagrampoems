@@ -42,3 +42,7 @@
 .selected-poem {
   background-color: yellow; /* Change this to your desired color */
 }
+
+.selected-poem.pill {
+  background-color: yellow; /* Change this to your desired color */
+}
