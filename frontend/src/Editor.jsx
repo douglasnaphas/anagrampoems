@@ -6,7 +6,12 @@ const Editor = ({ dictionary, keyWord }) => {
   return (
     <>
       <Grid item xs={6} className="grid-item">
-        <Typography variant="h3" component="h3" className="center-align">
+        <Typography
+          variant="h2"
+          component="h2"
+          className="center-align"
+          id="lines-heading"
+        >
           Lines
         </Typography>
         <ul className="lines left-align">
@@ -16,7 +21,12 @@ const Editor = ({ dictionary, keyWord }) => {
         </ul>
       </Grid>
       <Grid item xs={6} className="grid-item">
-        <Typography variant="h3" component="h3" className="center-align">
+        <Typography
+          variant="h2"
+          component="h2"
+          className="center-align"
+          id="dictionary-heading"
+        >
           Dictionary
         </Typography>
         <ul className="dictionary left-align">

@@ -230,6 +230,33 @@ const waitOptions = { timeout /*, visible: true */ };
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
+    // Poem
+    
+    // Expect the lines heading and dictionary heading
+    const linesHeadingSelector = "#lines-heading";
+    await page.waitForSelector(linesHeadingSelector);
+    const linesHeadingText = await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      return element.textContent;
+    }
+    , linesHeadingSelector);
+    if (linesHeadingText !== "Lines") {
+      await failTest("Poem test error", "Expected 'Lines' heading not found");
+    }
+    const dictionaryHeadingSelector = "#dictionary-heading";
+    await page.waitForSelector(dictionaryHeadingSelector);
+    const dictionaryHeadingText = await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      return element.textContent;
+    }
+    , dictionaryHeadingSelector);
+    if (dictionaryHeadingText !== "Dictionary") {
+      await failTest("Poem test error", "Expected 'Dictionary' heading not found");
+    }
+    
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
     // Log out
 
     // There should be a log out link
