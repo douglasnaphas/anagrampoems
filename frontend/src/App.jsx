@@ -156,6 +156,7 @@ function App() {
           </li>
         ))}
       </ul>
+      {selectedPoem} && <Editor keyWord={selectedPoem} />
     </>
   );
 }
