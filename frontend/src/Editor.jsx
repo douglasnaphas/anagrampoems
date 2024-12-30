@@ -1,11 +1,13 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
-import { Typography } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 
 const Editor = ({ keyWord }) => {
   const [commonWords, setCommonWords] = useState([]);
   const [manyWords, setManyWords] = useState([]);
+  const [showCommonWords, setShowCommonWords] = useState(true);
+  const [showManyWords, setShowManyWords] = useState(true);
 
   useEffect(() => {
     const fetchCommonWords = async () => {
@@ -81,7 +83,12 @@ const Editor = ({ keyWord }) => {
           Dictionary
         </Typography>
         <div id="controls">
-          
+          <Button onClick={() => setShowCommonWords(!showCommonWords)}>
+            {showCommonWords ? "Hide" : "Show"} Common words
+          </Button>
+          <Button onClick={() => setShowManyWords(!showManyWords)}>
+            {showManyWords ? "Hide" : "Show"} Many words
+          </Button>
         </div>
         <div className="scrollable-dictionary">
           <Typography
@@ -92,15 +99,17 @@ const Editor = ({ keyWord }) => {
           >
             Common words
           </Typography>
-          <ul className="dictionary left-align">
-            {commonWords
-              .sort((a, b) => b.length - a.length || a.localeCompare(b))
-              .map((word, index) => (
-                <li key={`${index}-${word}`} className="pill">
-                  {word}
-                </li>
-              ))}
-          </ul>
+          {showCommonWords && (
+            <ul className="dictionary left-align">
+              {commonWords
+                .sort((a, b) => b.length - a.length || a.localeCompare(b))
+                .map((word, index) => (
+                  <li key={`${index}-${word}`} className="pill">
+                    {word}
+                  </li>
+                ))}
+            </ul>
+          )}
           <Typography
             variant="h3"
             component="h3"
@@ -109,15 +118,17 @@ const Editor = ({ keyWord }) => {
           >
             Many words
           </Typography>
-          <ul className="dictionary left-align">
-            {manyWords
-              .sort((a, b) => b.length - a.length || a.localeCompare(b))
-              .map((word, index) => (
-                <li key={`${index}-${word}`} className="pill">
-                  {word}
-                </li>
-              ))}
-          </ul>
+          {showManyWords && (
+            <ul className="dictionary left-align">
+              {manyWords
+                .sort((a, b) => b.length - a.length || a.localeCompare(b))
+                .map((word, index) => (
+                  <li key={`${index}-${word}`} className="pill">
+                    {word}
+                  </li>
+                ))}
+            </ul>
+          )}
         </div>
       </Grid>
     </Grid>
