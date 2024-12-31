@@ -112,14 +112,14 @@ const Editor = ({ keyWord }) => {
         <ul className="lines left-align" id="lines">
           {poem.poem_line_id_order &&
             poem.poem_line_id_order.map((lineId) => (
-              <li key={lineId} className="line">
+              <Grid item xs={6} key={lineId} className="line-box">
                 {lines[lineId] &&
                   lines[lineId].map((word, index) => (
                     <Box key={index} className="word-box">
                       {word}
                     </Box>
                   ))}
-              </li>
+              </Grid>
             ))}
         </ul>
       </Grid>
