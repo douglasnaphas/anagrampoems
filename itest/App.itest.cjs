@@ -254,6 +254,49 @@ const waitOptions = { timeout /*, visible: true */ };
       await failTest("Poem test error", "Expected 'Dictionary' heading not found");
     }
 
+    // Expect the text "Douglas Naphas" to be displayed as the first line under Lines
+    const linesSelector = "#lines";
+    await page.waitForSelector(linesSelector);
+    const linesText = await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      return element.textContent;
+    }, linesSelector);
+    if (!linesText.includes(inputValue)) {
+      await failTest("Poem test error", "Expected key line not found for " + inputValue);
+    }
+
+    // Expect the word "sounds" to not be displayed under Lines
+    if (linesText.includes("sounds")) {
+      await failTest("Poem test error", "Expected word 'sounds' not to be found under Lines");
+    }
+
+    // Add a line
+    const addLineSelector = "#add-line-control";
+    await page.waitForSelector(addLineSelector);
+    await page.click(addLineSelector);
+    
+    // Click the added line
+    const addedLineSelector = "#line-2";
+    await page.waitForSelector(addedLineSelector);
+    await page.click(addedLineSelector);
+
+    // Add the word "sounds" to the line
+    const soundsSelector = "#common-word-sounds";
+    await page.waitForSelector(soundsSelector);
+    await page.click(soundsSelector);
+    const addWordSelector = "#add-word-to-line-button";
+    await page.waitForSelector(addWordSelector);
+    await page.click(addWordSelector);
+
+    // Check the text content under Lines again, and expect "sounds" to be there
+    const updatedLinesText = await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      return element.textContent;
+    }, linesSelector);
+    if (!updatedLinesText.includes("sounds")) {
+      await failTest("Poem test error", "Expected word 'sounds' to be found under Lines");
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////

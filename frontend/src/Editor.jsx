@@ -218,7 +218,9 @@ const Editor = ({ keyWord }) => {
           Lines
         </Typography>
         <div className="line-controls">
-          <Button onClick={handleAddLine}>Add Line</Button>
+          <Button onClick={handleAddLine} id="add-line-control">
+            Add Line
+          </Button>
         </div>
         <ul className="lines left-align" id="lines">
           {poemLineIdOrder &&
@@ -228,6 +230,7 @@ const Editor = ({ keyWord }) => {
                 item
                 xs={12}
                 key={lineId}
+                id={`line-${lineId}`}
                 className={`line-box ${
                   selectedLineId === lineId ? "selected-line" : ""
                 }`}
@@ -312,6 +315,7 @@ const Editor = ({ keyWord }) => {
                 .map((word, index) => (
                   <li
                     key={`${index}-${word}`}
+                    id={`common-word-${word}`}
                     className={`pill ${
                       selectedWord === word ? "selected-word" : ""
                     }`}
@@ -348,6 +352,7 @@ const Editor = ({ keyWord }) => {
                 .map((word, index) => (
                   <li
                     key={`${index}-${word}`}
+                    id={`many-word-${word}`}
                     className={`pill ${
                       selectedWord === word ? "selected-word" : ""
                     }`}
