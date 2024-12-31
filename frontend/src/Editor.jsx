@@ -13,6 +13,7 @@ const Editor = ({ keyWord }) => {
   const [lines, setLines] = useState({});
   const [poemLineIdOrder, setPoemLineIdOrder] = useState([]);
   const [selectedLineId, setSelectedLineId] = useState(null);
+  const [selectedWord, setSelectedWord] = useState(null);
 
   useEffect(() => {
     const fetchCommonWords = async () => {
@@ -167,6 +168,10 @@ const Editor = ({ keyWord }) => {
     }
   };
 
+  const handleWordClick = (word) => {
+    setSelectedWord(word);
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={6} className="grid-item">
@@ -241,7 +246,11 @@ const Editor = ({ keyWord }) => {
               {commonWords
                 .sort((a, b) => b.length - a.length || a.localeCompare(b))
                 .map((word, index) => (
-                  <li key={`${index}-${word}`} className="pill">
+                  <li
+                    key={`${index}-${word}`}
+                    className={`pill ${selectedWord === word ? "selected-word" : ""}`}
+                    onClick={() => handleWordClick(word)}
+                  >
                     {word}
                   </li>
                 ))}
@@ -260,7 +269,11 @@ const Editor = ({ keyWord }) => {
               {manyWords
                 .sort((a, b) => b.length - a.length || a.localeCompare(b))
                 .map((word, index) => (
-                  <li key={`${index}-${word}`} className="pill">
+                  <li
+                    key={`${index}-${word}`}
+                    className={`pill ${selectedWord === word ? "selected-word" : ""}`}
+                    onClick={() => handleWordClick(word)}
+                  >
                     {word}
                   </li>
                 ))}

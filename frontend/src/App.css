@@ -76,6 +76,10 @@
   background-color: yellow; /* Change this to your desired color */
 }
 
+.selected-word {
+  background-color: lightblue; /* Change this to your desired color */
+}
+
 .line-controls {
   display: flex;
   flex-direction: column;
