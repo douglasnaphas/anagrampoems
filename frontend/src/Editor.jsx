@@ -4,6 +4,8 @@ import Grid from "@mui/material/Grid";
 import { Typography, Button, Box } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { letters, aContainsB } from "./letters";
 
 const Editor = ({ keyWord }) => {
   const [commonWords, setCommonWords] = useState([]);
@@ -104,9 +106,7 @@ const Editor = ({ keyWord }) => {
 
   const handleAddLine = async () => {
     // Compute the new lineId
-    const newLineId = poemLineIdOrder
-      ? Math.max(...poemLineIdOrder) + 1
-      : 1;
+    const newLineId = poemLineIdOrder ? Math.max(...poemLineIdOrder) + 1 : 1;
 
     try {
       const response = await fetch(`/backend/poem-lines`, {
@@ -156,7 +156,10 @@ const Editor = ({ keyWord }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ key: keyWord, poemLineIdOrder: newPoemLineIdOrder }),
+        body: JSON.stringify({
+          key: keyWord,
+          poemLineIdOrder: newPoemLineIdOrder,
+        }),
       });
       if (!response.ok) {
         throw new Error("Network response was not ok, updating line order");
@@ -195,7 +198,9 @@ const Editor = ({ keyWord }) => {
                 item
                 xs={12}
                 key={lineId}
-                className={`line-box ${selectedLineId === lineId ? "selected-line" : ""}`}
+                className={`line-box ${
+                  selectedLineId === lineId ? "selected-line" : ""
+                }`}
                 onClick={() => handleLineClick(lineId)}
               >
                 <Grid item xs={11}>
@@ -232,6 +237,22 @@ const Editor = ({ keyWord }) => {
           <Button onClick={() => setShowManyWords(!showManyWords)}>
             {showManyWords ? "Hide" : "Show"} Many words
           </Button>
+          {selectedLineId && selectedWord && (
+            <Button
+              id="add-word-to-line-button"
+              disabled={
+                !aContainsB(
+                  key,
+                  lines[selectedLineId].reduce(
+                    (wholeLine, word) => wholeLine + word,
+                    ""
+                  ) + selectedWord
+                )
+              }
+            >
+              <ArrowBackIcon />
+            </Button>
+          )}
         </div>
         <div className="scrollable-dictionary">
           <Typography
@@ -249,7 +270,9 @@ const Editor = ({ keyWord }) => {
                 .map((word, index) => (
                   <li
                     key={`${index}-${word}`}
-                    className={`pill ${selectedWord === word ? "selected-word" : ""}`}
+                    className={`pill ${
+                      selectedWord === word ? "selected-word" : ""
+                    }`}
                     onClick={() => handleWordClick(word)}
                   >
                     {word}
@@ -272,7 +295,9 @@ const Editor = ({ keyWord }) => {
                 .map((word, index) => (
                   <li
                     key={`${index}-${word}`}
-                    className={`pill ${selectedWord === word ? "selected-word" : ""}`}
+                    className={`pill ${
+                      selectedWord === word ? "selected-word" : ""
+                    }`}
                     onClick={() => handleWordClick(word)}
                   >
                     {word}
