@@ -55,8 +55,6 @@ function App() {
     const poem = params.get("poem");
     if (poem) {
       const decodedPoem = decodeURIComponent(poem);
-      console.log("poem is", poem);
-      console.log("setting selected poem", decodedPoem);
       setSelectedPoem(decodedPoem);
     }
   }, []);
