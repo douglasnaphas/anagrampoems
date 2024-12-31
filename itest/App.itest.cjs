@@ -289,13 +289,15 @@ const waitOptions = { timeout /*, visible: true */ };
     await page.click(addWordSelector);
 
     // Check the text content under Lines again, and expect "sounds" to be there
-    const updatedLinesText = await page.evaluate((selector) => {
-      const element = document.querySelector(selector);
-      return element.textContent;
-    }, linesSelector);
-    if (!updatedLinesText.includes("sounds")) {
-      await failTest("Poem test error", "Expected word 'sounds' to be found under Lines");
-    }
+    await page.waitForFunction(
+      (selector, text) => {
+        const element = document.querySelector(selector);
+        return element && element.textContent.includes(text);
+      },
+      {},
+      linesSelector,
+      "sounds"
+    );
 
     // Look for a Delete Poem button
     const deletePoemButtonSelector = "#delete-poem-button";
