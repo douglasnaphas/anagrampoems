@@ -242,7 +242,7 @@ const Editor = ({ keyWord }) => {
               id="add-word-to-line-button"
               disabled={
                 !aContainsB(
-                  key,
+                  keyWord,
                   lines[selectedLineId].reduce(
                     (wholeLine, word) => wholeLine + word,
                     ""
