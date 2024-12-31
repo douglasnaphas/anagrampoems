@@ -81,7 +81,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-right: 1rem;
+  margin-left: 1rem;
 }
 
 .line-controls svg {

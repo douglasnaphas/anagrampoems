@@ -192,12 +192,6 @@ const Editor = ({ keyWord }) => {
                 className={`line-box ${selectedLineId === lineId ? "selected-line" : ""}`}
                 onClick={() => handleLineClick(lineId)}
               >
-                {selectedLineId === lineId && (
-                  <Grid item xs={1} className="line-controls">
-                    <ArrowUpwardIcon onClick={() => handleMoveLine("up")} />
-                    <ArrowDownwardIcon onClick={() => handleMoveLine("down")} />
-                  </Grid>
-                )}
                 <Grid item xs={11}>
                   {lines[lineId] &&
                     lines[lineId].map((word, index) => (
@@ -206,6 +200,12 @@ const Editor = ({ keyWord }) => {
                       </Box>
                     ))}
                 </Grid>
+                {selectedLineId === lineId && (
+                  <Grid item xs={1} className="line-controls">
+                    <ArrowUpwardIcon onClick={() => handleMoveLine("up")} />
+                    <ArrowDownwardIcon onClick={() => handleMoveLine("down")} />
+                  </Grid>
+                )}
               </Grid>
             ))}
         </ul>
