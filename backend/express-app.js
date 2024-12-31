@@ -17,6 +17,8 @@ const whoami = require("./whoami");
 const logout = require("./logout");
 const postPoems = require("./postPoems");
 const getPoems = require("./getPoems");
+const getPoem = require("./getPoem");
+const getPoemLines = require("./getPoemLines");
 
 router.get("/", (req, res) => {
   return res.send("/ from Express on AWS Lambda!");
@@ -41,6 +43,8 @@ router.get("logout", logout);
 router.use(bodyParser.urlencoded({ extended: true }));
 router.post("/poems", postPoems);
 router.get("/poems", getPoems);
+router.get("/poem", getPoem);
+router.get("/poem-lines", getPoemLines);
 app.use("/backend", router);
 
 module.exports = app;

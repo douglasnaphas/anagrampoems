@@ -32,15 +32,15 @@ const postPoems = async (req, res, next) => {
   }
 
   // Create an item in the DynamoDB table with PK user#<username> and SK
-  // poem-line#<key>. The item should have an attribute "line_text" with the
-  // value of the key parameter.
+  // poem-line#<key>. The item should have an attribute "line_words" with a
+  // list of words in the line, for now just key.
   const lineId = 1;
   const keyLinePutParams = {
     TableName: schema.TABLE_NAME,
     Item: {
       [schema.PARTITION_KEY]: `user#${username}`,
       [schema.SORT_KEY]: `poem-line#${key}#${lineId}`,
-      line_text: key,
+      line_words: [key],
     },
   };
 

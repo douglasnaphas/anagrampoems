@@ -1,13 +1,15 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
-import { Typography, Button } from "@mui/material";
+import { Typography, Button, Box } from "@mui/material";
 
 const Editor = ({ keyWord }) => {
   const [commonWords, setCommonWords] = useState([]);
   const [manyWords, setManyWords] = useState([]);
   const [showCommonWords, setShowCommonWords] = useState(true);
   const [showManyWords, setShowManyWords] = useState(true);
+  const [lines, setLines] = useState({});
+  const [poem, setPoem] = useState({});
 
   useEffect(() => {
     const fetchCommonWords = async () => {
@@ -52,8 +54,48 @@ const Editor = ({ keyWord }) => {
       }
     };
 
+    const fetchLines = async () => {
+      try {
+        const response = await fetch(
+          `/backend/poem-lines?key=${encodeURIComponent(keyWord)}`
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok, fetching lines");
+        }
+        const data = await response.json();
+        if (data && typeof data === "object") {
+          setLines(data);
+        } else {
+          console.error("Invalid data format for lines:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching lines:", error);
+      }
+    };
+
+    const fetchPoem = async () => {
+      try {
+        const response = await fetch(
+          `/backend/poem?key=${encodeURIComponent(keyWord)}`
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok, fetching poem");
+        }
+        const data = await response.json();
+        if (data && typeof data === "object") {
+          setPoem(data);
+        } else {
+          console.error("Invalid data format for poem:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching poem:", error);
+      }
+    };
+
     fetchCommonWords();
     fetchManyWords();
+    fetchLines();
+    fetchPoem();
   }, [keyWord]);
 
   return (
@@ -67,10 +109,18 @@ const Editor = ({ keyWord }) => {
         >
           Lines
         </Typography>
-        <ul className="lines left-align">
-          <li key="keyWord" className="pill">
-            {keyWord}
-          </li>
+        <ul className="lines left-align" id="lines">
+          {poem.poem_line_id_order &&
+            poem.poem_line_id_order.map((lineId) => (
+              <li key={lineId} className="line">
+                {lines[lineId] &&
+                  lines[lineId].map((word, index) => (
+                    <Box key={index} className="word-box">
+                      {word}
+                    </Box>
+                  ))}
+              </li>
+            ))}
         </ul>
       </Grid>
       <Grid item xs={6} className="grid-item">

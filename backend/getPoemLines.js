@@ -18,16 +18,18 @@ const getPoemLines = async (req, res) => {
     TableName: schema.TABLE_NAME,
     KeyConditionExpression: "PK = :pk and begins_with(SK, :sk)",
     ExpressionAttributeValues: {
-      ":pk": `user#${res.locas.username}`,
+      ":pk": `user#${res.locals.username}`,
       ":sk": `poem-line#${key}`,
     },
   };
 
   try {
     const data = await docClient.send(new QueryCommand(params));
-    const lines = data.Items.sort((a, b) => a.line_number - b.line_number).map(
-      (item) => item.line_text
-    );
+    const lines = data.Items.reduce((acc, item) => {
+      const line_id = item.SK.split("#").slice(-1)[0];
+      acc[line_id] = item.line_words;
+      return acc;
+    }, {});
     return res.status(200).send(lines);
   } catch (error) {
     console.error("Error retrieving poem lines:", error);
