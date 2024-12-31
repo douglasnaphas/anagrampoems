@@ -176,6 +176,37 @@ const Editor = ({ keyWord }) => {
     setSelectedWord(word);
   };
 
+  const handleAddWordToLine = async () => {
+    if (selectedLineId === null || selectedWord === null) return;
+
+    const newLineWords = [...lines[selectedLineId], selectedWord];
+
+    try {
+      const response = await fetch(`/backend/line-words`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          key: keyWord,
+          lineId: selectedLineId,
+          lineWords: newLineWords,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok, updating line words");
+      }
+
+      // Update lines state with the new word list for the selected line
+      setLines((prevLines) => ({
+        ...prevLines,
+        [selectedLineId]: newLineWords,
+      }));
+    } catch (error) {
+      console.error("Error updating line words:", error);
+    }
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={6} className="grid-item">
@@ -240,6 +271,7 @@ const Editor = ({ keyWord }) => {
           {selectedLineId && selectedWord && (
             <Button
               id="add-word-to-line-button"
+              onClick={handleAddWordToLine}
               disabled={
                 !aContainsB(
                   keyWord,

@@ -21,6 +21,7 @@ const getPoem = require("./getPoem");
 const getPoemLines = require("./getPoemLines");
 const postPoemLines = require("./postPoemLines");
 const postLineOrder = require("./postLineOrder");
+const putLineWords = require("./putLineWords");
 
 router.get("/", (req, res) => {
   return res.send("/ from Express on AWS Lambda!");
@@ -36,19 +37,21 @@ router.get("/login", login);
 router.get("/get-cookies", getCookies);
 
 // authenticated requests
-router.use(cookieParser());
+router.use(cookieParser()); // TODO: Does this check cookie expiration?
 router.use(validateLoginCookie);
 router.use(getDBLoginCookie());
 // ^^ sets res.locals.username, user_email, loginCookie
+// sends 401 if loginCookie is not found or is logged out
 router.get("/whoami", whoami);
 router.get("logout", logout);
 
 // Use bodyParser.urlencoded for /poems route
 router.post("/poems", bodyParser.urlencoded({ extended: true }), postPoems);
 
-// Use bodyParser.json for /poem-lines and /line-order routes
+// Use bodyParser.json for /poem-lines, /line-order, and /line-words routes
 router.post("/poem-lines", bodyParser.json(), postPoemLines);
 router.post("/line-order", bodyParser.json(), postLineOrder);
+router.put("/line-words", bodyParser.json(), putLineWords);
 
 router.get("/poems", getPoems);
 router.get("/poem", getPoem);
