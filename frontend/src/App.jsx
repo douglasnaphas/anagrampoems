@@ -208,6 +208,7 @@ function App() {
                 onClick={() => {}}
                 color="error"
                 variant="outlined"
+                sx={{ borderColor: 'error.main', color: 'error.main' }}
                 autoFocus
               >
                 Yes, delete
