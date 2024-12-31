@@ -2,6 +2,8 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import { Typography, Button, Box } from "@mui/material";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 const Editor = ({ keyWord }) => {
   const [commonWords, setCommonWords] = useState([]);
@@ -132,6 +134,39 @@ const Editor = ({ keyWord }) => {
     setSelectedLineId(lineId);
   };
 
+  const handleMoveLine = async (direction) => {
+    if (selectedLineId === null) return;
+
+    const currentIndex = poemLineIdOrder.indexOf(selectedLineId);
+    if (currentIndex === -1) return;
+
+    const newIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+    if (newIndex < 0 || newIndex >= poemLineIdOrder.length) return;
+
+    const newPoemLineIdOrder = [...poemLineIdOrder];
+    [newPoemLineIdOrder[currentIndex], newPoemLineIdOrder[newIndex]] = [
+      newPoemLineIdOrder[newIndex],
+      newPoemLineIdOrder[currentIndex],
+    ];
+
+    try {
+      const response = await fetch(`/backend/line-order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ key: keyWord, poemLineIdOrder: newPoemLineIdOrder }),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok, updating line order");
+      }
+
+      setPoemLineIdOrder(newPoemLineIdOrder);
+    } catch (error) {
+      console.error("Error updating line order:", error);
+    }
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={6} className="grid-item">
@@ -148,20 +183,29 @@ const Editor = ({ keyWord }) => {
         </div>
         <ul className="lines left-align" id="lines">
           {poemLineIdOrder &&
-            poemLineIdOrder.map((lineId) => (
+            poemLineIdOrder.map((lineId, index) => (
               <Grid
+                container
                 item
-                xs={6}
+                xs={12}
                 key={lineId}
                 className={`line-box ${selectedLineId === lineId ? "selected-line" : ""}`}
                 onClick={() => handleLineClick(lineId)}
               >
-                {lines[lineId] &&
-                  lines[lineId].map((word, index) => (
-                    <Box key={index} className="word-box">
-                      {word}
-                    </Box>
-                  ))}
+                {selectedLineId === lineId && (
+                  <Grid item xs={1} className="line-controls">
+                    <ArrowUpwardIcon onClick={() => handleMoveLine("up")} />
+                    <ArrowDownwardIcon onClick={() => handleMoveLine("down")} />
+                  </Grid>
+                )}
+                <Grid item xs={11}>
+                  {lines[lineId] &&
+                    lines[lineId].map((word, index) => (
+                      <Box key={index} className="word-box">
+                        {word}
+                      </Box>
+                    ))}
+                </Grid>
               </Grid>
             ))}
         </ul>

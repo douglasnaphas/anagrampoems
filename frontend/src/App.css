@@ -69,8 +69,22 @@
   display: flex;
   flex-wrap: wrap;
   cursor: pointer;
+  position: relative;
 }
 
 .selected-line {
   background-color: yellow; /* Change this to your desired color */
+}
+
+.line-controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.line-controls svg {
+  cursor: pointer;
+  margin: 0.2rem 0;
 }
