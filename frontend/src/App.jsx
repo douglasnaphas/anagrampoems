@@ -201,6 +201,7 @@ function App() {
                 onClick={handleCloseDialog}
                 color="primary"
                 variant="contained"
+                autoFocus
               >
                 Cancel
               </Button>
@@ -208,7 +209,6 @@ function App() {
                 onClick={() => {}}
                 color="error"
                 variant="outlined"
-                autoFocus
               >
                 Yes, delete
               </Button>
