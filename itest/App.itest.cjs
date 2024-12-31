@@ -314,6 +314,21 @@ const waitOptions = { timeout /*, visible: true */ };
     await page.waitForSelector(cancelDeletePoemSelector);
     await page.click(cancelDeletePoemSelector);
 
+    // Click the Delete Poem button, then confirm
+    await page.click(deletePoemButtonSelector);
+    const confirmDeletePoemSelector = "#confirm-delete-poem-button";
+    await page.waitForSelector(confirmDeletePoemSelector);
+    await page.click(confirmDeletePoemSelector);
+
+    // Expect the text "Douglas Naphas" to not be displayed under Your Poems
+    const poemsListTextPostDelete = await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      return element.textContent;
+    }, poemsListSelector);
+    if (poemsListTextPostDelete.includes(inputValue)) {
+      await failTest("Poem test error", "Expected poem to be deleted");
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////

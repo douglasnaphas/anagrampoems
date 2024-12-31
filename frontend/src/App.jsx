@@ -206,6 +206,7 @@ function App() {
                 Cancel
               </Button>
               <Button
+                id="confirm-delete-poem-button"
                 onClick={() => {}}
                 color="error"
                 variant="outlined"
