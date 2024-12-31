@@ -253,7 +253,7 @@ const waitOptions = { timeout /*, visible: true */ };
     if (dictionaryHeadingText !== "Dictionary") {
       await failTest("Poem test error", "Expected 'Dictionary' heading not found");
     }
-    
+
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
@@ -288,6 +288,18 @@ const waitOptions = { timeout /*, visible: true */ };
       await failTest(
         "Home page test error",
         "Username should not be displayed after logging out"
+      );
+    }
+
+    // The Login button should be displayed
+    const isLoginButtonVisible = await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      return element ? element.offsetParent !== null : false;
+    }, loginButtonSelector);
+    if (!isLoginButtonVisible) {
+      await failTest(
+        "Home page test error",
+        "Login button should be displayed after logging out"
       );
     }
 
