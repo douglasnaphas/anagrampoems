@@ -10,6 +10,7 @@ const Editor = ({ keyWord }) => {
   const [showManyWords, setShowManyWords] = useState(true);
   const [lines, setLines] = useState({});
   const [poemLineIdOrder, setPoemLineIdOrder] = useState([]);
+  const [selectedLineId, setSelectedLineId] = useState(null);
 
   useEffect(() => {
     const fetchCommonWords = async () => {
@@ -127,6 +128,10 @@ const Editor = ({ keyWord }) => {
     }
   };
 
+  const handleLineClick = (lineId) => {
+    setSelectedLineId(lineId);
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={6} className="grid-item">
@@ -144,7 +149,13 @@ const Editor = ({ keyWord }) => {
         <ul className="lines left-align" id="lines">
           {poemLineIdOrder &&
             poemLineIdOrder.map((lineId) => (
-              <Grid item xs={6} key={lineId} className="line-box">
+              <Grid
+                item
+                xs={6}
+                key={lineId}
+                className={`line-box ${selectedLineId === lineId ? "selected-line" : ""}`}
+                onClick={() => handleLineClick(lineId)}
+              >
                 {lines[lineId] &&
                   lines[lineId].map((word, index) => (
                     <Box key={index} className="word-box">

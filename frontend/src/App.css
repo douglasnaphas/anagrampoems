@@ -68,4 +68,9 @@
   background-color: transparent;
   display: flex;
   flex-wrap: wrap;
+  cursor: pointer;
+}
+
+.selected-line {
+  background-color: yellow; /* Change this to your desired color */
 }
