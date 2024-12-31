@@ -297,6 +297,17 @@ const waitOptions = { timeout /*, visible: true */ };
       await failTest("Poem test error", "Expected word 'sounds' to be found under Lines");
     }
 
+    // Look for a Delete Poem button
+    const deletePoemButtonSelector = "#delete-poem-button";
+    const isDeletePoemButtonVisible = await page.evaluate((selector) => {
+      const button = document.querySelector(selector);
+      return button ? button.offsetParent !== null : false;
+    }
+    , deletePoemButtonSelector);
+    if (!isDeletePoemButtonVisible) {
+      await failTest("Poem test error", "Expected 'Delete Poem' button not found");
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
