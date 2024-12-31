@@ -4,6 +4,11 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import "./App.css";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -18,6 +23,7 @@ function App() {
   const [userInfo, setUserInfo] = useState(null);
   const [poems, setPoems] = useState([]);
   const [selectedPoem, setSelectedPoem] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const whoami = async () => {
     try {
@@ -69,6 +75,14 @@ function App() {
 
   const handlePoemClick = (poem) => {
     setSelectedPoem(poem);
+  };
+
+  const handleDeleteClick = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
 
   return (
@@ -154,7 +168,54 @@ function App() {
           </li>
         ))}
       </ul>
-      {selectedPoem && <Editor keyWord={selectedPoem} />}
+      {selectedPoem && (
+        <>
+          <Editor keyWord={selectedPoem} />
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Button
+              id="delete-poem-button"
+              variant="outlined"
+              color="error"
+              onClick={handleDeleteClick}
+            >
+              Delete Poem
+            </Button>
+          </Box>
+          <Dialog
+            open={openDialog}
+            onClose={handleCloseDialog}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Delete the poem for " + selectedPoem + "?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Are you sure you want to delete the poem for "{selectedPoem}"?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                id="cancel-delete-poem-button"
+                onClick={handleCloseDialog}
+                color="primary"
+                variant="contained"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {}}
+                color="error"
+                variant="outlined"
+                autoFocus
+              >
+                Yes, delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      )}
     </>
   );
 }

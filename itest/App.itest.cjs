@@ -308,6 +308,12 @@ const waitOptions = { timeout /*, visible: true */ };
       await failTest("Poem test error", "Expected 'Delete Poem' button not found");
     }
 
+    // Click the Delete Poem button, then cancel
+    await page.click(deletePoemButtonSelector);
+    const cancelDeletePoemSelector = "#cancel-delete-poem-button";
+    await page.waitForSelector(cancelDeletePoemSelector);
+    await page.click(cancelDeletePoemSelector);
+
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
