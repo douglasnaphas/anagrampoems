@@ -9,7 +9,7 @@ const Editor = ({ keyWord }) => {
   const [showCommonWords, setShowCommonWords] = useState(true);
   const [showManyWords, setShowManyWords] = useState(true);
   const [lines, setLines] = useState({});
-  const [poem, setPoem] = useState({});
+  const [poemLineIdOrder, setPoemLineIdOrder] = useState([]);
 
   useEffect(() => {
     const fetchCommonWords = async () => {
@@ -83,7 +83,7 @@ const Editor = ({ keyWord }) => {
         }
         const data = await response.json();
         if (data && typeof data === "object") {
-          setPoem(data);
+          setPoemLineIdOrder(data.poem_line_id_order);
         } else {
           console.error("Invalid data format for poem:", data);
         }
@@ -98,6 +98,35 @@ const Editor = ({ keyWord }) => {
     fetchPoem();
   }, [keyWord]);
 
+  const handleAddLine = async () => {
+    // Compute the new lineId
+    const newLineId = poemLineIdOrder
+      ? Math.max(...poemLineIdOrder) + 1
+      : 1;
+
+    try {
+      const response = await fetch(`/backend/poem-lines`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ key: keyWord, lineId: newLineId }),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok, adding line");
+      }
+
+      // Update lines and poemLineIdOrder based on the previous values
+      setLines((prevLines) => ({
+        ...prevLines,
+        [newLineId]: [],
+      }));
+      setPoemLineIdOrder((prevOrder) => [...prevOrder, newLineId]);
+    } catch (error) {
+      console.error("Error adding line:", error);
+    }
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={6} className="grid-item">
@@ -109,9 +138,12 @@ const Editor = ({ keyWord }) => {
         >
           Lines
         </Typography>
+        <div className="line-controls">
+          <Button onClick={handleAddLine}>Add Line</Button>
+        </div>
         <ul className="lines left-align" id="lines">
-          {poem.poem_line_id_order &&
-            poem.poem_line_id_order.map((lineId) => (
+          {poemLineIdOrder &&
+            poemLineIdOrder.map((lineId) => (
               <Grid item xs={6} key={lineId} className="line-box">
                 {lines[lineId] &&
                   lines[lineId].map((word, index) => (

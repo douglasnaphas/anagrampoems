@@ -19,6 +19,7 @@ const postPoems = require("./postPoems");
 const getPoems = require("./getPoems");
 const getPoem = require("./getPoem");
 const getPoemLines = require("./getPoemLines");
+const postPoemLines = require("./postPoemLines");
 
 router.get("/", (req, res) => {
   return res.send("/ from Express on AWS Lambda!");
@@ -40,8 +41,13 @@ router.use(getDBLoginCookie());
 // ^^ sets res.locals.username, user_email, loginCookie
 router.get("/whoami", whoami);
 router.get("logout", logout);
-router.use(bodyParser.urlencoded({ extended: true }));
-router.post("/poems", postPoems);
+
+// Use bodyParser.urlencoded for /poems route
+router.post("/poems", bodyParser.urlencoded({ extended: true }), postPoems);
+
+// Use bodyParser.json for /poem-lines route
+router.post("/poem-lines", bodyParser.json(), postPoemLines);
+
 router.get("/poems", getPoems);
 router.get("/poem", getPoem);
 router.get("/poem-lines", getPoemLines);
