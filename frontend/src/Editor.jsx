@@ -13,7 +13,7 @@ const Editor = ({ keyWord }) => {
   const [lines, setLines] = useState({});
   const [poemLineIdOrder, setPoemLineIdOrder] = useState([]);
   const [selectedLineId, setSelectedLineId] = useState(null);
-  const [selectedWord, setSelectedWord] = useState(null);
+  const [selectedWord, setSelectedWord] = useState(null); // Ensure this state is initialized
 
   useEffect(() => {
     const fetchCommonWords = async () => {
@@ -253,6 +253,7 @@ const Editor = ({ keyWord }) => {
                     onClick={() => handleWordClick(word)}
                   >
                     {word}
+                    {selectedWord === word && "*"}
                   </li>
                 ))}
             </ul>
@@ -276,6 +277,7 @@ const Editor = ({ keyWord }) => {
                     onClick={() => handleWordClick(word)}
                   >
                     {word}
+                    {selectedWord === word && "*"}
                   </li>
                 ))}
             </ul>
