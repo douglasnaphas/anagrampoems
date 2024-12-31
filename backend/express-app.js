@@ -43,7 +43,7 @@ router.use(getDBLoginCookie());
 // ^^ sets res.locals.username, user_email, loginCookie
 // sends 401 if loginCookie is not found or is logged out
 router.get("/whoami", whoami);
-router.get("logout", logout);
+router.get("/logout", logout);
 
 // Use bodyParser.urlencoded for /poems route
 router.post("/poems", bodyParser.urlencoded({ extended: true }), postPoems);
