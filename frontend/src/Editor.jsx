@@ -169,6 +169,7 @@ const Editor = ({ keyWord }) => {
   };
 
   const handleWordClick = (word) => {
+    console.log("Word clicked:", word);
     setSelectedWord(word);
   };
 
