@@ -298,6 +298,17 @@ const Editor = ({ keyWord }) => {
           {showCommonWords && (
             <ul className="dictionary left-align">
               {commonWords
+                .filter((word) =>
+                  selectedLineId
+                    ? aContainsB(
+                        keyWord,
+                        lines[selectedLineId].reduce(
+                          (wholeLine, w) => wholeLine + w,
+                          ""
+                        ) + word
+                      )
+                    : true
+                )
                 .sort((a, b) => b.length - a.length || a.localeCompare(b))
                 .map((word, index) => (
                   <li
@@ -323,6 +334,17 @@ const Editor = ({ keyWord }) => {
           {showManyWords && (
             <ul className="dictionary left-align">
               {manyWords
+                .filter((word) =>
+                  selectedLineId
+                    ? aContainsB(
+                        keyWord,
+                        lines[selectedLineId].reduce(
+                          (wholeLine, w) => wholeLine + w,
+                          ""
+                        ) + word
+                      )
+                    : true
+                )
                 .sort((a, b) => b.length - a.length || a.localeCompare(b))
                 .map((word, index) => (
                   <li
