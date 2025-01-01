@@ -16,6 +16,7 @@ const Editor = ({ keyWord }) => {
   const [poemLineIdOrder, setPoemLineIdOrder] = useState([]);
   const [selectedLineId, setSelectedLineId] = useState(null);
   const [selectedWord, setSelectedWord] = useState(null);
+  const [selectedLineWord, setSelectedLineWord] = useState(null);
 
   useEffect(() => {
     const fetchCommonWords = async () => {
@@ -209,12 +210,21 @@ const Editor = ({ keyWord }) => {
   const handleDeleteLine = async () => {
     if (selectedLineId === null) return;
 
-    const newPoemLineIdOrder = poemLineIdOrder.filter((lineId) => lineId !== selectedLineId);
+    const newPoemLineIdOrder = poemLineIdOrder.filter(
+      (lineId) => lineId !== selectedLineId
+    );
 
     try {
-      const response = await fetch(`/backend/poem-lines?key=${encodeURIComponent(keyWord)}&lineId=${selectedLineId}&poemLineIdOrder=${encodeURIComponent(JSON.stringify(newPoemLineIdOrder))}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `/backend/poem-lines?key=${encodeURIComponent(
+          keyWord
+        )}&lineId=${selectedLineId}&poemLineIdOrder=${encodeURIComponent(
+          JSON.stringify(newPoemLineIdOrder)
+        )}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok, deleting line");
       }
@@ -236,6 +246,85 @@ const Editor = ({ keyWord }) => {
     }
   };
 
+  const handleLineWordClick = (word) => {
+    setSelectedLineWord(word);
+  };
+
+  const handleRemoveWordFromLine = async () => {
+    if (selectedLineId === null || selectedLineWord === null) return;
+
+    const newLineWords = lines[selectedLineId].filter(
+      (word) => word !== selectedLineWord
+    );
+
+    try {
+      const response = await fetch(`/backend/line-words`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          key: keyWord,
+          lineId: selectedLineId,
+          lineWords: newLineWords,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok, updating line words");
+      }
+
+      setLines((prevLines) => ({
+        ...prevLines,
+        [selectedLineId]: newLineWords,
+      }));
+      setSelectedLineWord(null);
+    } catch (error) {
+      console.error("Error updating line words:", error);
+    }
+  };
+
+  const handleMoveWord = async (direction) => {
+    if (selectedLineId === null || selectedLineWord === null) return;
+
+    const currentIndex = lines[selectedLineId].indexOf(selectedLineWord);
+    if (currentIndex === -1) return;
+
+    const newIndex = direction === "left" ? currentIndex - 1 : currentIndex + 1;
+    if (newIndex < 0 || newIndex >= lines[selectedLineId].length) return;
+
+    const newLineWords = [...lines[selectedLineId]];
+    [newLineWords[currentIndex], newLineWords[newIndex]] = [
+      newLineWords[newIndex],
+      newLineWords[currentIndex],
+    ];
+
+    try {
+      const response = await fetch(`/backend/line-words`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          key: keyWord,
+          lineId: selectedLineId,
+          lineWords: newLineWords,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(
+          "Network response was not ok, updating line words on move"
+        );
+      }
+
+      setLines((prevLines) => ({
+        ...prevLines,
+        [selectedLineId]: newLineWords,
+      }));
+    } catch (error) {
+      console.error("Error updating line words:", error);
+    }
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={6} className="grid-item">
@@ -253,6 +342,31 @@ const Editor = ({ keyWord }) => {
           </Button>
           <Button id="delete-line-control" onClick={handleDeleteLine}>
             Delete selected line
+          </Button>
+          <Button
+            onClick={handleRemoveWordFromLine}
+            disabled={!selectedLineWord}
+          >
+            Remove Word
+          </Button>
+          <Button
+            onClick={() => handleMoveWord("left")}
+            disabled={
+              !selectedLineWord ||
+              lines[selectedLineId].indexOf(selectedLineWord) === 0
+            }
+          >
+            Move Left
+          </Button>
+          <Button
+            onClick={() => handleMoveWord("right")}
+            disabled={
+              !selectedLineWord ||
+              lines[selectedLineId].indexOf(selectedLineWord) ===
+                lines[selectedLineId].length - 1
+            }
+          >
+            Move Right
           </Button>
         </div>
         <ul className="lines left-align" id="lines">
@@ -272,7 +386,13 @@ const Editor = ({ keyWord }) => {
                 <Grid item xs={11}>
                   {lines[lineId] &&
                     lines[lineId].map((word, index) => (
-                      <Box key={index} className="word-box">
+                      <Box
+                        key={index}
+                        className={`word-box ${
+                          selectedLineWord === word ? "selected-word" : ""
+                        }`}
+                        onClick={() => handleLineWordClick(word)}
+                      >
                         {word}
                       </Box>
                     ))}
