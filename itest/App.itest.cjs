@@ -197,9 +197,9 @@ const waitOptions = { timeout /*, visible: true */ };
     }
 
     // Create a poem
-    const inputValue = "Douglas Naphas";
+    const douglasNaphasInputValue = "Douglas Naphas";
     const thingToGramSelector = "#thing-to-gram";
-    await page.type(thingToGramSelector, inputValue);
+    await page.type(thingToGramSelector, douglasNaphasInputValue);
     await Promise.all([
       page.click(createPoemButtonSelector),
       page.waitForNavigation(),
@@ -209,11 +209,13 @@ const waitOptions = { timeout /*, visible: true */ };
     const url = page.url();
     const urlParams = new URLSearchParams(new URL(url).search);
     const poem = urlParams.get("poem");
-    if (!poem || poem !== inputValue) {
+    if (!poem || poem !== douglasNaphasInputValue) {
       await failTest(
         "Home page test error",
-        `Expected poem in URL not found or incorrect, expected ${inputValue}, got ${poem}` +
-          `, encoded inputValue is ${encodeURIComponent(inputValue)}`
+        `Expected poem in URL not found or incorrect, expected ${douglasNaphasInputValue}, got ${poem}` +
+          `, encoded inputValue is ${encodeURIComponent(
+            douglasNaphasInputValue
+          )}`
       );
     }
     // Expect the text "Douglas Naphas" to be displayed under Your Poems,
@@ -224,22 +226,21 @@ const waitOptions = { timeout /*, visible: true */ };
       const element = document.querySelector(selector);
       return element.textContent;
     }, poemsListSelector);
-    if (!poemsListText.includes(inputValue)) {
+    if (!poemsListText.includes(douglasNaphasInputValue)) {
       await failTest("Home page test error", "Expected poem not found in list");
     }
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
     // Poem
-    
+
     // Expect the lines heading and dictionary heading
     const linesHeadingSelector = "#lines-heading";
     await page.waitForSelector(linesHeadingSelector);
     const linesHeadingText = await page.evaluate((selector) => {
       const element = document.querySelector(selector);
       return element.textContent;
-    }
-    , linesHeadingSelector);
+    }, linesHeadingSelector);
     if (linesHeadingText !== "Lines") {
       await failTest("Poem test error", "Expected 'Lines' heading not found");
     }
@@ -248,10 +249,12 @@ const waitOptions = { timeout /*, visible: true */ };
     const dictionaryHeadingText = await page.evaluate((selector) => {
       const element = document.querySelector(selector);
       return element.textContent;
-    }
-    , dictionaryHeadingSelector);
+    }, dictionaryHeadingSelector);
     if (dictionaryHeadingText !== "Dictionary") {
-      await failTest("Poem test error", "Expected 'Dictionary' heading not found");
+      await failTest(
+        "Poem test error",
+        "Expected 'Dictionary' heading not found"
+      );
     }
 
     // Expect the text "Douglas Naphas" to be displayed as the first line under Lines
@@ -261,20 +264,26 @@ const waitOptions = { timeout /*, visible: true */ };
       const element = document.querySelector(selector);
       return element.textContent;
     }, linesSelector);
-    if (!linesText.includes(inputValue)) {
-      await failTest("Poem test error", "Expected key line not found for " + inputValue);
+    if (!linesText.includes(douglasNaphasInputValue)) {
+      await failTest(
+        "Poem test error",
+        "Expected key line not found for " + douglasNaphasInputValue
+      );
     }
 
     // Expect the word "sounds" to not be displayed under Lines
     if (linesText.includes("sounds")) {
-      await failTest("Poem test error", "Expected word 'sounds' not to be found under Lines");
+      await failTest(
+        "Poem test error",
+        "Expected word 'sounds' not to be found under Lines"
+      );
     }
 
     // Add a line
     const addLineSelector = "#add-line-control";
     await page.waitForSelector(addLineSelector);
     await page.click(addLineSelector);
-    
+
     // Click the added line
     const addedLineSelector = "#line-2";
     await page.waitForSelector(addedLineSelector);
@@ -304,10 +313,12 @@ const waitOptions = { timeout /*, visible: true */ };
     const isDeletePoemButtonVisible = await page.evaluate((selector) => {
       const button = document.querySelector(selector);
       return button ? button.offsetParent !== null : false;
-    }
-    , deletePoemButtonSelector);
+    }, deletePoemButtonSelector);
     if (!isDeletePoemButtonVisible) {
-      await failTest("Poem test error", "Expected 'Delete Poem' button not found");
+      await failTest(
+        "Poem test error",
+        "Expected 'Delete Poem' button not found"
+      );
     }
 
     // Click the Delete Poem button, then cancel
@@ -328,10 +339,15 @@ const waitOptions = { timeout /*, visible: true */ };
 
     // Expect the URL to not have a poem search param
     const urlPostDelete = page.url();
-    const urlParamsPostDelete = new URLSearchParams(new URL(urlPostDelete).search);
+    const urlParamsPostDelete = new URLSearchParams(
+      new URL(urlPostDelete).search
+    );
     const poemPostDelete = urlParamsPostDelete.get("poem");
     if (poemPostDelete) {
-      await failTest("Poem test error", "Expected poem search param to be deleted");
+      await failTest(
+        "Poem test error",
+        "Expected poem search param to be deleted"
+      );
     }
 
     // Expect the text "Douglas Naphas" to not be displayed under Your Poems
@@ -339,10 +355,29 @@ const waitOptions = { timeout /*, visible: true */ };
       const element = document.querySelector(selector);
       return element.textContent;
     }, poemsListSelector);
-    if (poemsListTextPostDelete.includes(inputValue)) {
+    if (poemsListTextPostDelete.includes(douglasNaphasInputValue)) {
       await failTest("Poem test error", "Expected poem to be deleted");
     }
 
+    // Create the poem "Douglas Naphas" again, and expect it to be displayed
+    await page.type(thingToGramSelector, douglasNaphasInputValue);
+    await Promise.all([
+      page.click(createPoemButtonSelector),
+      page.waitForNavigation(),
+    ]);
+
+    // Expect the word "sounds" not to be displayed under Lines
+    const linesTextPostReCreate = await page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      return element.textContent;
+    }, linesSelector);
+    if (linesTextPostReCreate.includes("sounds")) {
+      await failTest(
+        "Poem test error",
+        "Expected word 'sounds' not to be found under Lines" +
+          " in freshly created poem"
+      );
+    }
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
