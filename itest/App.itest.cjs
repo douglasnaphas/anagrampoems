@@ -320,7 +320,19 @@ const waitOptions = { timeout /*, visible: true */ };
     await page.click(deletePoemButtonSelector);
     const confirmDeletePoemSelector = "#confirm-delete-poem-button";
     await page.waitForSelector(confirmDeletePoemSelector);
-    await page.click(confirmDeletePoemSelector);
+    // Click confirm and wait for navigation
+    await Promise.all([
+      page.click(confirmDeletePoemSelector),
+      page.waitForNavigation(),
+    ]);
+
+    // Expect the URL to not have a poem search param
+    const urlPostDelete = page.url();
+    const urlParamsPostDelete = new URLSearchParams(new URL(urlPostDelete).search);
+    const poemPostDelete = urlParamsPostDelete.get("poem");
+    if (poemPostDelete) {
+      await failTest("Poem test error", "Expected poem search param to be deleted");
+    }
 
     // Expect the text "Douglas Naphas" to not be displayed under Your Poems
     const poemsListTextPostDelete = await page.evaluate((selector) => {
