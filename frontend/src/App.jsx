@@ -85,6 +85,21 @@ function App() {
     setOpenDialog(false);
   };
 
+  const handleDeletePoem = async () => {
+    try {
+      const response = await fetch(`/backend/poems?key=${encodeURIComponent(selectedPoem)}`, {
+        method: "DELETE",
+      });
+      if (response.status !== 204) {
+        throw new Error("Network response was not ok, deleting poem");
+      }
+      // Redirect to home page
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error deleting poem:", error);
+    }
+  };
+
   return (
     <>
       <Typography variant="h1" component="h1">
@@ -207,7 +222,7 @@ function App() {
               </Button>
               <Button
                 id="confirm-delete-poem-button"
-                onClick={() => {}}
+                onClick={handleDeletePoem}
                 color="error"
                 variant="outlined"
               >
