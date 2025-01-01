@@ -23,6 +23,7 @@ const postPoemLines = require("./postPoemLines");
 const postLineOrder = require("./postLineOrder");
 const putLineWords = require("./putLineWords");
 const deletePoems = require("./deletePoems");
+const checkKeyMiddleware = require("./checkKeyMiddleware");
 
 router.get("/", (req, res) => {
   return res.send("/ from Express on AWS Lambda!");
@@ -45,6 +46,9 @@ router.use(getDBLoginCookie());
 // sends 401 if loginCookie is not found or is logged out
 router.get("/whoami", whoami);
 router.get("/logout", logout);
+
+// Send a 4xx response if body.key has a # character
+router.use(checkKeyMiddleware);
 
 // Use bodyParser.urlencoded for /poems route
 router.post("/poems", bodyParser.urlencoded({ extended: true }), postPoems);
