@@ -336,7 +336,7 @@ const Editor = ({ keyWord }) => {
         >
           Lines
         </Typography>
-        <div className="line-controls">
+        <div>
           <Button onClick={handleAddLine} id="add-line-control">
             Add Line
           </Button>
