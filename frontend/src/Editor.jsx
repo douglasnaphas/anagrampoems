@@ -389,7 +389,9 @@ const Editor = ({ keyWord }) => {
                       <Box
                         key={index}
                         className={`word-box ${
-                          selectedLineWord === word ? "selected-word" : ""
+                          selectedLineId === lineId && selectedLineWord === word
+                            ? "selected-word"
+                            : ""
                         }`}
                         onClick={() => handleLineWordClick(word)}
                       >
