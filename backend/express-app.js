@@ -25,6 +25,7 @@ const putLineWords = require("./putLineWords");
 const deletePoems = require("./deletePoems");
 const checkKeyMiddleware = require("./checkKeyMiddleware");
 const putPoems = require("./putPoems");
+const deletePoemLines = require("./deletePoemLines");
 
 router.get("/", (req, res) => {
   return res.send("/ from Express on AWS Lambda!");
@@ -60,6 +61,7 @@ router.post("/line-order", bodyParser.json(), postLineOrder);
 router.put("/line-words", bodyParser.json(), putLineWords);
 router.put("/poems", bodyParser.json(), putPoems);
 router.delete("/poems", deletePoems);
+router.delete("/poem-lines", deletePoemLines);
 
 router.get("/poems", getPoems);
 router.get("/poem", getPoem);

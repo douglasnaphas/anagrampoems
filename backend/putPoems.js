@@ -12,6 +12,10 @@ const putPoems = async (req, res, next) => {
   }
 
   const { key, poemLineIdOrder } = req.body;
+  if (!Array.isArray(poemLineIdOrder)) {
+    return res.status(400).send("poemLineIdOrder must be an array");
+  }
+
   const username = res.locals.username;
 
   const client = new DynamoDBClient();

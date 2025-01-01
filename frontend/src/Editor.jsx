@@ -212,15 +212,8 @@ const Editor = ({ keyWord }) => {
     const newPoemLineIdOrder = poemLineIdOrder.filter((lineId) => lineId !== selectedLineId);
 
     try {
-      const response = await fetch(`/backend/poems`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          key: keyWord,
-          poemLineIdOrder: newPoemLineIdOrder,
-        }),
+      const response = await fetch(`/backend/poem-lines?key=${encodeURIComponent(keyWord)}&lineId=${selectedLineId}&poemLineIdOrder=${encodeURIComponent(JSON.stringify(newPoemLineIdOrder))}`, {
+        method: "DELETE",
       });
       if (!response.ok) {
         throw new Error("Network response was not ok, deleting line");
