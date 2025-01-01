@@ -136,7 +136,7 @@ function App() {
             name="key"
           />
           <Box mt={2}>
-            <Button id="create-poem-button" disabled={!userInfo} type="submit">
+            <Button id="create-poem-button" disabled={!userInfo || !inputValue} type="submit">
               Create poem
             </Button>
           </Box>
