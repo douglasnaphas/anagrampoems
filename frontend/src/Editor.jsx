@@ -206,6 +206,43 @@ const Editor = ({ keyWord }) => {
     }
   };
 
+  const handleDeleteLine = async () => {
+    if (selectedLineId === null) return;
+
+    const newPoemLineIdOrder = poemLineIdOrder.filter((lineId) => lineId !== selectedLineId);
+
+    try {
+      const response = await fetch(`/backend/poems`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          key: keyWord,
+          poemLineIdOrder: newPoemLineIdOrder,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok, deleting line");
+      }
+
+      // Update lines state to remove the selected line
+      setLines((prevLines) => {
+        const newLines = { ...prevLines };
+        delete newLines[selectedLineId];
+        return newLines;
+      });
+
+      // Update poemLineIdOrder state to remove the selected line
+      setPoemLineIdOrder(newPoemLineIdOrder);
+
+      // Clear the selected line
+      setSelectedLineId(null);
+    } catch (error) {
+      console.error("Error deleting line:", error);
+    }
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={6} className="grid-item">
@@ -221,7 +258,7 @@ const Editor = ({ keyWord }) => {
           <Button onClick={handleAddLine} id="add-line-control">
             Add Line
           </Button>
-          <Button id="delete-line-control">
+          <Button id="delete-line-control" onClick={handleDeleteLine}>
             Delete selected line
           </Button>
         </div>
