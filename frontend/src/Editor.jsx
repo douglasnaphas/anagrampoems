@@ -221,6 +221,9 @@ const Editor = ({ keyWord }) => {
           <Button onClick={handleAddLine} id="add-line-control">
             Add Line
           </Button>
+          <Button id="delete-line-control">
+            Delete selected line
+          </Button>
         </div>
         <ul className="lines left-align" id="lines">
           {poemLineIdOrder &&

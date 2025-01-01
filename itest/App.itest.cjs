@@ -379,6 +379,40 @@ const waitOptions = { timeout /*, visible: true */ };
       );
     }
 
+    // Add a line, and add the word "analog" to the new line
+    await page.click(addLineSelector);
+    // Wait for the new line to be added
+    await page.waitForSelector("#line-2");
+    await page.click("#line-2");
+    await page.click("#common-word-analog");
+    await page.click(addWordSelector);
+    // Expect the word "analog" to be displayed under Lines
+    await page.waitForFunction(
+      (selector, text) => {
+        const element = document.querySelector(selector);
+        return element && element.textContent.includes(text);
+      },
+      {},
+      linesSelector,
+      "analog"
+    );
+
+    // Delete the selected line
+    const deleteLineSelector = "#delete-line-control";
+    await page.waitForSelector(deleteLineSelector);
+    await page.click(deleteLineSelector);
+
+    // Expect the word "analog" not to be found under Lines
+    await page.waitForFunction(
+      (selector, text) => {
+        const element = document.querySelector(selector);
+        return element && !element.textContent.includes(text);
+      },
+      {},
+      linesSelector,
+      "analog"
+    );
+
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
     // Log out
