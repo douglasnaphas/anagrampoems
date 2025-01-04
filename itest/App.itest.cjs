@@ -120,7 +120,7 @@ const waitOptions = { timeout /*, visible: true */ };
 
     // There should be an explanation that login is required
     const requiresLoginTextSelector = "#requires-login-text"; // Adjust the selector as needed
-    await page.waitForSelector(requiresLoginTextSelector);
+    await page.waitForSelector(requiresLoginTextSelector, waitOptions);
     const requiresLoginText = await page.evaluate((selector) => {
       const element = document.querySelector(selector);
       return element.textContent;
@@ -151,7 +151,7 @@ const waitOptions = { timeout /*, visible: true */ };
 
     // Click the Login button
     const loginButtonSelector = "#login-button";
-    await page.waitForSelector(loginButtonSelector);
+    await page.waitForSelector(loginButtonSelector, waitOptions);
     await Promise.all([
       page.click(loginButtonSelector),
       page.waitForNavigation(),
@@ -165,7 +165,7 @@ const waitOptions = { timeout /*, visible: true */ };
     }
     // Enter username
     const usernameSelector = `input#signInFormUsername[type='text']`;
-    await page.waitForSelector(usernameSelector);
+    await page.waitForSelector(usernameSelector, waitOptions);
     await page.type(usernameSelector, adminCreateUserInput.Username);
     // Enter temp password
     const passwordSelector = `input#signInFormPassword[type='password']`;
@@ -175,7 +175,7 @@ const waitOptions = { timeout /*, visible: true */ };
     // Change password
     const password = randString({ numLetters: 8 });
     const newPasswordSelector = `input#new_password[type='password']`;
-    await page.waitForSelector(newPasswordSelector);
+    await page.waitForSelector(newPasswordSelector, waitOptions);
     await page.type(newPasswordSelector, password);
     const confirmPasswordSelector = `input#confirm_password[type='password']`;
     await page.type(confirmPasswordSelector, password);
@@ -187,7 +187,7 @@ const waitOptions = { timeout /*, visible: true */ };
 
     // The username should be displayed
     const usernameDisplaySelector = "#username-display";
-    await page.waitForSelector(usernameDisplaySelector);
+    await page.waitForSelector(usernameDisplaySelector, waitOptions);
     const usernameDisplay = await page.evaluate((selector) => {
       const element = document.querySelector(selector);
       return element.textContent;
@@ -221,7 +221,7 @@ const waitOptions = { timeout /*, visible: true */ };
     // Expect the text "Douglas Naphas" to be displayed under Your Poems,
     // in a ul with id "poems-list"
     const poemsListSelector = "#poems-list";
-    await page.waitForSelector(poemsListSelector);
+    await page.waitForSelector(poemsListSelector, waitOptions);
     const poemsListText = await page.evaluate((selector) => {
       const element = document.querySelector(selector);
       return element.textContent;
@@ -236,7 +236,7 @@ const waitOptions = { timeout /*, visible: true */ };
 
     // Expect the lines heading and dictionary heading
     const linesHeadingSelector = "#lines-heading";
-    await page.waitForSelector(linesHeadingSelector);
+    await page.waitForSelector(linesHeadingSelector, waitOptions);
     const linesHeadingText = await page.evaluate((selector) => {
       const element = document.querySelector(selector);
       return element.textContent;
@@ -245,7 +245,7 @@ const waitOptions = { timeout /*, visible: true */ };
       await failTest("Poem test error", "Expected 'Lines' heading not found");
     }
     const dictionaryHeadingSelector = "#dictionary-heading";
-    await page.waitForSelector(dictionaryHeadingSelector);
+    await page.waitForSelector(dictionaryHeadingSelector, waitOptions);
     const dictionaryHeadingText = await page.evaluate((selector) => {
       const element = document.querySelector(selector);
       return element.textContent;
@@ -259,7 +259,7 @@ const waitOptions = { timeout /*, visible: true */ };
 
     // Expect the text "Douglas Naphas" to be displayed as the first line under Lines
     const linesSelector = "#lines";
-    await page.waitForSelector(linesSelector);
+    await page.waitForSelector(linesSelector, waitOptions);
     const linesText = await page.evaluate((selector) => {
       const element = document.querySelector(selector);
       return element.textContent;
@@ -281,20 +281,20 @@ const waitOptions = { timeout /*, visible: true */ };
 
     // Add a line
     const addLineSelector = "#add-line-control";
-    await page.waitForSelector(addLineSelector);
+    await page.waitForSelector(addLineSelector, waitOptions);
     await page.click(addLineSelector);
 
     // Click the added line
     const addedLineSelector = "#line-2";
-    await page.waitForSelector(addedLineSelector);
+    await page.waitForSelector(addedLineSelector, waitOptions);
     await page.click(addedLineSelector);
 
     // Add the word "sounds" to the line
     const soundsSelector = "#common-word-sounds";
-    await page.waitForSelector(soundsSelector);
+    await page.waitForSelector(soundsSelector, waitOptions);
     await page.click(soundsSelector);
     const addWordSelector = "#add-word-to-line-button";
-    await page.waitForSelector(addWordSelector);
+    await page.waitForSelector(addWordSelector, waitOptions);
     await page.click(addWordSelector);
 
     // Check the text content under Lines again, and expect "sounds" to be there
@@ -324,13 +324,13 @@ const waitOptions = { timeout /*, visible: true */ };
     // Click the Delete Poem button, then cancel
     await page.click(deletePoemButtonSelector);
     const cancelDeletePoemSelector = "#cancel-delete-poem-button";
-    await page.waitForSelector(cancelDeletePoemSelector);
+    await page.waitForSelector(cancelDeletePoemSelector, waitOptions);
     await page.click(cancelDeletePoemSelector);
 
     // Click the Delete Poem button, then confirm
     await page.click(deletePoemButtonSelector);
     const confirmDeletePoemSelector = "#confirm-delete-poem-button";
-    await page.waitForSelector(confirmDeletePoemSelector);
+    await page.waitForSelector(confirmDeletePoemSelector, waitOptions);
     // Click confirm and wait for navigation
     await Promise.all([
       page.click(confirmDeletePoemSelector),
@@ -382,7 +382,7 @@ const waitOptions = { timeout /*, visible: true */ };
     // Add a line, and add the word "analog" to the new line
     await page.click(addLineSelector);
     // Wait for the new line to be added
-    await page.waitForSelector("#line-2");
+    await page.waitForSelector("#line-2", waitOptions);
     await page.click("#line-2");
     await page.click("#common-word-analog");
     await page.click(addWordSelector);
@@ -399,7 +399,7 @@ const waitOptions = { timeout /*, visible: true */ };
 
     // Delete the selected line
     const deleteLineSelector = "#delete-line-control";
-    await page.waitForSelector(deleteLineSelector);
+    await page.waitForSelector(deleteLineSelector, waitOptions);
     await page.click(deleteLineSelector);
 
     // Expect the word "analog" not to be found under Lines
@@ -419,7 +419,7 @@ const waitOptions = { timeout /*, visible: true */ };
 
     // There should be a log out link
     const logoutLinkSelector = "a#logout-link";
-    await page.waitForSelector(logoutLinkSelector);
+    await page.waitForSelector(logoutLinkSelector, waitOptions);
     const logoutLinkText = await page.evaluate((selector) => {
       const link = document.querySelector(selector);
       return link.textContent;
