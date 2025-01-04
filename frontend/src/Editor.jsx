@@ -325,7 +325,7 @@ const Editor = ({ keyWord }) => {
   };
 
   const fullGram = (id) => {
-    const lineText = lines[id].reduce(
+    const lineText = (lines[id] || []).reduce(
       (wholeLine, word) => wholeLine + word,
       ""
     );
@@ -446,7 +446,7 @@ const Editor = ({ keyWord }) => {
               disabled={
                 !aContainsB(
                   keyWord,
-                  lines[selectedLineId].reduce(
+                  (lines[selectedLineId] || []).reduce(
                     (wholeLine, word) => wholeLine + word,
                     ""
                   ) + selectedWord
@@ -473,7 +473,7 @@ const Editor = ({ keyWord }) => {
                   selectedLineId
                     ? aContainsB(
                         keyWord,
-                        lines[selectedLineId].reduce(
+                        (lines[selectedLineId] || []).reduce(
                           (wholeLine, w) => wholeLine + w,
                           ""
                         ) + word
@@ -510,7 +510,7 @@ const Editor = ({ keyWord }) => {
                   selectedLineId
                     ? aContainsB(
                         keyWord,
-                        lines[selectedLineId].reduce(
+                        (lines[selectedLineId] || []).reduce(
                           (wholeLine, w) => wholeLine + w,
                           ""
                         ) + word
