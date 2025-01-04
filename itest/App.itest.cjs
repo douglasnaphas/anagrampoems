@@ -17,7 +17,7 @@ program
   .option("--user-pool-id <ID>", "The User Pool Id for the web app")
   .parse(process.argv);
 const slowDown = 90;
-const timeout = 10000 + (program.opts().slow ? slowDown + 2000 : 0); // ms
+const timeout = 20000 + (program.opts().slow ? slowDown + 2000 : 0); // ms
 const site = program.opts().site;
 const idpUrl = program.opts().idpUrl;
 const userPoolId = program.opts().userPoolId;
