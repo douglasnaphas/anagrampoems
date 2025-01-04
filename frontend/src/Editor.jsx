@@ -355,7 +355,7 @@ const Editor = ({ keyWord }) => {
           </Button>
           <Button
             onClick={handleRemoveWordFromLine}
-            disabled={selectedLineWordIndex === null}
+            disabled={selectedLineWordIndex === null || !lines[selectedLineId]}
           >
             Remove Word
           </Button>
@@ -371,6 +371,7 @@ const Editor = ({ keyWord }) => {
             onClick={() => handleMoveWord("right")}
             disabled={
               selectedLineWordIndex === null ||
+              !lines[selectedLineId] ||
               selectedLineWordIndex === lines[selectedLineId].length - 1
             }
           >
