@@ -16,7 +16,7 @@ const Editor = ({ keyWord }) => {
   const [poemLineIdOrder, setPoemLineIdOrder] = useState([]);
   const [selectedLineId, setSelectedLineId] = useState(null);
   const [selectedWord, setSelectedWord] = useState(null);
-  const [selectedLineWord, setSelectedLineWord] = useState(null);
+  const [selectedLineWordIndex, setSelectedLineWordIndex] = useState(null);
 
   useEffect(() => {
     const fetchCommonWords = async () => {
@@ -246,15 +246,15 @@ const Editor = ({ keyWord }) => {
     }
   };
 
-  const handleLineWordClick = (word) => {
-    setSelectedLineWord(word);
+  const handleLineWordClick = (index) => {
+    setSelectedLineWordIndex(index);
   };
 
   const handleRemoveWordFromLine = async () => {
-    if (selectedLineId === null || selectedLineWord === null) return;
+    if (selectedLineId === null || selectedLineWordIndex === null) return;
 
     const newLineWords = lines[selectedLineId].filter(
-      (word) => word !== selectedLineWord
+      (_, index) => index !== selectedLineWordIndex
     );
 
     try {
@@ -277,18 +277,16 @@ const Editor = ({ keyWord }) => {
         ...prevLines,
         [selectedLineId]: newLineWords,
       }));
-      setSelectedLineWord(null);
+      setSelectedLineWordIndex(null);
     } catch (error) {
       console.error("Error updating line words:", error);
     }
   };
 
   const handleMoveWord = async (direction) => {
-    if (selectedLineId === null || selectedLineWord === null) return;
+    if (selectedLineId === null || selectedLineWordIndex === null) return;
 
-    const currentIndex = lines[selectedLineId].indexOf(selectedLineWord);
-    if (currentIndex === -1) return;
-
+    const currentIndex = selectedLineWordIndex;
     const newIndex = direction === "left" ? currentIndex - 1 : currentIndex + 1;
     if (newIndex < 0 || newIndex >= lines[selectedLineId].length) return;
 
@@ -320,6 +318,7 @@ const Editor = ({ keyWord }) => {
         ...prevLines,
         [selectedLineId]: newLineWords,
       }));
+      setSelectedLineWordIndex(newIndex);
     } catch (error) {
       console.error("Error updating line words:", error);
     }
@@ -345,15 +344,15 @@ const Editor = ({ keyWord }) => {
           </Button>
           <Button
             onClick={handleRemoveWordFromLine}
-            disabled={!selectedLineWord}
+            disabled={selectedLineWordIndex === null}
           >
             Remove Word
           </Button>
           <Button
             onClick={() => handleMoveWord("left")}
             disabled={
-              !selectedLineWord ||
-              lines[selectedLineId].indexOf(selectedLineWord) === 0
+              selectedLineWordIndex === null ||
+              selectedLineWordIndex === 0
             }
           >
             Move Left
@@ -361,9 +360,8 @@ const Editor = ({ keyWord }) => {
           <Button
             onClick={() => handleMoveWord("right")}
             disabled={
-              !selectedLineWord ||
-              lines[selectedLineId].indexOf(selectedLineWord) ===
-                lines[selectedLineId].length - 1
+              selectedLineWordIndex === null ||
+              selectedLineWordIndex === lines[selectedLineId].length - 1
             }
           >
             Move Right
@@ -383,17 +381,20 @@ const Editor = ({ keyWord }) => {
                 }`}
                 onClick={() => handleLineClick(lineId)}
               >
-                <Grid item xs={11}>
+                <Grid
+                  item
+                  xs={11}
+                >
                   {lines[lineId] &&
                     lines[lineId].map((word, index) => (
                       <Box
                         key={index}
                         className={`word-box ${
-                          selectedLineId === lineId && selectedLineWord === word
+                          selectedLineId === lineId && selectedLineWordIndex === index
                             ? "selected-word"
                             : ""
                         }`}
-                        onClick={() => handleLineWordClick(word)}
+                        onClick={() => handleLineWordClick(index)}
                       >
                         {word}
                       </Box>
