@@ -416,7 +416,7 @@ const Editor = ({ keyWord }) => {
                 )}
                 {fullGram(lineId) && (
                   <Grid item xs={1} className="line-controls">
-                    ✔️
+                    <span>✔️</span>
                   </Grid>
                 )}
               </Grid>
