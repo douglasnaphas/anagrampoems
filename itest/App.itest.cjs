@@ -157,7 +157,7 @@ const waitOptions = { timeout /*, visible: true */ };
       page.waitForNavigation(),
     ]);
     if (page.url() !== idpUrl) {
-      failTest(
+      await failTest(
         new Error("wrong IDP URL"),
         `expected IDP URL ${idpUrl}, got ${page.url()}`,
         browsers
