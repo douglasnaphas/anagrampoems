@@ -324,6 +324,17 @@ const Editor = ({ keyWord }) => {
     }
   };
 
+  const fullGram = (id) => {
+    const lineText = lines[id].reduce(
+      (wholeLine, word) => wholeLine + word,
+      ""
+    );
+    if (aContainsB(keyWord, lineText) && aContainsB(lineText, keyWord)) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={6} className="grid-item">
@@ -351,8 +362,7 @@ const Editor = ({ keyWord }) => {
           <Button
             onClick={() => handleMoveWord("left")}
             disabled={
-              selectedLineWordIndex === null ||
-              selectedLineWordIndex === 0
+              selectedLineWordIndex === null || selectedLineWordIndex === 0
             }
           >
             Move Left
@@ -381,16 +391,14 @@ const Editor = ({ keyWord }) => {
                 }`}
                 onClick={() => handleLineClick(lineId)}
               >
-                <Grid
-                  item
-                  xs={11}
-                >
+                <Grid item xs={11}>
                   {lines[lineId] &&
                     lines[lineId].map((word, index) => (
                       <Box
                         key={index}
                         className={`word-box ${
-                          selectedLineId === lineId && selectedLineWordIndex === index
+                          selectedLineId === lineId &&
+                          selectedLineWordIndex === index
                             ? "selected-word"
                             : ""
                         }`}
@@ -404,6 +412,11 @@ const Editor = ({ keyWord }) => {
                   <Grid item xs={1} className="line-controls">
                     <ArrowUpwardIcon onClick={() => handleMoveLine("up")} />
                     <ArrowDownwardIcon onClick={() => handleMoveLine("down")} />
+                  </Grid>
+                )}
+                {fullGram(lineId) && (
+                  <Grid item xs={1} className="line-controls">
+                    ✔️
                   </Grid>
                 )}
               </Grid>
