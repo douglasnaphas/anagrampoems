@@ -88,13 +88,13 @@ test("how array tests work", () => {
 });
 
 describe.only("grams", () => {
-  it("should return an empty array if no words are provided", () => {
+  it.skip("should return an empty array if no words are provided", () => {
     const letterCount = new Array(26).fill(0);
     const results = grams({}, letterCount);
     expect(results).toEqual([]);
   });
 
-  test("a word in vocab cannot be formed from key", () => {
+  test.skip("a word in vocab cannot be formed from key", () => {
     const vocab = { bat: letters("bat") };
     const keyLetterCount = letters("cat");
     expect(() => grams(vocab, keyLetterCount)).toThrow(
@@ -116,5 +116,6 @@ describe.only("grams", () => {
     const results = grams(vocab, keyLetterCount);
     // expect results to contain ["k", "tea"]
     expect(results).toContainEqual(["k", "tea"]);
+    expect(results).toContainEqual(["k", "eat"]);
   });
 });

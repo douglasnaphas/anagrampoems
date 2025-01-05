@@ -61,35 +61,37 @@ const findAnagrams = (words, letterCount) => {
 const grams = (vocab, keyLetterCount) => {
   // vocab looks like { "word": [0, 0, 0, 1, ...], ... }
   // iterate over each word in vocab
-  for (w in vocab) {
+  for (const w in vocab) {
     if (!countAContainsCountB(keyLetterCount, vocab[w])) {
       throw new Error("a word in vocab cannot be formed from key");
     }
   }
   // every word in vocab can be formed from key
   const ret = [];
-  // iterate over each word in vocab
-  for (v in vocab) {
-    // Add to ret v + grams that can be formed from key - v
-    const keyLetterCountMinusVLetterCount = keyLetterCount.map(
-      (c, i) => c - vocab[v][i]
-    );
-    // const vocabMinusV = countAContainsCountB(
-    //   keyLetterCountMinusVLetterCount,
-    //   vocab[v]
-    // )
-    //   ? vocab
-    //   : Object.fromEntries(Object.entries(vocab).filter(([k, _]) => k !== v));
-    /*Object.assign({}, vocab, { [v]: undefined });*/
-    const vocabMinusV = Object.fromEntries(
-      Object.entries(vocab).filter(([_, c]) =>
-        countAContainsCountB(keyLetterCountMinusVLetterCount, c)
-      )
-    );
-    for (g in grams(vocabMinusV, keyLetterCountMinusVLetterCount)) {
-      ret.push([v, g]);
+
+  const backtrack = (current, remaining, vocab) => {
+    if (remaining.every((count) => count === 0)) {
+      ret.push(current.slice());
+      return;
     }
-  }
+
+    for (const v in vocab) {
+      const wordLetters = vocab[v];
+      if (countAContainsCountB(remaining, wordLetters)) {
+        const newRemaining = remaining.map(
+          (count, index) => count - wordLetters[index]
+        );
+        current.push(v);
+        const newVocab = Object.fromEntries(
+          Object.entries(vocab).filter(([key]) => key !== v)
+        );
+        backtrack(current, newRemaining, newVocab);
+        current.pop();
+      }
+    }
+  };
+
+  backtrack([], keyLetterCount, vocab);
   return ret;
 };
 
