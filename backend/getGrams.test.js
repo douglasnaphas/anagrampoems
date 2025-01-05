@@ -94,7 +94,7 @@ describe.only("grams", () => {
     expect(results).toEqual([]);
   });
 
-  test.skip("a word in vocab cannot be formed from key", () => {
+  test("a word in vocab cannot be formed from key", () => {
     const vocab = { bat: letters("bat") };
     const keyLetterCount = letters("cat");
     expect(() => grams(vocab, keyLetterCount)).toThrow(

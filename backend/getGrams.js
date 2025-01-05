@@ -83,6 +83,7 @@ const grams = (vocab, keyLetterCount) => {
         );
         current.push(v);
         const newVocab = Object.fromEntries(
+          // TODO: only remove it if it can't be formed from the remaining letters
           Object.entries(vocab).filter(([key]) => key !== v)
         );
         backtrack(current, newRemaining, newVocab);
@@ -95,4 +96,13 @@ const grams = (vocab, keyLetterCount) => {
   return ret;
 };
 
-module.exports = { getGrams, findAnagrams, grams };
+const gramSets = (vocab, keyLetterCount) => {
+  const gramArrays = grams(vocab, keyLetterCount);
+  const ret = [];
+  for (const gramArray of gramArrays) {
+    ret.push(new Set(gramArray));
+  }
+  return ret;
+}
+
+module.exports = { getGrams, findAnagrams, grams, gramSets };
