@@ -15,6 +15,23 @@ const letters = (str) => {
   return result;
 };
 
+const letterCount = (str) => letters(str);
+
+/**
+ * Checks if letter count array a contains all letters of letter count array b.
+ * @param {number[]} a - The first letter count array.
+ * @param {number[]} b - The second letter count array.
+ * @returns {boolean} - True if a contains all letters of b, otherwise false.
+ */
+const countAContainsCountB = (a, b) => {
+  for (let i = 0; i < 26; i++) {
+    if (a[i] < b[i]) {
+      return false;
+    }
+  }
+  return true;
+};
+
 /**
  * Checks if string a contains all letters of string b.
  * @param {string} a - The first string.
@@ -22,14 +39,9 @@ const letters = (str) => {
  * @returns {boolean} - True if a contains all letters of b, otherwise false.
  */
 const aContainsB = (a, b) => {
-  const lettersA = letters(a);
-  const lettersB = letters(b);
-  for (let i = 0; i < 26; i++) {
-    if (lettersA[i] < lettersB[i]) {
-      return false;
-    }
-  }
-  return true;
+  const aLetters = letters(a);
+  const bLetters = letters(b);
+  return countAContainsCountB(aLetters, bLetters);
 };
 
-module.exports = { letters, aContainsB };
+module.exports = { letters, letterCount, countAContainsCountB, aContainsB };
