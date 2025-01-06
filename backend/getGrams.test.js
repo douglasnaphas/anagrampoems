@@ -52,7 +52,7 @@ describe("GET /getGrams", () => {
   });
 });
 
-describe("findAnagrams", () => {
+describe.skip("findAnagrams", () => {
   it("should find anagrams for a given letter count", () => {
     const words = ["ab", "ba", "abc", "cab"];
     const letterCount = new Array(26).fill(0);
@@ -87,7 +87,7 @@ test("how array tests work", () => {
   expect(outerArray).toContainEqual(innerArray);
 });
 
-describe.only("grams", () => {
+describe("grams", () => {
   it.skip("should return an empty array if no words are provided", () => {
     const letterCount = new Array(26).fill(0);
     const results = grams({}, letterCount);

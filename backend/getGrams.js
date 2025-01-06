@@ -1,8 +1,10 @@
-const words = require("./words_alpha-union-google-10000-english-usa.json");
+// const words = require("./words_alpha-union-google-10000-english-usa.json");
 const { letters, countAContainsCountB, aContainsB } = require("./letters");
+const fs = require("fs");
+const path = require("path");
 
 const getGrams = (req, res) => {
-  console.log("getGrams, req.query:", req.query);
+  // console.log("getGrams, req.query:", req.query);
   const letterCount = req.query.letterCount;
   if (
     !letterCount ||
@@ -11,17 +13,33 @@ const getGrams = (req, res) => {
   ) {
     return res.status(400).send("Invalid letter count format");
   }
-  console.log("getGrams, have letterCount array");
-  const validWords = words.filter((word) =>
-    countAContainsCountB(letterCount, letters(word))
-  );
-  const anagrams = findAnagrams(validWords, letterCount);
+  // console.log("getGrams, have letterCount array");
+  const filePath = path.join(__dirname, "words_alpha-union-google-10000-english-usa.json");
+  let wordsFileContents;
+  try {
+    wordsFileContents = fs.readFileSync(filePath, "utf8");
+  } catch (err) {
+    console.error("Error reading words file:", err);
+    return res.status(500).send("Error determining words");
+  }
+  const wordMap = JSON.parse(wordsFileContents);
+  const validWords = {};
+  for (const word in wordMap) {
+    if (countAContainsCountB(letterCount, wordMap[word])) {
+      validWords[word] = wordMap[word];
+    }
+  }
+  const anagrams = grams(validWords, letterCount);
+  // const validWords = wordMap.filter((word) =>
+  //   countAContainsCountB(letterCount, letters(word))
+  // );
+  // const anagrams = findAnagrams(validWords, letterCount);
 
   return res.send(anagrams);
 };
 
 const findAnagrams = (words, letterCount) => {
-  console.log("findAnagrams, words:", words);
+  // console.log("findAnagrams, words:", words);
   const results = [];
   const used = new Array(words.length).fill(false);
 
