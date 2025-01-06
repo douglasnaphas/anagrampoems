@@ -25,6 +25,13 @@ jobs:
         working-directory: frontend
         run: |
           npm run build
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v4
+        with:
+          poetry-version: 2.0
       - name: Install backend
         working-directory: backend
         run: |
