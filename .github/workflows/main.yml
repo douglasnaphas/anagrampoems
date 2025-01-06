@@ -37,6 +37,18 @@ jobs:
         working-directory: backend
         run: |
           npm run install-build
+      - name: Install backend-py
+        working-directory: backend-py
+        run: |
+          poetry install
+      - name: Test backend-py
+        working-directory: backend-py
+        run: |
+          poetry run pytest
+      - name: Prepare backend-py Lambda code
+        working-directory: backend-py
+        run: |
+          poetry build
       - name: Install infra
         working-directory: infra
         run: |

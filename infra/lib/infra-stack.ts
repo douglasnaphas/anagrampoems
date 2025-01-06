@@ -13,6 +13,7 @@ import { aws_dynamodb as dynamodb } from "aws-cdk-lib";
 import { aws_iam as iam } from "aws-cdk-lib";
 import { RemovalPolicy } from "aws-cdk-lib";
 import path = require("path");
+import * as lambdaPython from "aws-cdk-lib/aws-lambda-python";
 const crypto = require("crypto");
 const stackname = require("@cdk-turnkey/stackname");
 
@@ -192,6 +193,19 @@ export class InfraStack extends cdk.Stack {
       value: apiUrl(api),
     });
 
+    // backend-py
+    const backendPyFn = new lambdaPython.PythonFunction(this, "BackendPyFn", {
+      entry: "../backend-py",
+      runtime: lambda.Runtime.PYTHON_3_9,
+      handler: "lambda_handler",
+      timeout: cdk.Duration.seconds(30),
+      memorySize: 1024,
+    });
+
+    const backendPyAPI = new apigwv2.HttpApi(this, "BackendPyAPI", {
+      defaultIntegration: new HttpLambdaIntegration("BackendPyIntegration", backendPyFn),
+    });
+
     // Let the backend handler read from and write to the DynamoDB table
     table.grantReadWriteData(webFn);
     // Let the backend handler describe the user pool client
@@ -203,6 +217,20 @@ export class InfraStack extends cdk.Stack {
         ],
       })
     );
+
+    distro.addBehavior("/backend/py-hello", new origins.HttpOrigin(apiUrl(backendPyAPI)), {
+      allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+      viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+      originRequestPolicy: new cloudfront.OriginRequestPolicy(
+        this,
+        "BackendPyORP",
+        {
+          cookieBehavior: cloudfront.OriginRequestCookieBehavior.all(),
+          queryStringBehavior: cloudfront.OriginRequestQueryStringBehavior.all(),
+        }
+      ),
+    });
 
     distro.addBehavior("/backend/*", new origins.HttpOrigin(apiUrl(api)), {
       allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
