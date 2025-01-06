@@ -3,11 +3,12 @@ name = "backend-py"
 version = "0.1.0"
 description = "A Python backend for handling HTTP requests"
 authors = ["Your Name <you@example.com>"]
+packages = [{ include = "backend_py" }]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.13"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^6.2.4"
 
 [build-system]
