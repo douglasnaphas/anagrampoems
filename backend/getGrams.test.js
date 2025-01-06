@@ -39,10 +39,31 @@ describe("GET /getGrams", () => {
   });
 
   test("the response for 'kate' should include 'take'", async () => {
-    const letterCount = [
-      1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
-      0,
-    ];
+    const letterCount = letters("kate");
+    const response = await request(app).get("/getGrams").query({ letterCount });
+    expect(response.status).toBe(200);
+    expect(response.body).toContainEqual(["take"]);
+  });
+
+  test.skip("the response for 'kate' should include a gram with 'k' and 'tea'", async () => {
+    const letterCount = letters("kate");
+    const response = await request(app).get("/getGrams").query({ letterCount });
+    expect(response.status).toBe(200);
+    expect(
+      response.body.some(
+        (gram) =>
+          gram.length === 2 && gram.includes("k") && gram.includes("tea")
+      )
+    ).toBe(true);
+    // console.log(response.body);
+  });
+
+  test.skip("the response for 'ab' should include either ['a','b'] or ['b','a'] but not both", async () => {
+    const letterCount = letters("ab");
+    const response = await request(app).get("/getGrams").query({ letterCount });
+    expect(response.status).toBe(200);
+    expect(response.body.filter((gram) => gram.length === 2)).toHaveLength(1);
+    console.log(response.body);
   });
 
   test("countAContainsCountB correctly identifies if one letter count array contains another", () => {

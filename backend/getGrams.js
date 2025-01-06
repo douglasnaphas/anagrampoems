@@ -14,7 +14,10 @@ const getGrams = (req, res) => {
     return res.status(400).send("Invalid letter count format");
   }
   // console.log("getGrams, have letterCount array");
-  const filePath = path.join(__dirname, "words_alpha-union-google-10000-english-usa.json");
+  const filePath = path.join(
+    __dirname,
+    "words_alpha-union-google-10000-english-usa.json"
+  );
   let wordsFileContents;
   try {
     wordsFileContents = fs.readFileSync(filePath, "utf8");
@@ -29,7 +32,13 @@ const getGrams = (req, res) => {
       validWords[word] = wordMap[word];
     }
   }
-  const anagrams = grams(validWords, letterCount);
+  let anagrams;
+  try {
+    anagrams = grams(validWords, letterCount);
+  } catch (err) {
+    console.error("Error determining anagrams:", err);
+    return res.status(500).send("Error determining anagrams");
+  }
   // const validWords = wordMap.filter((word) =>
   //   countAContainsCountB(letterCount, letters(word))
   // );
@@ -85,11 +94,11 @@ const grams = (vocab, keyLetterCount) => {
     }
   }
   // every word in vocab can be formed from key
-  const ret = [];
+  const perms = []; // permutations
 
-  const backtrack = (current, remaining, vocab) => {
+  const backtrack = (current, remaining, vocab, start) => {
     if (remaining.every((count) => count === 0)) {
-      ret.push(current.slice());
+      perms.push(current.slice());
       return;
     }
 
@@ -104,14 +113,36 @@ const grams = (vocab, keyLetterCount) => {
           // TODO: only remove it if it can't be formed from the remaining letters
           Object.entries(vocab).filter(([key]) => key !== v)
         );
-        backtrack(current, newRemaining, newVocab);
+        backtrack(current, newRemaining, newVocab, start + 1);
         current.pop();
       }
     }
   };
 
-  backtrack([], keyLetterCount, vocab);
-  return ret;
+  backtrack([], keyLetterCount, vocab, 0);
+
+  // get an array containing all the keys from vocab
+  const vocabKeys = Object.keys(vocab);
+  // sort vocabKeys alphabetically
+  vocabKeys.sort();
+  // ensure there are no duplicates in vocabKeys
+  const vocabKeysSet = new Set(vocabKeys);
+  if (vocabKeys.length !== vocabKeysSet.size) {
+    throw new Error("vocabKeys contains duplicates");
+  }
+  // create an array of 0s the same length as vocabKeys
+  const vocabCounts = new Array(vocabKeys.length).fill(0);
+  const combos = []; // combinations
+  perms.forEach((perm, i) => {
+    const combo = [];
+    for (let i = 0; i < vocabKeys.length; i++) {
+      combo.push(perm.filter((word) => word === vocabKeys[i]).length);
+    }
+    combos.push(combo);
+  });
+
+
+  return perms;
 };
 
 const gramSets = (vocab, keyLetterCount) => {
@@ -121,6 +152,6 @@ const gramSets = (vocab, keyLetterCount) => {
     ret.push(new Set(gramArray));
   }
   return ret;
-}
+};
 
 module.exports = { getGrams, findAnagrams, grams, gramSets };
