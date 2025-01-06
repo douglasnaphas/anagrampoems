@@ -26,8 +26,9 @@
     "typescript": "~5.7.2"
   },
   "dependencies": {
+    "@aws-cdk/aws-lambda-python-alpha": "^2.174.0-alpha.0",
     "@cdk-turnkey/stackname": "^2.1.0",
-    "aws-cdk-lib": "2.173.1",
+    "aws-cdk-lib": "^2.174.0",
     "aws-github-oidc-role": "^0.1.5",
     "constructs": "^10.4.2",
     "source-map-support": "^0.5.21"

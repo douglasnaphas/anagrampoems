@@ -13,7 +13,7 @@ import { aws_dynamodb as dynamodb } from "aws-cdk-lib";
 import { aws_iam as iam } from "aws-cdk-lib";
 import { RemovalPolicy } from "aws-cdk-lib";
 import path = require("path");
-import * as lambdaPython from "aws-cdk-lib/aws-lambda-python";
+import * as lambdaPython from "@aws-cdk/aws-lambda-python-alpha";
 const crypto = require("crypto");
 const stackname = require("@cdk-turnkey/stackname");
 
