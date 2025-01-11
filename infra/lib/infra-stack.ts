@@ -197,7 +197,7 @@ export class InfraStack extends cdk.Stack {
     const backendPyFn = new lambdaPython.PythonFunction(this, "BackendPyFn", {
       entry: "../backend-py",
       runtime: lambda.Runtime.PYTHON_3_13,
-      handler: "backend_py.lambda_handler",
+      handler: "lambda_handler",
       timeout: cdk.Duration.seconds(30),
       memorySize: 1024,
     });
