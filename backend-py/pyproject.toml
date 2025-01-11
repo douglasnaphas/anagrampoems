@@ -3,7 +3,7 @@ name = "backend-py"
 version = "0.1.0"
 description = "A Python backend for handling HTTP requests"
 authors = ["Your Name <you@example.com>"]
-packages = [{ include = "backend_py" }, { include = "tests" }]
+packages = [{ include = "." }, { include = "tests" }]
 
 [tool.poetry.dependencies]
 python = "^3.13"

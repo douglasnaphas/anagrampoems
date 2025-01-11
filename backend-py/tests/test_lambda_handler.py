@@ -1,4 +1,4 @@
-from backend_py.index import handler
+from index import handler
 
 def test_lambda_handler():
     event = {}
