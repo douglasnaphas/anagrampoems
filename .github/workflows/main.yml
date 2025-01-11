@@ -52,10 +52,6 @@ jobs:
         working-directory: backend-py
         run: |
           poetry run pytest
-      - name: Prepare backend-py Lambda code
-        working-directory: backend-py
-        run: |
-          poetry build
       - name: Install infra
         working-directory: infra
         run: |
