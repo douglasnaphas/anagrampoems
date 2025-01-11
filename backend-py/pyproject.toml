@@ -4,9 +4,11 @@ version = "0.1.0"
 description = "A Python backend for handling HTTP requests"
 authors = ["Your Name <you@example.com>"]
 packages = [{ include = "." }, { include = "tests" }]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.13"
+requests = "^2.32.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^6.2.4"
