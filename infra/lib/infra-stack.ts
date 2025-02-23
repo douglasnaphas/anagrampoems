@@ -194,12 +194,20 @@ export class InfraStack extends cdk.Stack {
     });
 
     // backend-py
-    const backendPyFn = new lambdaPython.PythonFunction(this, "BackendPyFn", {
-      entry: "../backend-py",
+    const backendPyFn = new lambda.Function(this, "BackendPyFn", {
+      code: lambda.Code.fromAsset("../backend-py"),
+      handler: "lambda.handler",
       runtime: lambda.Runtime.PYTHON_3_13,
       timeout: cdk.Duration.seconds(30),
       memorySize: 1024,
     });
+
+    // const backendPyFn = new lambdaPython.PythonFunction(this, "BackendPyFn", {
+    //   entry: "../backend-py",
+    //   runtime: lambda.Runtime.PYTHON_3_13,
+    //   timeout: cdk.Duration.seconds(30),
+    //   memorySize: 1024,
+    // });
 
     const backendPyAPI = new apigwv2.HttpApi(this, "BackendPyAPI", {
       defaultIntegration: new HttpLambdaIntegration("BackendPyIntegration", backendPyFn),

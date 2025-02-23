@@ -26,6 +26,7 @@ const deletePoems = require("./deletePoems");
 const checkKeyMiddleware = require("./checkKeyMiddleware");
 const putPoems = require("./putPoems");
 const deletePoemLines = require("./deletePoemLines");
+const { getGrams } = require("./getGrams"); // Import getGrams
 
 router.get("/", (req, res) => {
   return res.send("/ from Express on AWS Lambda!");
@@ -39,6 +40,7 @@ router.get("/common-words", commonWords);
 router.get("/many-words", manyWords);
 router.get("/login", login);
 router.get("/get-cookies", getCookies);
+router.get("/grams", getGrams);
 
 // authenticated requests
 router.use(cookieParser()); // TODO: Does this check cookie expiration?

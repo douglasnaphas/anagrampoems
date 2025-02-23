@@ -1,17 +1,14 @@
 [tool.poetry]
 name = "backend-py"
 version = "0.1.0"
-description = "A Python backend for handling HTTP requests"
-authors = ["Your Name <you@example.com>"]
-packages = [{ include = "." }]
+description = ""
+authors = ["Douglas Naphas <douglasnaphas@gmail.com>"]
+readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.13"
-requests = "^2.32.3"
+python = "^3.12"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^6.2.4"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
