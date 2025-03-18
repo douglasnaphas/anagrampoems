@@ -35,13 +35,16 @@ USER_POOL_DOMAIN=$(aws cognito-idp describe-user-pool \
 REDIRECT_URI=${APP_URL}/backend/get-cookies
 IDP_URL="https://${USER_POOL_DOMAIN}.auth.${AWS_DEFAULT_REGION}.amazoncognito.com/login?response_type=code&client_id=${USER_POOL_CLIENT_ID}&redirect_uri=${REDIRECT_URI}"
 
+# determine the file to run, default to App.itest.cjs if not provided
+FILE_TO_RUN=${1:-App.itest.cjs}
+
 if [[ "${SLOW}" == "y" ]]
 then
   SLOW_ARG="--slow"
 else
   SLOW_ARG=
 fi
-node App.itest.cjs \
+node "$FILE_TO_RUN" \
   --site ${APP_URL} \
   --idp-url "${IDP_URL}" \
   --user-pool-id ${USER_POOL_ID} \
