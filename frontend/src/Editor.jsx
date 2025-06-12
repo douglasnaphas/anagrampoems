@@ -6,6 +6,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { letters, aContainsB } from "./letters";
+import { grams } from "./grams";
 
 const Editor = ({ keyWord }) => {
   const [commonWords, setCommonWords] = useState([]);
@@ -533,6 +534,28 @@ const Editor = ({ keyWord }) => {
                 ))}
             </ul>
           )}
+          <Typography
+            variant="h3"
+            component="h3"
+            className="center-align"
+            id="grams-heading"
+          >
+            Grams
+          </Typography>
+          <ul className="dictionary left-align" id="grams-section">
+            {(() => {
+              // Combine commonWords and manyWords into a union
+              const vocabUnion = Array.from(
+                new Set([...commonWords, ...manyWords])
+              );
+              const gramsSet = grams(keyWord, vocabUnion);
+              return Array.from(gramsSet).map((gramArray, index) => (
+                <li key={index} className="pill">
+                  {gramArray.join(" ")}
+                </li>
+              ));
+            })()}
+          </ul>
         </div>
       </Grid>
     </Grid>
