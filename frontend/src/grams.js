@@ -30,9 +30,9 @@ function isEmpty(freq) {
     return Object.keys(freq).length === 0;
 }
 
-function grams(w, vocab) {
+function grams(k, vocab) {
     const result = new Set();
-    const targetFreq = getFrequency(w);
+    const targetFreq = getFrequency(k);
     // Precompute frequency for each word in vocab
     const vocabData = vocab.map(word => [word, getFrequency(word)]);
 
@@ -62,4 +62,18 @@ function grams(w, vocab) {
     return finalResult;
 }
 
-export { grams };
+function grams2(k, vocab, f){
+    const result = grams(k, vocab);
+    const filteredResult = new Set();
+
+    for (const combo of result) {
+        // Check if any word in the combination is in the filter set
+        if (combo.some(word => f.includes(word))) {
+            filteredResult.add(combo);
+        }
+    }
+
+    return filteredResult;
+}
+
+export { grams, grams2 };
