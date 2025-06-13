@@ -548,12 +548,12 @@ const Editor = ({ keyWord }) => {
               const vocabUnion = Array.from(
                 new Set([...commonWords, ...manyWords])
               );
-              const gramsSet = grams(keyWord, vocabUnion);
-              return Array.from(gramsSet).map((gramArray, index) => (
-                <li key={index} className="pill">
-                  {gramArray.join(" ")}
-                </li>
-              ));
+              // const gramsSet = grams(keyWord, vocabUnion);
+              // return Array.from(gramsSet).map((gramArray, index) => (
+              //   <li key={index} className="pill">
+              //     {gramArray.join(" ")}
+              //   </li>
+              // ));
             })()}
           </ul>
         </div>
