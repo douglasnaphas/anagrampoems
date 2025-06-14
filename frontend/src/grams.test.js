@@ -8,91 +8,65 @@ import {
   isEmpty,
 } from "./grams";
 
-// Helper to compare two sets of arrays (order-insensitive)
-function setEquals(setA, setB) {
-  if (setA.size !== setB.size) return false;
-  for (const arrA of setA) {
-    let foundEqual = false;
-    for (const arrB of setB) {
-      const sortedA = [...arrA].sort().join(",");
-      const sortedB = [...arrB].sort().join(",");
-      if (sortedA === sortedB) {
-        foundEqual = true;
-        break;
-      }
-    }
-    if (!foundEqual) return false;
-  }
-  return true;
+// Helper to normalize an array of arrays into a Set of sorted JSON strings for comparison
+function normalizeList(listOfLists) {
+  return new Set(listOfLists.map(sub => JSON.stringify([...sub].sort())));
 }
 
 test('grams function with k = "kate"', () => {
   const k = "kate";
   const vocab = ["a", "k", "t", "e", "at", "eat", "take"];
-  const expected = new Set();
-  expected.add(["take"]);
-  expected.add(["eat", "k"]);
-  expected.add(["at", "k", "e"]);
-  expected.add(["k", "a", "t", "e"]);
-
+  const expected = [
+    ["take"],
+    ["eat", "k"],
+    ["at", "k", "e"],
+    ["k", "a", "t", "e"]
+  ];
   const result = grams(k, vocab);
-  expect(setEquals(result, expected)).toBe(true);
+  expect(normalizeList(result)).toEqual(normalizeList(expected));
 });
 
 test('grams2 function with k = "kate"', () => {
+  // This test is equivalent to the grams test above.
   const k = "kate";
   const vocab = ["a", "k", "t", "e", "at", "eat", "take"];
-  const expected = new Set();
-  expected.add(["take"]);
-  expected.add(["eat", "k"]);
-  expected.add(["at", "k", "e"]);
-  expected.add(["k", "a", "t", "e"]);
-
+  const expected = [
+    ["take"],
+    ["eat", "k"],
+    ["at", "k", "e"],
+    ["k", "a", "t", "e"]
+  ];
   const result = grams(k, vocab);
-  expect(setEquals(result, expected)).toBe(true);
+  expect(normalizeList(result)).toEqual(normalizeList(expected));
 });
 
-// Parameterized tests for grams2
-describe("grams2 parameterized tests", () => {
-  // Helper to convert a set of sets (or arrays) into a normalized set of strings for comparison
-  function normalizeSet(setOfSets) {
-    const normalized = new Set();
-    for (const subset of setOfSets) {
-      // If subset is a Set, convert to array; if already an array, leave it be.
-      const arr = subset instanceof Set ? Array.from(subset) : subset;
-      normalized.add(JSON.stringify(arr.sort()));
-    }
-    return normalized;
-  }
-
+// Parameterized tests for fgrams
+describe("fgrams parameterized tests", () => {
   test.each([
     {
       description: "Filter with ['take'] - only combinations containing 'take'",
       k: "kate",
       vocab: ["a", "k", "t", "e", "at", "eat", "take"],
       f: ["take"],
-      expected: new Set([new Set(["take"])]),
+      expected: [ ["take"] ]
     },
     {
       description: "Filter with ['eat'] - only combinations containing 'eat'",
       k: "kate",
       vocab: ["a", "k", "t", "e", "at", "eat", "take"],
       f: ["eat"],
-      expected: new Set([new Set(["eat", "k"])]),
+      expected: [ ["eat", "k"] ]
     },
     {
-      description: "No filter should return the empty set",
+      description: "No filter should return the empty list",
       k: "kate",
       vocab: ["a", "k", "t", "e", "at", "eat", "take"],
       f: [],
-      expected: new Set(),
+      expected: []
     },
   ])("fgrams parameterized test: $description", ({ k, vocab, f, expected }) => {
     const result = fgrams(k, vocab, f);
-    // Normalize both expected and result for comparison
-    const normalizedResult = normalizeSet(result);
-    const normalizedExpected = normalizeSet(expected);
-    expect(normalizedResult).toEqual(normalizedExpected);
+    expect(normalizeList(result)).toEqual(normalizeList(expected));
   });
 });
 

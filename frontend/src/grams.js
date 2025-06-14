@@ -60,16 +60,15 @@ function kMinusF(k, f) {
 }
 
 function grams(k, vocab) {
-  const result = new Set();
+  const uniqueCombos = new Set();
   const targetFreq = getFrequency(k);
-  // Precompute frequency for each word in vocab
   const vocabData = vocab.map((word) => [word, getFrequency(word)]);
 
   function backtrack(currentCombo, remainingFreq) {
     if (isEmpty(remainingFreq)) {
       // Canonically sort the combination so order doesn't matter
       const sortedCombo = [...currentCombo].sort();
-      result.add(JSON.stringify(sortedCombo));
+      uniqueCombos.add(JSON.stringify(sortedCombo));
       return;
     }
     for (const [word, wordFreq] of vocabData) {
@@ -83,17 +82,14 @@ function grams(k, vocab) {
   }
 
   backtrack([], targetFreq);
-  // Convert JSON strings back into arrays and return as a new Set
-  const finalResult = new Set();
-  for (const comboStr of result) {
-    finalResult.add(JSON.parse(comboStr));
-  }
+  // Convert JSON strings back into arrays and return as an array of arrays.
+  const finalResult = Array.from(uniqueCombos).map((comboStr) => JSON.parse(comboStr));
   return finalResult;
 }
 
 function fgrams(k, vocab, f) {
   if (f.length === 0) {
-    return new Set();
+    return [];
   }
   const k2 = kMinusF(k, f);
   const fk2 = f.reduce((acc, word) => {
@@ -111,11 +107,8 @@ function fgrams(k, vocab, f) {
     return acc;
   }, []);
   const subGrams = grams(k2, vocab2);
-  // Add the filter words to each combination
-  const result = new Set();
-  for (const combo of subGrams) {
-    result.add([...combo, ...f]);
-  }
+  // For each combination, add the filter words and return an array
+  const result = subGrams.map((combo) => [...combo, ...f]);
   return result;
 }
 
