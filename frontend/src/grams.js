@@ -92,6 +92,9 @@ function grams(k, vocab) {
 }
 
 function fgrams(k, vocab, f) {
+  if (f.length === 0) {
+    return new Set();
+  }
   const k2 = kMinusF(k, f);
   const fk2 = f.reduce((acc, word) => {
     const wordFreq = getFrequency(word);
@@ -108,30 +111,20 @@ function fgrams(k, vocab, f) {
     return acc;
   }, []);
   const subGrams = grams(k2, vocab2);
-  // Add each word in `f` to each combination in `subGrams`
-  // const result = new Set();
-  // // for each word in f
-  // for(const word of f){
-  //   // for each combination in subGrams
-  //   for(const combo of subGrams){
-  //     // add the word to the combination
-  //     const newCombo = [...combo, word];
-  //     // add the new combination to the result set
-  //     result.add(newCombo);
-  //   }
-  // }
-  
-  const result = grams(k, vocab);
-  const filteredResult = new Set();
-
-  for (const combo of result) {
-    // Check if any word in the combination is in the filter set
-    if (combo.some((word) => f.includes(word))) {
-      filteredResult.add(combo);
-    }
+  // Add the filter words to each combination
+  const result = new Set();
+  for (const combo of subGrams) {
+    result.add([...combo, ...f]);
   }
-
-  return filteredResult;
+  return result;
 }
 
-export { grams, fgrams, kMinusF, getFrequency, canSubtract, subtractFreq, isEmpty };
+export {
+  grams,
+  fgrams,
+  kMinusF,
+  getFrequency,
+  canSubtract,
+  subtractFreq,
+  isEmpty,
+};
