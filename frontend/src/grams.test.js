@@ -10,7 +10,7 @@ import {
 
 // Helper to normalize an array of arrays into a Set of sorted JSON strings for comparison
 function normalizeList(listOfLists) {
-  return new Set(listOfLists.map(sub => JSON.stringify([...sub].sort())));
+  return new Set(listOfLists.map((sub) => JSON.stringify([...sub].sort())));
 }
 
 test('grams function with k = "kate"', () => {
@@ -20,7 +20,7 @@ test('grams function with k = "kate"', () => {
     ["take"],
     ["eat", "k"],
     ["at", "k", "e"],
-    ["k", "a", "t", "e"]
+    ["k", "a", "t", "e"],
   ];
   const result = grams(k, vocab);
   expect(normalizeList(result)).toEqual(normalizeList(expected));
@@ -34,7 +34,7 @@ test('grams2 function with k = "kate"', () => {
     ["take"],
     ["eat", "k"],
     ["at", "k", "e"],
-    ["k", "a", "t", "e"]
+    ["k", "a", "t", "e"],
   ];
   const result = grams(k, vocab);
   expect(normalizeList(result)).toEqual(normalizeList(expected));
@@ -48,21 +48,21 @@ describe("fgrams parameterized tests", () => {
       k: "kate",
       vocab: ["a", "k", "t", "e", "at", "eat", "take"],
       f: ["take"],
-      expected: [ ["take"] ]
+      expected: [["take"]],
     },
     {
       description: "Filter with ['eat'] - only combinations containing 'eat'",
       k: "kate",
       vocab: ["a", "k", "t", "e", "at", "eat", "take"],
       f: ["eat"],
-      expected: [ ["eat", "k"] ]
+      expected: [["eat", "k"]],
     },
     {
       description: "No filter should return the empty list",
       k: "kate",
       vocab: ["a", "k", "t", "e", "at", "eat", "take"],
       f: [],
-      expected: []
+      expected: [],
     },
   ])("fgrams parameterized test: $description", ({ k, vocab, f, expected }) => {
     const result = fgrams(k, vocab, f);
@@ -100,5 +100,33 @@ describe("kMinusF parameterized tests", () => {
   ])("kMinusF parameterized test: $description", ({ k, f, expected }) => {
     const result = kMinusF(k, f);
     expect(result).toBe(expected);
+  });
+});
+
+import { flgrams } from "./grams";
+
+describe("flgrams (with real limiting)", () => {
+  it("stops after lim entries", () => {
+    const k = "react";
+    const vocab = ["act", "cat", "tac"];
+    const f = ["re"];
+    const lim = 2;
+
+    // Removing 're' from 'react' leaves 'act'
+    // Possible grams on 'act' are ['act'], ['cat'], ['tac']
+    // In lex order (vocab sorted): act, cat, tac
+    // So flgrams yields:
+    //   ['act','re']
+    //   ['cat','re']
+    //   ['tac','re']
+    // but with lim=2 we only get the first two.
+
+    const result = flgrams(k, vocab, f, lim);
+
+    expect(result).toEqual([
+      ["act", "re"],
+      ["cat", "re"],
+    ]);
+    expect(result).toHaveLength(lim);
   });
 });

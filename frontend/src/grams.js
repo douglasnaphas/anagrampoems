@@ -83,7 +83,9 @@ function grams(k, vocab) {
 
   backtrack([], targetFreq);
   // Convert JSON strings back into arrays and return as an array of arrays.
-  const finalResult = Array.from(uniqueCombos).map((comboStr) => JSON.parse(comboStr));
+  const finalResult = Array.from(uniqueCombos).map((comboStr) =>
+    JSON.parse(comboStr)
+  );
   return finalResult;
 }
 
@@ -112,9 +114,48 @@ function fgrams(k, vocab, f) {
   return result;
 }
 
+/**
+ * Like fgrams, but returns at most `lim` combinations in lex order.
+ * Ordering: treat each combination as a sorted list of words and compare lexicographically.
+ */
+function flgrams(k, vocab, f, lim) {
+  if (f.length === 0 || lim <= 0) return [];
+  // Remainder after removing filter words
+  const k2 = kMinusF(k, f);
+  const freqK2 = getFrequency(k2);
+  // Only words that fit, sorted lexicographically
+  const vocab2 = vocab
+    .filter((word) => canSubtract(freqK2, getFrequency(word)))
+    .sort();
+
+  const results = [];
+  function backtrack(startIdx, combo, remFreq) {
+    if (results.length >= lim) return true; // stop early
+    if (isEmpty(remFreq)) {
+      results.push([...combo, ...f]);
+      return results.length >= lim;
+    }
+    for (let i = startIdx; i < vocab2.length; i++) {
+      const word = vocab2[i];
+      const wf = getFrequency(word);
+      if (!canSubtract(remFreq, wf)) continue;
+      combo.push(word);
+      const newRem = subtractFreq(remFreq, wf);
+      const done = backtrack(i, combo, newRem);
+      combo.pop();
+      if (done) return true;
+    }
+    return false;
+  }
+
+  backtrack(0, [], freqK2);
+  return results;
+}
+
 export {
   grams,
   fgrams,
+  flgrams,
   kMinusF,
   getFrequency,
   canSubtract,
