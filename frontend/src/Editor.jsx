@@ -6,7 +6,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { letters, aContainsB } from "./letters";
-import { grams } from "./grams";
+import { grams, flgrams } from "./grams";
 
 const Editor = ({ keyWord }) => {
   const [commonWords, setCommonWords] = useState([]);
@@ -18,6 +18,7 @@ const Editor = ({ keyWord }) => {
   const [selectedLineId, setSelectedLineId] = useState(null);
   const [selectedWord, setSelectedWord] = useState(null);
   const [selectedLineWordIndex, setSelectedLineWordIndex] = useState(null);
+  const [generatedGrams, setGeneratedGrams] = useState([]);
 
   useEffect(() => {
     const fetchCommonWords = async () => {
@@ -441,21 +442,24 @@ const Editor = ({ keyWord }) => {
           <Button onClick={() => setShowManyWords(!showManyWords)}>
             {showManyWords ? "Hide" : "Show"} Many words
           </Button>
-          {selectedLineId && selectedWord && (
+          {selectedLineId && (
             <Button
-              id="add-word-to-line-button"
-              onClick={handleAddWordToLine}
-              disabled={
-                !aContainsB(
+              onClick={() => {
+                // Generate grams when a line is selected.
+                const vocabUnion = Array.from(
+                  new Set([...commonWords, ...manyWords])
+                );
+                const lineWords = lines[selectedLineId] || [];
+                const gramsResult = flgrams(
                   keyWord,
-                  (lines[selectedLineId] || []).reduce(
-                    (wholeLine, word) => wholeLine + word,
-                    ""
-                  ) + selectedWord
-                )
-              }
+                  vocabUnion,
+                  lineWords,
+                  100
+                );
+                setGeneratedGrams(gramsResult);
+              }}
             >
-              <ArrowBackIcon />
+              Generate grams
             </Button>
           )}
         </div>
@@ -543,18 +547,13 @@ const Editor = ({ keyWord }) => {
             Grams
           </Typography>
           <ul className="dictionary left-align" id="grams-section">
-            {(() => {
-              // Combine commonWords and manyWords into a union
-              const vocabUnion = Array.from(
-                new Set([...commonWords, ...manyWords])
-              );
-              // const gramsSet = grams(keyWord, vocabUnion);
-              // return Array.from(gramsSet).map((gramArray, index) => (
-              //   <li key={index} className="pill">
-              //     {gramArray.join(" ")}
-              //   </li>
-              // ));
-            })()}
+            {generatedGrams.length > 0
+              ? generatedGrams.map((gramArray, index) => (
+                  <li key={index} className="pill">
+                    {gramArray.join(" ")}
+                  </li>
+                ))
+              : "No grams generated"}
           </ul>
         </div>
       </Grid>
