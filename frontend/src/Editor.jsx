@@ -442,6 +442,26 @@ const Editor = ({ keyWord }) => {
           <Button onClick={() => setShowManyWords(!showManyWords)}>
             {showManyWords ? "Hide" : "Show"} Many words
           </Button>
+          {selectedLineId && selectedWord && (
+            <Button
+              id="add-word-to-line-button"
+              Add
+              commentMore
+              actions
+              onClick={handleAddWordToLine}
+              disabled={
+                !aContainsB(
+                  keyWord,
+                  (lines[selectedLineId] || []).reduce(
+                    (wholeLine, word) => wholeLine + word,
+                    ""
+                  ) + selectedWord
+                )
+              }
+            >
+              <ArrowBackIcon />
+            </Button>
+          )}
           {selectedLineId && (
             <Button
               onClick={() => {
