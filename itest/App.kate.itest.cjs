@@ -260,16 +260,21 @@ const waitOptions = { timeout /*, visible: true */ };
     // Expect the text "Douglas Naphas" to be displayed as the first line under Lines
     const linesSelector = "#lines";
     await page.waitForSelector(linesSelector, waitOptions);
+    await page.waitForFunction(
+      (selector, expectedText) => {
+        const element = document.querySelector(selector);
+        return element && element.textContent.includes(expectedText);
+      },
+      { timeout },
+      linesSelector,
+      douglasNaphasInputValue
+    );
+
+    // Get the lines text content before checking for "sounds"
     const linesText = await page.evaluate((selector) => {
       const element = document.querySelector(selector);
       return element.textContent;
     }, linesSelector);
-    if (!linesText.includes(douglasNaphasInputValue)) {
-      await failTest(
-        "Poem test error",
-        "Expected key line not found for " + douglasNaphasInputValue
-      );
-    }
 
     // Expect the word "sounds" to not be displayed under Lines
     if (linesText.includes("sounds")) {
