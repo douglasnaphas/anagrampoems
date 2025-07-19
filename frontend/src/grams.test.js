@@ -130,3 +130,26 @@ describe("flgrams (with real limiting)", () => {
     expect(result).toHaveLength(lim);
   });
 });
+
+describe("flsgrams", () => {
+  test("navigating the grid of possible grams", () => {
+    const vocab = [
+      "alpha",
+      "bravo",
+      "charlie",
+      "delta",
+    ];
+    const expected = [
+        {"alpha": 1}, {"alpha": 2}, {"alpha": 3},
+        {"bravo": 1},
+        {"bravo": 1, "alpha": 1}, {"bravo": 1, "alpha": 2}, {"bravo": 1, "alpha": 3},
+        {"bravo": 2},
+        {"bravo": 2, "alpha": 1}, {"bravo": 2, "alpha": 2}, {"bravo": 2, "alpha": 3},
+        {"bravo": 3},
+        {"bravo": 3, "alpha": 1}, {"bravo": 3, "alpha": 2}, {"bravo": 3, "alpha": 3},
+        {"charlie": 1},
+        {"charlie": 1, "alpha": 1}, {"charlie": 1, "alpha": 2}, {"charlie": 1, "alpha: 3"}
+    ];
+
+  });
+});

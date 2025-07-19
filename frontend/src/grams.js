@@ -1,3 +1,12 @@
+/*
+  vocab is always the full vocabulary of words. Callers must not remove filter
+  words from vocab before calling a grams function.
+
+  Callers should lowercase every input word before calling these functions.
+
+  Callers are responsible for sorting vocab before providing it as input.
+*/
+
 function getFrequency(word) {
   const freq = {};
   for (const char of word) {
@@ -152,10 +161,27 @@ function flgrams(k, vocab, f, lim) {
   return results;
 }
 
+/**
+ * Finds all valid combinations of words from the vocabulary that can be formed
+ * from the letters in the input string `k`, while also considering the filter
+ * words `f` and limiting the number of results to `lim`. Starts after the gram
+ * given by `start`.
+ * @param {*} k The key, the string being anagrammed.
+ * @param {*} vocab The vocabulary of words to use for forming combinations.
+ * @param {*} f A list of words from `vocab` which must be in all grams.
+ *   Example: `["animal", "lover"]`.
+ * @param {*} lim The maximum number of combinations to return example: `10`.
+ * @param {*} start A gram to start after, example: `"his wrath at"`.
+ */
+function flsgrams(k, vocab, f, lim, start) {
+
+}
+
 export {
   grams,
   fgrams,
   flgrams,
+  flsgrams,
   kMinusF,
   getFrequency,
   canSubtract,
