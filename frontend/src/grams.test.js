@@ -268,5 +268,6 @@ describe("flsgrams", () => {
         {"delta": 3, "charlie": 3, "bravo": 3},
         {"delta": 3, "charlie": 3, "bravo": 3, "alpha": 1}, {"delta": 3, "charlie": 3, "bravo": 3, "alpha": 2}, {"delta": 3, "charlie": 3, "bravo": 3, "alpha": 3}
     ];
+    expect(expected.length).toBe(255);
   });
 });
