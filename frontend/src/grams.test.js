@@ -148,7 +148,10 @@ describe("flsgrams", () => {
         {"bravo": 3},
         {"bravo": 3, "alpha": 1}, {"bravo": 3, "alpha": 2}, {"bravo": 3, "alpha": 3},
         {"charlie": 1},
-        {"charlie": 1, "alpha": 1}, {"charlie": 1, "alpha": 2}, {"charlie": 1, "alpha: 3"}
+        {"charlie": 1, "alpha": 1}, {"charlie": 1, "alpha": 2}, {"charlie": 1, "alpha": 3},
+        {"charlie": 1, "bravo": 1},
+        {"charlie": 1, "bravo": 1, "alpha": 1}, {"charlie": 1, "bravo": 1, "alpha": 2}, {"charlie": 1, "bravo": 1, "alpha": 3},
+        
     ];
 
   });
