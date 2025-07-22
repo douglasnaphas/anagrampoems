@@ -5,6 +5,8 @@
   Callers should lowercase every input word before calling these functions.
 
   Callers are responsible for sorting vocab before providing it as input.
+
+  Sort vocab in ascending order by length for best results. Break ties any way.
 */
 
 function getFrequency(word) {
@@ -172,8 +174,76 @@ function flgrams(k, vocab, f, lim) {
  *   Example: `["animal", "lover"]`.
  * @param {*} lim The maximum number of combinations to return example: `10`.
  * @param {*} start A gram to start after, example: `"his wrath at"`.
+ * @param {*} fits A function fits(small, big) -> boolean.
+ *   `small` is the candidate gram, example: `{"alpha": 1, "bravo": 2}`
+ *   `big` is the key, example: `"alpha bravo bravo charlie"`
+ * @param {*} nextCombo A function that returns the next combination of vocab
+ *   words to operate on. nextCombo(thisCombo, vocab) -> combo. `combo`, `thisCombo`
+ *   example: {"alpha": 1, "bravo": 2}
+ *   Maybe this should be defined in the function, since I always want to
+ *   progress through gram candidates in the same order.
+ *   Or maybe nextCombo should contain the gram-checking logic?
+ *   Or maybe nextCombo should take fits as an arg?
  */
 function flsgrams(k, vocab, f, lim, start) {
+  const ret = [];
+  /*
+    Maybe nextCombo's algo should be:
+      For the word that I'm on (how do I know that? From the loop index?), if I
+      can increment it based on fits(), then do it, otherwise, increase the
+      index. Maybe the index is in some kind of inner loop? What's the outer
+      loop?
+    
+    I think the outer loop is a combo, a candidate gram. The inner loop is over
+    the vocab.
+  */
+  const nextCombo = (thisCombo) => {
+
+  }
+
+  // Remove the filter words from k and vocab
+  if (f.length === 0 || lim <= 0) return [];
+  // Remainder after removing filter words
+  const k2 = kMinusF(k, f);
+  const freqK2 = getFrequency(k2);
+  // Only words that fit
+  const vocab2 = vocab
+    .filter((word) => canSubtract(freqK2, getFrequency(word)));
+
+  
+  return ret;
+}
+
+/**
+ * 
+ * @param {*} k 
+ * @param {*} vocab 
+ * @param {*} thisCombo 
+ * @param {*} i
+ * @return {*} thisCombo with the lowest possible order increment made, of 1
+ */
+function nextCombo(k, vocab, thisCombo, i) {
+  // base case: thisCombo falsy
+  if(!thisCombo) {
+    return {[vocab[i]]: 1};
+  }
+
+  // base case: can increment, based on canSubtract
+  const freq = getFrequency(k);
+  let candidate = {...thisCombo, [vocab[i]]: (thisCombo[vocab[i]] || 0) + 1};
+  console.log(candidate);
+  const candidateFreq = candidate => {
+    let candidateWord = "";
+    // iterate over the keys in candidate
+    for (const word in candidate) {
+      candidateWord += word.repeat(candidate[word]);
+    }
+    return getFrequency(candidateWord);
+  }
+  if (canSubtract(freq, candidateFreq(candidate))) {
+    console.log(`can subtract ${candidate} from ${freq}`);
+    return candidate;
+  }
 
 }
 
@@ -182,6 +252,7 @@ export {
   fgrams,
   flgrams,
   flsgrams,
+  nextCombo,
   kMinusF,
   getFrequency,
   canSubtract,

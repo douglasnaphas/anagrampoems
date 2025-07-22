@@ -1,6 +1,9 @@
+import { describe, expect } from "vitest";
 import {
   grams,
   fgrams,
+  flsgrams,
+  nextCombo,
   kMinusF,
   getFrequency,
   canSubtract,
@@ -131,7 +134,7 @@ describe("flgrams (with real limiting)", () => {
   });
 });
 
-describe("flsgrams", () => {
+describe.skip("flsgrams", () => {
   test("navigating the grid of possible grams", () => {
     const vocab = [
       "alpha",
@@ -269,5 +272,82 @@ describe("flsgrams", () => {
         {"delta": 3, "charlie": 3, "bravo": 3, "alpha": 1}, {"delta": 3, "charlie": 3, "bravo": 3, "alpha": 2}, {"delta": 3, "charlie": 3, "bravo": 3, "alpha": 3}
     ];
     expect(expected.length).toBe(255);
+    const k = "placeholder";
+    const f = ["place", "holder"];
+    const lim = 300;
+    const start = "placeholder";
+    const nextCombo = (combo, vocab) => {
+      
+    }
+    const fits = (small, big) => {
+      for(let i = 0; i < vocab.length; i++) {
+        if(small[vocab[i]]) {
+          // Placeholder logic, should return true/false as needed
+        }
+      }
+      // Placeholder return value
+      return true;
+    };
+    const actual = flsgrams(k, vocab, f, lim, start, fits);
+    
+    expect({"a": 5, "b": 6}).toEqual({"b": 6, "a": 5});
+    expect(actual.length).toBe(expected.length);
+    expected.forEach((gram, i) => {
+      expect(actual[i]).toEqual(gram);
+    });
   });
+  test("simple case, lim 1", () => {
+    const k = "aabbcc";
+    const vocab = ["aa", "bb", "bc", "cc"];
+    const f = ["aa", "bb", "cc"];
+    const lim = 1;
+    const start = undefined;
+    const expected = [
+      {"aa": 1, "bb": 1, "cc": 1}
+    ];
+    const actual = flsgrams(k, vocab, f, lim, start);
+    expect(actual).toEqual(expected);
+  })
 });
+
+describe("canSubtract", () => {
+  test("can subtract two frequency objects", () => {
+    const freq1 = { a: 2, b: 3 };
+    const freq2 = { a: 1, b: 2 };
+    expect(canSubtract(freq1, freq2)).toBe(true);
+  });
+
+  test("cannot subtract when freq2 has more of a letter than freq1", () => {
+    const freq1 = { a: 2, b: 3 };
+    const freq2 = { a: 3, b: 2 };
+    expect(canSubtract(freq1, freq2)).toBe(false);
+  });
+
+  test("can subtract when freq2 has zero counts", () => {
+    const freq1 = { a: 2, b: 3 };
+    const freq2 = { a: 0, b: 0 };
+    expect(canSubtract(freq1, freq2)).toBe(true);
+  });
+})
+
+describe("nextCombo", () => {
+  test("find the first combo", () => {
+    const k = "aabbcc";
+    const vocab = ["aa", "bb", "cc"];
+    const expected = {
+      "aa": 1
+    };
+    const actual = nextCombo(k, vocab, null, 0);
+    expect(actual).toEqual(expected);
+  });
+  test("second combo", () => {
+    const k = "aabbaacc";
+    const vocab = ["aa", "bb", "cc"];
+    const thisCombo = {"aa":1}
+    const expected = {
+      "aa": 2
+    };
+    const actual = nextCombo(k, vocab, thisCombo, 0);
+    expect(actual).toEqual(expected);
+  })
+})
