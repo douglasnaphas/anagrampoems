@@ -197,9 +197,7 @@ function flsgrams(k, vocab, f, lim, start) {
     I think the outer loop is a combo, a candidate gram. The inner loop is over
     the vocab.
   */
-  const nextCombo = (thisCombo) => {
-
-  }
+  const nextCombo = (thisCombo) => {};
 
   // Remove the filter words from k and vocab
   if (f.length === 0 || lim <= 0) return [];
@@ -207,44 +205,66 @@ function flsgrams(k, vocab, f, lim, start) {
   const k2 = kMinusF(k, f);
   const freqK2 = getFrequency(k2);
   // Only words that fit
-  const vocab2 = vocab
-    .filter((word) => canSubtract(freqK2, getFrequency(word)));
+  const vocab2 = vocab.filter((word) =>
+    canSubtract(freqK2, getFrequency(word))
+  );
 
-  
   return ret;
 }
 
 /**
- * 
- * @param {*} k 
- * @param {*} vocab 
- * @param {*} thisCombo 
+ *
+ * @param {*} k
+ * @param {*} vocab
+ * @param {*} thisCombo
  * @param {*} i
  * @return {*} thisCombo with the lowest possible order increment made, of 1
  */
 function nextCombo(k, vocab, thisCombo, i) {
   // base case: thisCombo falsy
-  if(!thisCombo) {
-    return {[vocab[i]]: 1};
+  if (!thisCombo) {
+    return { [vocab[i]]: 1 };
   }
 
   // base case: can increment, based on canSubtract
   const freq = getFrequency(k);
-  let candidate = {...thisCombo, [vocab[i]]: (thisCombo[vocab[i]] || 0) + 1};
+  let candidate = { ...thisCombo, [vocab[i]]: (thisCombo[vocab[i]] || 0) + 1 };
   console.log(candidate);
-  const candidateFreq = candidate => {
+  const candidateFreq = (candidate) => {
     let candidateWord = "";
     // iterate over the keys in candidate
     for (const word in candidate) {
       candidateWord += word.repeat(candidate[word]);
     }
     return getFrequency(candidateWord);
-  }
+  };
   if (canSubtract(freq, candidateFreq(candidate))) {
     console.log(`can subtract ${candidate} from ${freq}`);
     return candidate;
   }
+}
 
+/**
+ *
+ * @param {*} k
+ * @param {*} vocab
+ * @param {*} thisCombo example: {"a": 2, "cat": 1, "sphinx": 1}
+ * @returns
+ */
+function nextCombo2(k, vocab, thisCombo) {
+  if (!thisCombo) {
+    return { [vocab[0]]: 1 }; // always the first combo
+  }
+  // convert the combo to a vocab-length array
+  const thisComboArray = [];
+  vocab.forEach((v, idx) => {
+    if (thisCombo(v)) {
+      thisComboArray[idx] = thisCombo[v];
+    } else {
+      thisComboArray[v] = 0;
+    }
+  });
+  for (let v = 0; v <= vocab.length; v++) {}
 }
 
 export {
