@@ -139,3 +139,5 @@ override.tf.json
 # swap files
 *.sw?
 .sw?
+
+.vscode
