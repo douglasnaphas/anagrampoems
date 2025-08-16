@@ -181,12 +181,42 @@ const Editor = ({ keyWord }) => {
     setSelectedWord(word);
   };
 
-  const handleExcludeWord = () => {
+  const handleExcludeWord = async () => {
     if (selectedWord && !excludedWords.includes(selectedWord)) {
-      setExcludedWords((prev) => [...prev, selectedWord]);
+      const newExcludedWords = [...excludedWords, selectedWord];
+      setExcludedWords(newExcludedWords);
       setSelectedWord(null);
+      // Persist excluded words to backend
+      try {
+        await fetch("/backend/excluded-words", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ key: keyWord, excludedWords: newExcludedWords }),
+        });
+      } catch (err) {
+        console.error("Error persisting excluded words", err);
+      }
     }
   };
+  // Optionally, fetch excludedWords from backend on mount
+  useEffect(() => {
+    const fetchExcludedWords = async () => {
+      try {
+        const response = await fetch(`/backend/excluded-words?key=${encodeURIComponent(keyWord)}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data.excludedWords)) {
+            setExcludedWords(data.excludedWords);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching excluded words", err);
+      }
+    };
+    fetchExcludedWords();
+  }, [keyWord]);
 
   const handleAddWordToLine = async () => {
     if (selectedLineId === null || selectedWord === null) return;

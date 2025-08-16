@@ -148,6 +148,9 @@ export class InfraStack extends cdk.Stack {
       sortKey: { name: schema.SORT_KEY, type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: RemovalPolicy.DESTROY,
+      // Add excluded_words as an attribute for documentation (DynamoDB is schemaless, but this helps for clarity)
+      // excluded_words will be stored as a list on poem#<key> items
+      // No need to specify attribute here, but document in comments
     });
 
     // backend

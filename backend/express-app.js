@@ -1,3 +1,7 @@
+const putExcludedWords = require("./putExcludedWords");
+const getExcludedWords = require("./getExcludedWords");
+router.put("/excluded-words", bodyParser.json(), putExcludedWords);
+router.get("/excluded-words", getExcludedWords);
 const express = require("express");
 const app = express();
 const router = express.Router();
