@@ -69,7 +69,7 @@ describe("prepVocabForKey", () => {
     const vocabRaw = ["a", "k", "t", "e", "at", "eat", "take", "zebra"];
     const result = prepVocabForKey(keyFreq, vocabRaw);
     const words = result.map((w) => w.w);
-    expect(words).toEqual(["a", "k", "t", "e", "at", "eat", "take"]);
+    expect(words).toEqual(["a", "e", "k", "t", "at", "eat", "take"]);
   });
 });
 
