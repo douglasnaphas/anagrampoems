@@ -580,27 +580,27 @@ const Editor = ({ keyWord }) => {
                     {word}
                   </li>
                 ))}
-          <Typography
-            variant="h3"
-            component="h3"
-            className="center-align"
-            id="excluded-words-heading"
-          >
-            Excluded words
-          </Typography>
-          {showExcludedWords && (
-            <ul className="dictionary left-align" id="excluded-words-section">
-              {excludedWords.length > 0
-                ? excludedWords.map((word, index) => (
-                    <li key={`${index}-excluded-${word}`} className="pill">
-                      {word}
-                    </li>
-                  ))
-                : "No excluded words"}
-            </ul>
-          )}
-            </ul>
-          )}
+              </ul>
+            )}
+            <Typography
+              variant="h3"
+              component="h3"
+              className="center-align"
+              id="excluded-words-heading"
+            >
+              Excluded words
+            </Typography>
+            {showExcludedWords && (
+              <ul className="dictionary left-align" id="excluded-words-section">
+                {excludedWords.length > 0
+                  ? excludedWords.map((word, index) => (
+                      <li key={`${index}-excluded-${word}`} className="pill">
+                        {word}
+                      </li>
+                    ))
+                  : "No excluded words"}
+              </ul>
+            )}
           <Typography
             variant="h3"
             component="h3"
