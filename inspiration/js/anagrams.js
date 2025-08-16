@@ -183,45 +183,34 @@ export async function* genAnagrams({
 // import { genAnagrams } from "./anagrams.js";
 
 // const key = "Sarah Whitt"; // any capitals/spaces/punctuation ok
-// const vocab = ["a","aa","hat","wit","has","hart","shirt","wash","this","rah","tar","whit"];
-// const mustInclude = ["wit"]; // exact word(s) to force into every result
+// const vocab = [
+//   "a",
+//   "aa",
+//   "hat",
+//   "wit",
+//   "has",
+//   "hart",
+//   "shirt",
+//   "wash",
+//   "this",
+//   "rah",
+//   "tar",
+//   "whit",
+//   "thaw",
+//   "what"
+// ];
+// const mustInclude = ["a"]; // exact word(s) to force into every result
 
 // (async () => {
 //   let shown = 0;
-//   for await (const phrase of genAnagrams({ key, vocab, mustInclude, yieldEvery: 2000 })) {
+//   for await (const phrase of genAnagrams({
+//     key,
+//     vocab,
+//     mustInclude,
+//     yieldEvery: 2000,
+//   })) {
 //     console.log(phrase.join(" "));
 //     if (++shown >= 50) break; // stop after 50 for demo
 //   }
 // })();
-
-const key = "Sarah Whitt"; // any capitals/spaces/punctuation ok
-const vocab = [
-  "a",
-  "aa",
-  "hat",
-  "wit",
-  "has",
-  "hart",
-  "shirt",
-  "wash",
-  "this",
-  "rah",
-  "tar",
-  "whit",
-  "thaw",
-  "what"
-];
-const mustInclude = ["a"]; // exact word(s) to force into every result
-
-(async () => {
-  let shown = 0;
-  for await (const phrase of genAnagrams({
-    key,
-    vocab,
-    mustInclude,
-    yieldEvery: 2000,
-  })) {
-    console.log(phrase.join(" "));
-    if (++shown >= 50) break; // stop after 50 for demo
-  }
-})();
+// ```
