@@ -7,6 +7,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { letters, aContainsB } from "./letters";
 import { grams, flgrams } from "./grams";
+import { genAnagrams } from "./anagrams";
 
 const Editor = ({ keyWord }) => {
   const [commonWords, setCommonWords] = useState([]);
@@ -462,21 +463,20 @@ const Editor = ({ keyWord }) => {
               <ArrowBackIcon />
             </Button>
           )}
-          {selectedLineId && (
+          {selectedWord && (
             <Button
-              onClick={() => {
-                // Generate grams when a line is selected.
-                const vocabUnion = Array.from(
-                  new Set([...commonWords, ...manyWords])
-                );
-                const lineWords = lines[selectedLineId] || [];
-                const gramsResult = flgrams(
-                  keyWord,
-                  vocabUnion,
-                  lineWords,
-                  100
-                );
-                setGeneratedGrams(gramsResult);
+              onClick={async () => {
+                // Generate grams (anagrams) when a word is selected.
+                const vocabUnion = Array.from(new Set([...commonWords, ...manyWords]));
+                const anagrams = [];
+                for await (const phrase of genAnagrams({
+                  key: keyWord,
+                  vocab: vocabUnion,
+                  mustInclude: [selectedWord],
+                })) {
+                  anagrams.push(phrase);
+                }
+                setGeneratedGrams(anagrams);
               }}
             >
               Generate grams
