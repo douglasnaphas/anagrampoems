@@ -183,7 +183,7 @@ export async function* genAnagrams({
 // import { genAnagrams } from "./anagrams.js";
 
 // const key = "Sarah Whitt"; // any capitals/spaces/punctuation ok
-// const vocab = ["a","aa","hat","wit","has","hart","shirt","wash","this","rah","tar","hart","whit"];
+// const vocab = ["a","aa","hat","wit","has","hart","shirt","wash","this","rah","tar","whit"];
 // const mustInclude = ["wit"]; // exact word(s) to force into every result
 
 // (async () => {
@@ -207,10 +207,11 @@ const vocab = [
   "this",
   "rah",
   "tar",
-  "hart",
   "whit",
+  "thaw",
+  "what"
 ];
-const mustInclude = ["wit"]; // exact word(s) to force into every result
+const mustInclude = ["a"]; // exact word(s) to force into every result
 
 (async () => {
   let shown = 0;
