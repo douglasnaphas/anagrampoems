@@ -51,6 +51,18 @@ function sig(F) {
   return out;
 }
 
+/** Remove the letters of `w` from `s`. Return remainder string (sorted), or null if impossible. */
+export function kMinusWord(s, w) {
+  const S = freqOf(normalize(s));
+  const W = freqOf(normalize(w));
+  if (!canSubtract(S, W)) return null;
+  const rem = subtractFreq(S, W);
+  let out = "";
+  for (const ch of Object.keys(rem).sort()) out += ch.repeat(rem[ch]);
+  return out;
+}
+
+
 /**
  * Preprocess the vocabulary for a specific key:
  *  - normalize words
@@ -96,38 +108,68 @@ export async function* genAnagrams({
   const k = normalize(key);
   if (!k) return;
 
-  // Step 1: apply filter words up-front
+  // Step 1: subtract required filter words
   let K = k;
   for (const req of mustInclude) {
     const rw = normalize(req);
     if (!rw) continue;
-    K = kMinusWord(K, rw); // removes letters in-order; faster than multi-map ops
-    if (K == null) return; // required word doesn't fit -> no anagrams
+    K = kMinusWord(K, rw);
+    if (K == null) return;
   }
-
   const keyFreq = freqOf(K);
 
-  // Step 2: prep filtered vocab suited to this reduced key
-  const dict = prepVocabForKey(keyFreq, vocab); // [{w,wf,len}, ...]
-  if (dict.length === 0) return;
+  // Step 2: prepare filtered vocabulary suited to remaining key
+  const dict = prepVocabForKey(keyFreq, vocab);
+  if (!dict.length) return;
 
-  // Map required words to their exact, normalized forms as they must appear
-  const reqWords = mustInclude.map((w) => normalize(w)).filter(Boolean);
-
-  // Step 3: backtracking with pruning, non-blocking
-  //   We enumerate combinations by index (allowing reuse: i stays same on recursion)
+  const reqWords = mustInclude.map(normalize).filter(Boolean);
   let steps = 0;
-  const noSolution = new Set(); // memo: states that lead to 0 solutions
-  const reqPrefix = reqWords.slice(); // to append on success
+  const noSolution = new Set();
 
-  async function dfs(startIdx, remFreq, path) {
-    // Periodically yield to event loop to keep UI responsive
+  async function* dfs(startIdx, remFreq, path) {
     if (++steps % yieldEvery === 0) {
-      // microtask hop is enough in modern browsers
-      await Promise.resolve();
+      await Promise.resolve(); // Yield to event loop
     }
+
+    if (isEmpty(remFreq)) {
+      // Found a complete match for K
+      yield [...path, ...reqWords];
+      return;
+    }
+
+    const stateKey = `${startIdx}|${sig(remFreq)}`;
+    if (noSolution.has(stateKey)) return;
+
+    let foundAny = false;
+
+    for (let i = startIdx; i < dict.length; i++) {
+      const { w, wf, len } = dict[i];
+
+      let remTotal = 0;
+      for (const ch in remFreq) remTotal += remFreq[ch];
+      if (len > remTotal) break; // No further words will fit
+
+      if (!canSubtract(remFreq, wf)) continue;
+
+      const nextRem = subtractFreq(remFreq, wf);
+      path.push(w);
+
+      for await (const phrase of dfs(i, nextRem, path)) {
+        foundAny = true;
+        yield phrase;
+      }
+
+      path.pop();
+    }
+
+    if (!foundAny) noSolution.add(stateKey);
+  }
+
+  for await (const phrase of dfs(0, keyFreq, [])) {
+    yield phrase;
   }
 }
+
 // - We **yield control** to the browser every few thousand steps using `await Promise.resolve()` so the **event loop** can process input/paint—keeping the UI responsive while still being single-threaded. (This is the microtask hop pattern used with async/await.) :contentReference[oaicite:4]{index=4}
 // - Vocabulary is **pre-filtered** specifically for the current key (any word that can’t fit the reduced letter budget is removed), and we iterate in **length-ascending** order so once a word is too long for the remaining letters, we can **break** early for the rest of the list.
 
@@ -151,3 +193,34 @@ export async function* genAnagrams({
 //     if (++shown >= 50) break; // stop after 50 for demo
 //   }
 // })();
+
+const key = "Sarah Whitt"; // any capitals/spaces/punctuation ok
+const vocab = [
+  "a",
+  "aa",
+  "hat",
+  "wit",
+  "has",
+  "hart",
+  "shirt",
+  "wash",
+  "this",
+  "rah",
+  "tar",
+  "hart",
+  "whit",
+];
+const mustInclude = ["wit"]; // exact word(s) to force into every result
+
+(async () => {
+  let shown = 0;
+  for await (const phrase of genAnagrams({
+    key,
+    vocab,
+    mustInclude,
+    yieldEvery: 2000,
+  })) {
+    console.log(phrase.join(" "));
+    if (++shown >= 50) break; // stop after 50 for demo
+  }
+})();
