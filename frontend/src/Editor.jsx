@@ -20,6 +20,8 @@ const Editor = ({ keyWord }) => {
   const [selectedWord, setSelectedWord] = useState(null);
   const [selectedLineWordIndex, setSelectedLineWordIndex] = useState(null);
   const [generatedGrams, setGeneratedGrams] = useState([]);
+  const [excludedWords, setExcludedWords] = useState([]);
+  const [showExcludedWords, setShowExcludedWords] = useState(true);
 
   useEffect(() => {
     const fetchCommonWords = async () => {
@@ -177,6 +179,13 @@ const Editor = ({ keyWord }) => {
 
   const handleWordClick = (word) => {
     setSelectedWord(word);
+  };
+
+  const handleExcludeWord = () => {
+    if (selectedWord && !excludedWords.includes(selectedWord)) {
+      setExcludedWords((prev) => [...prev, selectedWord]);
+      setSelectedWord(null);
+    }
   };
 
   const handleAddWordToLine = async () => {
@@ -443,6 +452,9 @@ const Editor = ({ keyWord }) => {
           <Button onClick={() => setShowManyWords(!showManyWords)}>
             {showManyWords ? "Hide" : "Show"} Many words
           </Button>
+          <Button onClick={() => setShowExcludedWords(!showExcludedWords)}>
+            {showExcludedWords ? "Hide" : "Show"} Excluded words
+          </Button>
           {selectedLineId && selectedWord && (
             <Button
               id="add-word-to-line-button"
@@ -465,9 +477,19 @@ const Editor = ({ keyWord }) => {
           )}
           {selectedWord && (
             <Button
+              onClick={handleExcludeWord}
+              id="exclude-word-button"
+            >
+              Exclude Word
+            </Button>
+          )}
+          {selectedWord && (
+            <Button
               onClick={async () => {
                 // Generate grams (anagrams) when a word is selected.
-                const vocabUnion = Array.from(new Set([...commonWords, ...manyWords]));
+                const vocabUnion = Array.from(new Set([...commonWords, ...manyWords])).filter(
+                  (w) => !excludedWords.includes(w)
+                );
                 const anagrams = [];
                 for await (const phrase of genAnagrams({
                   key: keyWord,
@@ -496,7 +518,8 @@ const Editor = ({ keyWord }) => {
             <ul className="dictionary left-align">
               {commonWords
                 .filter((word) =>
-                  selectedLineId
+                  !excludedWords.includes(word) &&
+                  (selectedLineId
                     ? aContainsB(
                         keyWord,
                         (lines[selectedLineId] || []).reduce(
@@ -504,7 +527,7 @@ const Editor = ({ keyWord }) => {
                           ""
                         ) + word
                       )
-                    : true
+                    : true)
                 )
                 .sort((a, b) => b.length - a.length || a.localeCompare(b))
                 .map((word, index) => (
@@ -533,7 +556,8 @@ const Editor = ({ keyWord }) => {
             <ul className="dictionary left-align">
               {manyWords
                 .filter((word) =>
-                  selectedLineId
+                  !excludedWords.includes(word) &&
+                  (selectedLineId
                     ? aContainsB(
                         keyWord,
                         (lines[selectedLineId] || []).reduce(
@@ -541,7 +565,7 @@ const Editor = ({ keyWord }) => {
                           ""
                         ) + word
                       )
-                    : true
+                    : true)
                 )
                 .sort((a, b) => b.length - a.length || a.localeCompare(b))
                 .map((word, index) => (
@@ -556,6 +580,25 @@ const Editor = ({ keyWord }) => {
                     {word}
                   </li>
                 ))}
+          <Typography
+            variant="h3"
+            component="h3"
+            className="center-align"
+            id="excluded-words-heading"
+          >
+            Excluded words
+          </Typography>
+          {showExcludedWords && (
+            <ul className="dictionary left-align" id="excluded-words-section">
+              {excludedWords.length > 0
+                ? excludedWords.map((word, index) => (
+                    <li key={`${index}-excluded-${word}`} className="pill">
+                      {word}
+                    </li>
+                  ))
+                : "No excluded words"}
+            </ul>
+          )}
             </ul>
           )}
           <Typography
