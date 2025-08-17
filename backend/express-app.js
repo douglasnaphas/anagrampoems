@@ -1,3 +1,4 @@
+const deleteExcludedWord = require("./deleteExcludedWord");
 const putExcludedWords = require("./putExcludedWords");
 const getExcludedWords = require("./getExcludedWords");
 const express = require("express");
@@ -66,6 +67,7 @@ router.delete("/poems", deletePoems);
 router.delete("/poem-lines", deletePoemLines);
 router.put("/excluded-words", bodyParser.json(), putExcludedWords);
 router.get("/excluded-words", getExcludedWords);
+router.delete("/excluded-word", bodyParser.json(), deleteExcludedWord);
 
 router.get("/poems", getPoems);
 router.get("/poem", getPoem);

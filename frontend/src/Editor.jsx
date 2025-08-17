@@ -505,12 +505,35 @@ const Editor = ({ keyWord }) => {
               <ArrowBackIcon />
             </Button>
           )}
-          {selectedWord && (
+          {selectedWord && !excludedWords.includes(selectedWord) && (
             <Button
               onClick={handleExcludeWord}
               id="exclude-word-button"
             >
               Exclude Word
+            </Button>
+          )}
+          {selectedWord && excludedWords.includes(selectedWord) && (
+            <Button
+              onClick={async () => {
+                // Un-exclude word logic
+                try {
+                  await fetch("/backend/excluded-word", {
+                    method: "DELETE",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ key: keyWord, word: selectedWord }),
+                  });
+                  setExcludedWords(excludedWords.filter(w => w !== selectedWord));
+                  setSelectedWord(null);
+                } catch (err) {
+                  console.error("Error un-excluding word", err);
+                }
+              }}
+              id="unexclude-word-button"
+            >
+              Un-exclude Word
             </Button>
           )}
           {selectedWord && (
