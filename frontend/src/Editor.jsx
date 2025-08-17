@@ -680,7 +680,13 @@ const Editor = ({ keyWord }) => {
               <ul className="dictionary left-align" id="excluded-words-section">
                 {excludedWords.length > 0
                   ? excludedWords.map((word, index) => (
-                      <li key={`${index}-excluded-${word}`} className="pill">
+                      <li
+                        key={`${index}-excluded-${word}`}
+                        className={`pill ${
+                          selectedWord === word ? "selected-word" : ""
+                        }`}
+                        onClick={() => handleWordClick(word)}
+                      >
                         {word}
                       </li>
                     ))
