@@ -20,6 +20,39 @@ const Editor = ({ keyWord }) => {
   const [selectedWord, setSelectedWord] = useState(null);
   const [selectedLineWordIndex, setSelectedLineWordIndex] = useState(null);
   const [generatedGrams, setGeneratedGrams] = useState([]);
+  const [selectedGramIndex, setSelectedGramIndex] = useState(null);
+  const handleGramClick = (index) => {
+    setSelectedGramIndex(index);
+  };
+
+  const handleAddGramToPoem = async () => {
+    if (selectedGramIndex === null || !generatedGrams[selectedGramIndex]) return;
+    const gramWords = generatedGrams[selectedGramIndex];
+    // Compute new lineId
+    const newLineId = poemLineIdOrder && poemLineIdOrder.length > 0 ? Math.max(...poemLineIdOrder) + 1 : 1;
+    try {
+      // Add line to backend
+      const addLineResponse = await fetch(`/backend/poem-lines`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: keyWord, lineId: newLineId }),
+      });
+      if (!addLineResponse.ok) throw new Error("Failed to add line");
+      // Add words to line
+      const putWordsResponse = await fetch(`/backend/line-words`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: keyWord, lineId: newLineId, lineWords: gramWords }),
+      });
+      if (!putWordsResponse.ok) throw new Error("Failed to add words to line");
+      // Update local state
+      setLines((prevLines) => ({ ...prevLines, [newLineId]: gramWords }));
+      setPoemLineIdOrder((prevOrder) => [...prevOrder, newLineId]);
+      setSelectedGramIndex(null);
+    } catch (err) {
+      console.error("Error adding gram to poem", err);
+    }
+  };
   const [excludedWords, setExcludedWords] = useState([]);
   const [showExcludedWords, setShowExcludedWords] = useState(true);
 
@@ -665,12 +698,24 @@ const Editor = ({ keyWord }) => {
           <ul className="dictionary left-align" id="grams-section">
             {generatedGrams.length > 0
               ? generatedGrams.map((gramArray, index) => (
-                  <li key={index} className="pill">
+                  <li
+                    key={index}
+                    className={`pill${selectedGramIndex === index ? " selected-word" : ""}`}
+                    onClick={() => handleGramClick(index)}
+                  >
                     {gramArray.join(" ")}
                   </li>
                 ))
               : "No grams generated"}
           </ul>
+          {selectedGramIndex !== null && (
+            <Button
+              onClick={handleAddGramToPoem}
+              id="add-gram-to-poem-button"
+            >
+              Add selected gram as new line
+            </Button>
+          )}
         </div>
       </Grid>
     </Grid>
