@@ -107,3 +107,55 @@ jobs:
         working-directory: itest
         run: |
           npm run itest -- App.kate.itest.cjs
+  webapp-prod:
+    runs-on: ubuntu-latest
+    environment: prod
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install frontend
+        working-directory: frontend
+        run: |
+          npm install
+      - name: Test frontend
+        working-directory: frontend
+        run: |
+          npm test
+      - name: Build frontend
+        working-directory: frontend
+        run: |
+          npm run build
+      - name: Install backend
+        working-directory: backend
+        run: |
+          npm install
+      - name: Test backend
+        working-directory: backend
+        run: |
+          npm test
+      - name: Prepare backend Lambda code
+        working-directory: backend
+        run: |
+          npm run install-build
+      - name: Install infra
+        working-directory: infra
+        run: |
+          npm install
+      - name: Build infra
+        working-directory: infra
+        run: npm run build
+      - name: Test infra
+        working-directory: infra
+        run: |
+          npm test
+      - name: Configure AWS Credentials, prod env
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.DEPLOYMENT_ROLE_ARN }}
+          aws-region: us-east-2
+      - name: Deploy the webapp stack to the prod account
+        working-directory: infra
+        run: |
+          npm run deploy-webapp

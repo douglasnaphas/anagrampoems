@@ -14,7 +14,8 @@
     "deploy-role-master": "bash scripts/deploy-role-master.sh",
     "deploy-webapp": "bash scripts/deploy-webapp.sh",
     "synth-webapp": "bash scripts/synth-webapp.sh",
-    "deploy-role-test-env": "bash scripts/deploy-role-test-env.sh"
+    "deploy-role-test-env": "bash scripts/deploy-role-test-env.sh",
+    "deploy-role-prod-env": "bash scripts/deploy-role-prod-env.sh"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
