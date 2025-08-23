@@ -91,15 +91,15 @@ export class InfraStack extends cdk.Stack {
     });
 
     // Cognito user pool domain
-    const domainPrefixLength = 12;
-    const domainPrefix = crypto
+    const domainPrefixHashPartLength = 8;
+    const domainPrefixHashPart = crypto
       .createHash("sha256")
-      .update(stackname(`domain-prefix`, { hash: 5 }) /*+ `${this.account}`*/)
+      .update(stackname(`domain-prefix`, { hash: 5 }))
       .digest("hex")
       .toLowerCase()
-      .slice(0, domainPrefixLength);
+      .slice(0, domainPrefixHashPartLength);
     const userPoolDomain = userPool.addDomain("UserPoolDomain", {
-      cognitoDomain: { domainPrefix },
+      cognitoDomain: { domainPrefix: domainPrefixHashPart + this.account },
     });
 
     // Cognito app client
