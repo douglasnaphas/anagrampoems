@@ -108,6 +108,7 @@ jobs:
         run: |
           npm run itest -- App.kate.itest.cjs
   webapp-prod:
+    needs: [itest-kate-staging]
     runs-on: ubuntu-latest
     environment: prod
     permissions:
