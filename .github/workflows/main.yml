@@ -55,6 +55,9 @@ jobs:
           aws-region: us-east-2
       - name: Deploy the webapp stack to the staging account
         working-directory: infra
+        env:
+          ZONE_ID: ${{ vars.ZONE_ID }}
+          DOMAIN_NAME: ${{ vars.DOMAIN_NAME }}
         run: |
           npm run deploy-webapp
   itest-staging:
@@ -158,6 +161,9 @@ jobs:
           aws-region: us-east-2
       - name: Deploy the webapp stack to the prod account
         working-directory: infra
+        env:
+          ZONE_ID: ${{ vars.ZONE_ID }}
+          DOMAIN_NAME: ${{ vars.DOMAIN_NAME }}
         run: |
           npm run deploy-webapp
   itest-prod:

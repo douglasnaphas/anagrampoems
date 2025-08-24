@@ -20,5 +20,12 @@ import { InfraStack } from "../lib/infra-stack";
   }
   const app = new cdk.App();
   GitHubOidcRoleStacks(app, process.env.GITHUB_REPOSITORY);
-  new InfraStack(app, stackname("anagrampoems-web", { hash: 5 }), {});
+  new InfraStack(
+    app,
+    stackname("anagrampoems-web", { hash: 5 }),
+    {
+      zoneId: process.env.ZONE_ID,
+      domainName: process.env.DOMAIN_NAME,
+    }
+  );
 })();

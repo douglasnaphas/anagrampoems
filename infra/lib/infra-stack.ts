@@ -12,6 +12,8 @@ import { aws_cognito as cognito } from "aws-cdk-lib";
 import { aws_dynamodb as dynamodb } from "aws-cdk-lib";
 import { aws_iam as iam } from "aws-cdk-lib";
 import { RemovalPolicy } from "aws-cdk-lib";
+import { aws_ses as ses } from "aws-cdk-lib";
+import {aws_route53 as route53} from "aws-cdk-lib";
 import path = require("path");
 const crypto = require("crypto");
 const stackname = require("@cdk-turnkey/stackname");
@@ -25,6 +27,8 @@ export interface InfraStackProps extends cdk.StackProps {
 export class InfraStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: InfraStackProps) {
     super(scope, id, props);
+    
+    const { fromAddress, domainName, zoneId } = props || {};
 
     // frontend
     const frontendBucket = new s3.Bucket(this, "FrontendBucket", {
@@ -54,7 +58,20 @@ export class InfraStack extends cdk.Stack {
     };
     const distro = new cloudfront.Distribution(this, "Distro", distroProps);
 
-    const webappDomainName = props?.domainName || distro.distributionDomainName;
+    const webappDomainName = domainName || distro.distributionDomainName;
+
+    let hostedZone;
+    if(domainName && zoneId) {
+      hostedZone = route53.HostedZone.fromHostedZoneAttributes(
+        this,
+        "HostedZone",
+        { hostedZoneId: zoneId, zoneName: domainName + "." }
+      );
+      const identity = new ses.EmailIdentity(this, 'EmailIdentity', {
+        identity: ses.Identity.publicHostedZone(hostedZone),
+        mailFromDomain: domainName,
+      });
+    }
 
     // Cognito user pool
     const userPool = new cognito.UserPool(this, "UserPool", {
