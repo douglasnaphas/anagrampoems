@@ -69,7 +69,6 @@ export class InfraStack extends cdk.Stack {
       );
       const identity = new ses.EmailIdentity(this, 'EmailIdentity', {
         identity: ses.Identity.publicHostedZone(hostedZone),
-        mailFromDomain: domainName,
       });
     }
 
