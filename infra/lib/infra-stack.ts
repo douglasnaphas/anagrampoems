@@ -65,7 +65,7 @@ export class InfraStack extends cdk.Stack {
       hostedZone = route53.HostedZone.fromHostedZoneAttributes(
         this,
         "HostedZone",
-        { hostedZoneId: zoneId, zoneName: domainName + "." }
+        { hostedZoneId: zoneId, zoneName: domainName }
       );
       const identity = new ses.EmailIdentity(this, 'EmailIdentity', {
         identity: ses.Identity.publicHostedZone(hostedZone),
