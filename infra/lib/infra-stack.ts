@@ -241,7 +241,7 @@ export class InfraStack extends cdk.Stack {
       value: distro.distributionDomainName,
     });
     new cdk.CfnOutput(this, "webappDomainName", {
-      value: distro.distributionDomainName,
+      value: webappDomainName,
     });
   }
 }
