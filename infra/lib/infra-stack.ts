@@ -14,6 +14,7 @@ import { aws_iam as iam } from "aws-cdk-lib";
 import { RemovalPolicy } from "aws-cdk-lib";
 import { aws_ses as ses } from "aws-cdk-lib";
 import {aws_route53 as route53} from "aws-cdk-lib";
+import { aws_certificatemanager as acm } from "aws-cdk-lib";
 import path = require("path");
 const crypto = require("crypto");
 const stackname = require("@cdk-turnkey/stackname");
@@ -44,6 +45,27 @@ export class InfraStack extends cdk.Stack {
       }
     );
 
+
+    let hostedZone, wwwDomainName, certificate, domainNames;
+    if(domainName && zoneId) {
+      hostedZone = route53.HostedZone.fromHostedZoneAttributes(
+        this,
+        "HostedZone",
+        { hostedZoneId: zoneId, zoneName: domainName }
+      );
+      const identity = new ses.EmailIdentity(this, 'EmailIdentity', {
+        identity: ses.Identity.publicHostedZone(hostedZone),
+      });
+      wwwDomainName = "www." + domainName;
+      certificate = new acm.Certificate(this, "Certificate", {
+        domainName,
+        subjectAlternativeNames: [wwwDomainName],
+        validation: acm.CertificateValidation.fromDns(hostedZone),
+      });
+      domainNames = [domainName, wwwDomainName];
+    }
+
+
     // distro, for frontend and backend
     const distroProps: any = {
       enableLogging: true,
@@ -55,22 +77,12 @@ export class InfraStack extends cdk.Stack {
         cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
       },
       defaultRootObject: "index.html",
+      domainNames,
+      certificate,
     };
     const distro = new cloudfront.Distribution(this, "Distro", distroProps);
 
     const webappDomainName = domainName || distro.distributionDomainName;
-
-    let hostedZone;
-    if(domainName && zoneId) {
-      hostedZone = route53.HostedZone.fromHostedZoneAttributes(
-        this,
-        "HostedZone",
-        { hostedZoneId: zoneId, zoneName: domainName }
-      );
-      const identity = new ses.EmailIdentity(this, 'EmailIdentity', {
-        identity: ses.Identity.publicHostedZone(hostedZone),
-      });
-    }
 
     // Cognito user pool
     const userPool = new cognito.UserPool(this, "UserPool", {
