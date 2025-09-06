@@ -13,10 +13,11 @@ class CertificateStack extends Stack {
   public readonly certificateArn: string;
   constructor(scope: Construct, id: string, props: StackProps & { domainName: string; hostedZoneId: string }) {
     super(scope, id, { ...props, env: { region: "us-east-1" } });
-
+    const wwwDomainName = "www." + props.domainName;
     const cert = new Certificate(this, "Certificate", {
       domainName: props.domainName,
       validation: CertificateValidation.fromDns(),
+      subjectAlternativeNames: [wwwDomainName],
     });
     this.certificateArn = cert.certificateArn;
   }
