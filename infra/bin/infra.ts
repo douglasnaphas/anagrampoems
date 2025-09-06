@@ -44,6 +44,7 @@ class CertificateStack extends Stack {
     domainName: process.env.DOMAIN_NAME,
     hostedZoneId: process.env.ZONE_ID,
     env: { region: "us-east-1" },
+    crossRegionReferences: true,
   });
 
   // Step 2: Create InfraStack in your target region, referencing the cert ARN
@@ -55,6 +56,7 @@ class CertificateStack extends Stack {
       domainName: process.env.DOMAIN_NAME,
       certificateArn: certStack.certificateArn, // <-- pass the ARN
       env: { region: process.env.CDK_DEFAULT_REGION || "us-east-2" },
+      crossRegionReferences: true,
     }
   );
 })();
