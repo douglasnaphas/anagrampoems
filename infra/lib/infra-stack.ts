@@ -23,13 +23,14 @@ export interface InfraStackProps extends cdk.StackProps {
   fromAddress?: string;
   domainName?: string;
   zoneId?: string;
+  certificateArn?: string;
 }
 
 export class InfraStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: InfraStackProps) {
     super(scope, id, props);
-    
-    const { fromAddress, domainName, zoneId } = props || {};
+
+    const { fromAddress, domainName, zoneId, certificateArn } = props || {};
 
     // frontend
     const frontendBucket = new s3.Bucket(this, "FrontendBucket", {
@@ -47,22 +48,28 @@ export class InfraStack extends cdk.Stack {
 
 
     let hostedZone, wwwDomainName, certificate, domainNames;
-    if(domainName && zoneId) {
+    if (domainName && zoneId) {
       hostedZone = route53.HostedZone.fromHostedZoneAttributes(
         this,
         "HostedZone",
         { hostedZoneId: zoneId, zoneName: domainName }
       );
-      const identity = new ses.EmailIdentity(this, 'EmailIdentity', {
+      const identity = new ses.EmailIdentity(this, "EmailIdentity", {
         identity: ses.Identity.publicHostedZone(hostedZone),
       });
       wwwDomainName = "www." + domainName;
-      certificate = new acm.Certificate(this, "Certificate", {
-        domainName,
-        subjectAlternativeNames: [wwwDomainName],
-        validation: acm.CertificateValidation.fromDns(hostedZone),
-      });
       domainNames = [domainName, wwwDomainName];
+
+      // Use certificateArn if provided, otherwise create a new certificate
+      if (certificateArn) {
+        certificate = acm.Certificate.fromCertificateArn(this, "Certificate", certificateArn);
+      } else {
+        certificate = new acm.Certificate(this, "Certificate", {
+          domainName,
+          subjectAlternativeNames: [wwwDomainName],
+          validation: acm.CertificateValidation.fromDns(hostedZone),
+        });
+      }
     }
 
 
