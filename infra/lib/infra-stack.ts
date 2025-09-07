@@ -15,6 +15,7 @@ import { RemovalPolicy } from "aws-cdk-lib";
 import { aws_ses as ses } from "aws-cdk-lib";
 import {aws_route53 as route53} from "aws-cdk-lib";
 import { aws_certificatemanager as acm } from "aws-cdk-lib";
+import { aws_route53_targets as targets } from "aws-cdk-lib";
 import path = require("path");
 const crypto = require("crypto");
 const stackname = require("@cdk-turnkey/stackname");
@@ -256,6 +257,34 @@ export class InfraStack extends cdk.Stack {
         }
       ),
     });
+
+    if (domainName && wwwDomainName && hostedZone) {
+      // point the domain name with an alias record to the distro
+      const aliasRecord = new route53.ARecord(this, "Alias", {
+        recordName: domainName,
+        zone: hostedZone,
+        target: route53.RecordTarget.fromAlias(
+          new targets.CloudFrontTarget(distro)
+        ),
+      });
+      const aliasWWWRecord = new route53.ARecord(this, "AliasWWW", {
+        recordName: wwwDomainName,
+        zone: hostedZone,
+        target: route53.RecordTarget.fromAlias(
+          new targets.CloudFrontTarget(distro)
+        ),
+      });
+      const DNS_WEIGHT = 100;
+      const cfnAliasRecordSet = aliasRecord.node
+        .defaultChild as route53.CfnRecordSet;
+      cfnAliasRecordSet.weight = DNS_WEIGHT;
+      cfnAliasRecordSet.setIdentifier = "apwebapp-cf-alias";
+      const cfnAliasWWWRecordSet = aliasWWWRecord.node
+        .defaultChild as route53.CfnRecordSet;
+      cfnAliasWWWRecordSet.weight = DNS_WEIGHT;
+      cfnAliasWWWRecordSet.setIdentifier = "apwebapp-www-cf-alias";
+    }
+
     new cdk.CfnOutput(this, "DistributionDomainName", {
       value: distro.distributionDomainName,
     });
