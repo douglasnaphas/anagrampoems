@@ -7,6 +7,7 @@ import { InfraStack } from "../lib/infra-stack";
 import { Certificate, CertificateValidation } from "aws-cdk-lib/aws-certificatemanager";
 import { Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
+import { HostedZone } from "aws-cdk-lib/aws-route53";
 
 // Step 1: Certificate Stack in us-east-1
 class CertificateStack extends Stack {
@@ -15,9 +16,15 @@ class CertificateStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps & { domainName: string; hostedZoneId: string }) {
     super(scope, id, { ...props, env: { region: "us-east-1" } });
     const wwwDomainName = "www." + props.domainName;
+
+    const hostedZone = HostedZone.fromHostedZoneAttributes(this, "HostedZone", {
+      hostedZoneId: props.hostedZoneId,
+      zoneName: props.domainName,
+    });
+
     const cert = new Certificate(this, "Certificate", {
       domainName: props.domainName,
-      validation: CertificateValidation.fromDns(),
+      validation: CertificateValidation.fromDns(hostedZone),
       subjectAlternativeNames: [wwwDomainName],
     });
     this.certificateArn = cert.certificateArn;
