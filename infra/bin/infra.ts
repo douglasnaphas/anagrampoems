@@ -11,7 +11,7 @@ import { HostedZone } from "aws-cdk-lib/aws-route53";
 
 // Step 1: Certificate Stack in us-east-1
 class CertificateStack extends Stack {
-  public readonly certificateArnV3: string;
+  public readonly certificateArnV4: string;
   constructor(scope: Construct, id: string, props: StackProps & { domainName: string; hostedZoneId: string }) {
     super(scope, id, { ...props, env: { region: "us-east-1" } });
     const wwwDomainName = "www." + props.domainName;
@@ -26,7 +26,7 @@ class CertificateStack extends Stack {
       validation: CertificateValidation.fromDns(hostedZone),
       subjectAlternativeNames: [wwwDomainName],
     });
-    this.certificateArnV3 = cert.certificateArn;
+    this.certificateArnV4 = cert.certificateArn;
   }
 }
 
@@ -53,7 +53,7 @@ class CertificateStack extends Stack {
       env: { region: "us-east-1" },
       crossRegionReferences: true,
     });
-    certificateArn = certStack.certificateArnV3;
+    certificateArn = certStack.certificateArnV4;
   }
 
   // Step 2: Create InfraStack in your target region, referencing the cert ARN if available
