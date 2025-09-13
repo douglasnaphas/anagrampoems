@@ -11,6 +11,9 @@ import { HostedZone } from "aws-cdk-lib/aws-route53";
 
 // Step 1: Certificate Stack in us-east-1
 class CertificateStack extends Stack {
+  public readonly certificateArn: string;
+  public readonly certificateArnV2: string;
+  public readonly certificateArnV3: string;
   public readonly certificateArnV4: string;
   constructor(scope: Construct, id: string, props: StackProps & { domainName: string; hostedZoneId: string }) {
     super(scope, id, { ...props, env: { region: "us-east-1" } });
@@ -26,6 +29,9 @@ class CertificateStack extends Stack {
       validation: CertificateValidation.fromDns(hostedZone),
       subjectAlternativeNames: [wwwDomainName],
     });
+    this.certificateArn = cert.certificateArn;
+    this.certificateArnV2 = cert.certificateArn;
+    this.certificateArnV3 = cert.certificateArn;
     this.certificateArnV4 = cert.certificateArn;
   }
 }
