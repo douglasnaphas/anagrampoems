@@ -29,9 +29,10 @@ export interface InfraStackProps extends cdk.StackProps {
 
 export class InfraStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: InfraStackProps) {
-    super(scope, id, props);
+    // Force region to us-east-1
+    super(scope, id, { ...props, env: { ...props?.env, region: "us-east-1" } });
 
-    const { fromAddress, domainName, zoneId, certificateArn } = props || {};
+    const { fromAddress, domainName, zoneId } = props || {};
 
     // frontend
     const frontendBucket = new s3.Bucket(this, "FrontendBucket", {
@@ -60,17 +61,11 @@ export class InfraStack extends cdk.Stack {
       });
       wwwDomainName = "www." + domainName;
       domainNames = [domainName, wwwDomainName];
-
-      // Use certificateArn if provided, otherwise create a new certificate
-      if (certificateArn) {
-        certificate = acm.Certificate.fromCertificateArn(this, "Certificate", certificateArn);
-      } else {
-        certificate = new acm.Certificate(this, "Certificate", {
-          domainName,
-          subjectAlternativeNames: [wwwDomainName],
-          validation: acm.CertificateValidation.fromDns(hostedZone),
-        });
-      }
+      certificate = new acm.Certificate(this, "Certificate", {
+        domainName,
+        subjectAlternativeNames: [wwwDomainName],
+        validation: acm.CertificateValidation.fromDns(hostedZone),
+      });
     }
 
 

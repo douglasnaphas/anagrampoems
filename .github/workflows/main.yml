@@ -52,7 +52,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.DEPLOYMENT_ROLE_ARN }}
-          aws-region: us-east-2
+          aws-region: us-east-1
       - name: Deploy the webapp stack to the staging account
         working-directory: infra
         env:
@@ -77,11 +77,11 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.DEPLOYMENT_ROLE_ARN }}
-          aws-region: us-east-2
+          aws-region: us-east-1
       - name: Run itest
         env:
-          AWS_REGION: us-east-2
-          AWS_DEFAULT_REGION: us-east-2
+          AWS_REGION: us-east-1
+          AWS_DEFAULT_REGION: us-east-1
         working-directory: itest
         run: |
           npm run itest
@@ -102,11 +102,11 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.DEPLOYMENT_ROLE_ARN }}
-          aws-region: us-east-2
+          aws-region: us-east-1
       - name: Run itest for Kate
         env:
-          AWS_REGION: us-east-2
-          AWS_DEFAULT_REGION: us-east-2
+          AWS_REGION: us-east-1
+          AWS_DEFAULT_REGION: us-east-1
         working-directory: itest
         run: |
           npm run itest -- App.kate.itest.cjs
@@ -158,7 +158,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.DEPLOYMENT_ROLE_ARN }}
-          aws-region: us-east-2
+          aws-region: us-east-1
       - name: Deploy the webapp stack to the prod account
         working-directory: infra
         env:
@@ -183,11 +183,11 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.DEPLOYMENT_ROLE_ARN }}
-          aws-region: us-east-2
+          aws-region: us-east-1
       - name: Run itest
         env:
-          AWS_REGION: us-east-2
-          AWS_DEFAULT_REGION: us-east-2
+          AWS_REGION: us-east-1
+          AWS_DEFAULT_REGION: us-east-1
         working-directory: itest
         run: |
           npm run itest
@@ -208,11 +208,11 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.DEPLOYMENT_ROLE_ARN }}
-          aws-region: us-east-2
+          aws-region: us-east-1
       - name: Run itest for Kate
         env:
-          AWS_REGION: us-east-2
-          AWS_DEFAULT_REGION: us-east-2
+          AWS_REGION: us-east-1
+          AWS_DEFAULT_REGION: us-east-1
         working-directory: itest
         run: |
           npm run itest -- App.kate.itest.cjs
