@@ -87,9 +87,12 @@ function App() {
 
   const handleDeletePoem = async () => {
     try {
-      const response = await fetch(`/backend/poems?key=${encodeURIComponent(selectedPoem)}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `/backend/poems?key=${encodeURIComponent(selectedPoem)}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (response.status !== 204) {
         throw new Error("Network response was not ok, deleting poem");
       }
@@ -151,7 +154,11 @@ function App() {
             name="key"
           />
           <Box mt={2}>
-            <Button id="create-poem-button" disabled={!userInfo || !inputValue} type="submit">
+            <Button
+              id="create-poem-button"
+              disabled={!userInfo || !inputValue}
+              type="submit"
+            >
               Create poem
             </Button>
           </Box>
