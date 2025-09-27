@@ -14,7 +14,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { Typography, AppBar, Toolbar, Link } from "@mui/material";
+import { Typography, Link } from "@mui/material";
 import Editor from "./Editor";
 
 function App() {
@@ -87,9 +87,12 @@ function App() {
 
   const handleDeletePoem = async () => {
     try {
-      const response = await fetch(`/backend/poems?key=${encodeURIComponent(selectedPoem)}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `/backend/poems?key=${encodeURIComponent(selectedPoem)}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (response.status !== 204) {
         throw new Error("Network response was not ok, deleting poem");
       }
@@ -102,37 +105,60 @@ function App() {
 
   return (
     <>
-      <AppBar position="static" color="transparent" elevation={0}>
-        <Toolbar>
-          <Box sx={{ flexGrow: 1 }} />
+      <Typography variant="h1" component="h1">
+        Anagram Poems
+      </Typography>
+      <Box
+        position="absolute"
+        top={0}
+        right={0}
+        p={2}
+        textAlign="right"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          gap: "2px",
+        }}
+      >
+        {userInfo ? (
+          <>
+            <Typography variant="body1" id="username-display">
+              {userInfo.username}
+            </Typography>
+            <Typography variant="body2" id="user-email-display">
+              {userInfo.user_email}
+            </Typography>
+            <a href="/backend/logout" id="logout-link">
+              Log out
+            </a>
+            <Link
+              href="https://github.com/douglasnaphas/anagrampoems"
+              target="_blank"
+              rel="noopener"
+              underline="hover"
+              color="text.secondary"
+              id="about-link"
+              sx={{ fontSize: "1rem", fontWeight: 400, mt: 0.5 }}
+            >
+              About
+            </Link>
+          </>
+        ) : (
           <Link
             href="https://github.com/douglasnaphas/anagrampoems"
             target="_blank"
             rel="noopener"
             underline="hover"
             color="text.secondary"
+            id="about-link"
             sx={{ fontSize: "1rem", fontWeight: 400 }}
           >
             About
           </Link>
-        </Toolbar>
-      </AppBar>
-      <Typography variant="h1" component="h1">
-        Anagram Poems
-      </Typography>
-      {userInfo && (
-        <Box position="absolute" top={0} right={0} p={2} textAlign="right">
-          <Typography variant="body1" id="username-display">
-            {userInfo.username}
-          </Typography>
-          <Typography variant="body2" id="user-email-display">
-            {userInfo.user_email}
-          </Typography>
-          <a href="/backend/logout" id="logout-link">
-            Log out
-          </a>
-        </Box>
-      )}
+        )}
+      </Box>
+
       <div>
         <Box
           component="form"
@@ -151,7 +177,11 @@ function App() {
             name="key"
           />
           <Box mt={2}>
-            <Button id="create-poem-button" disabled={!userInfo || !inputValue} type="submit">
+            <Button
+              id="create-poem-button"
+              disabled={!userInfo || !inputValue}
+              type="submit"
+            >
               Create poem
             </Button>
           </Box>
