@@ -569,18 +569,19 @@ const Editor = ({ keyWord }) => {
               Un-exclude Word
             </Button>
           )}
-          {selectedWord && (
+          {selectedLineId !== null && lines[selectedLineId] && lines[selectedLineId].length > 0 && (
             <Button
               onClick={async () => {
                 // Generate grams (anagrams) when a word is selected.
                 const vocabUnion = Array.from(new Set([...commonWords, ...manyWords])).filter(
                   (w) => !excludedWords.includes(w)
                 );
+                const mustInclude = lines[selectedLineId];
                 const anagrams = [];
                 for await (const phrase of genAnagrams({
                   key: keyWord,
                   vocab: vocabUnion,
-                  mustInclude: [selectedWord],
+                  mustInclude,
                 })) {
                   anagrams.push(phrase);
                 }
