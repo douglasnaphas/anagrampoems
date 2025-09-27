@@ -14,7 +14,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { Typography } from "@mui/material";
+import { Typography, AppBar, Toolbar, Link } from "@mui/material";
 import Editor from "./Editor";
 
 function App() {
@@ -102,6 +102,21 @@ function App() {
 
   return (
     <>
+      <AppBar position="static" color="transparent" elevation={0}>
+        <Toolbar>
+          <Box sx={{ flexGrow: 1 }} />
+          <Link
+            href="https://github.com/douglasnaphas/anagrampoems"
+            target="_blank"
+            rel="noopener"
+            underline="hover"
+            color="text.secondary"
+            sx={{ fontSize: "1rem", fontWeight: 400 }}
+          >
+            About
+          </Link>
+        </Toolbar>
+      </AppBar>
       <Typography variant="h1" component="h1">
         Anagram Poems
       </Typography>
