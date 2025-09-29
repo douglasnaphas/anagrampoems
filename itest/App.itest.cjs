@@ -40,6 +40,7 @@ const browserOptions = {
 };
 browserOptions.slowMo = slowDown;
 const waitOptions = { timeout /*, visible: true */ };
+
 // Opens a MUI <Select> and chooses the option whose text includes optionText.
 async function selectFromMuiDropdown(page, selectSelector, optionText, waitOptions) {
   // Open the dropdown
@@ -74,6 +75,16 @@ async function selectFromMuiDropdown(page, selectSelector, optionText, waitOptio
     selectSelector,
     optionText
   );
+}
+
+async function dropdownOptionsContain(page, text, waitOptions) {
+  await openMuiDropdown(page, waitOptions);
+  const present = await page.evaluate((t) => {
+    const items = Array.from(document.querySelectorAll('li[role="option"]'));
+    return items.some(li => (li.textContent || '').includes(t));
+  }, text);
+  await closeMuiDropdown(page);
+  return present;
 }
 
 
@@ -382,14 +393,16 @@ async function selectFromMuiDropdown(page, selectSelector, optionText, waitOptio
       );
     }
 
-    // Expect the text "Douglas Naphas" to not be displayed under Your Poems
-    const poemsListTextPostDelete = await page.evaluate((selector) => {
-      const element = document.querySelector(selector);
-      return element.textContent;
-    }, poemsListSelector);
-    if (poemsListTextPostDelete.includes(douglasNaphasInputValue)) {
-      await failTest("Poem test error", "Expected poem to be deleted");
+    // The poem should no longer appear in the dropdown options
+    const stillInDropdown = await dropdownOptionsContain(
+      page,
+      douglasNaphasInputValue,
+      waitOptions
+    );
+    if (stillInDropdown) {
+      await failTest("Poem test error", "Expected poem to be     deleted");
     }
+
 
     // Create the poem "Douglas Naphas" again, and expect it to be displayed
     await page.type(thingToGramSelector, douglasNaphasInputValue);
