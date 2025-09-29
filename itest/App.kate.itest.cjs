@@ -218,17 +218,19 @@ const waitOptions = { timeout /*, visible: true */ };
           )}`
       );
     }
-    // Expect the text "Douglas Naphas" to be displayed under Your Poems,
-    // in a ul with id "poems-list"
-    const poemsListSelector = "#poems-list";
-    await page.waitForSelector(poemsListSelector, waitOptions);
-    const poemsListText = await page.evaluate((selector) => {
-      const element = document.querySelector(selector);
-      return element.textContent;
-    }, poemsListSelector);
-    if (!poemsListText.includes(douglasNaphasInputValue)) {
-      await failTest("Home page test error", "Expected poem not found in list");
+    // Expect the text "Douglas Naphas" to be displayed in the dropdown menu
+    const poemDropdownSelector = "#poem-select";
+    await page.waitForSelector(poemDropdownSelector, waitOptions);
+    // Get all options in the dropdown
+    const poemOptions = await page.$$eval(
+      `${poemDropdownSelector} option, ${poemDropdownSelector} [role="option"]`,
+      (options) => options.map((opt) => opt.textContent)
+    );
+    if (!poemOptions.some((text) => text.includes(douglasNaphasInputValue))) {
+      await failTest("Home page test error", "Expected poem not found in dropdown");
     }
+    // Select the poem in the dropdown
+    await page.select(poemDropdownSelector, douglasNaphasInputValue);
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
