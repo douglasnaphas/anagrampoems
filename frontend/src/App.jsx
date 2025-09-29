@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -14,15 +12,15 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { Typography, Link } from "@mui/material";
+import { Box, Typography, Link, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import Editor from "./Editor";
 
 function App() {
   // State to hold the input value
   const [inputValue, setInputValue] = useState("");
   const [userInfo, setUserInfo] = useState(null);
-  const [poems, setPoems] = useState([]);
-  const [selectedPoem, setSelectedPoem] = useState(null);
+  const [poems, setPoems] = React.useState([]);
+  const [selectedPoem, setSelectedPoem] = React.useState("");
   const [openDialog, setOpenDialog] = useState(false);
 
   const whoami = async () => {
@@ -48,6 +46,7 @@ function App() {
       }
       const getPoemsData = await response.json();
       setPoems(getPoemsData);
+      if (getPoemsData.length > 0) setSelectedPoem(getPoemsData[0]);
     } catch (error) {
       console.error("Error fetching GET /backend/poems:", error);
     }
@@ -73,8 +72,8 @@ function App() {
     window.location.href = "/backend/login";
   };
 
-  const handlePoemClick = (poem) => {
-    setSelectedPoem(poem);
+  const handlePoemChange = (event) => {
+    setSelectedPoem(event.target.value);
   };
 
   const handleDeleteClick = () => {
@@ -213,24 +212,29 @@ function App() {
       <Typography variant="h2" component="h2" id="your-poems">
         Your Poems
       </Typography>
-      <ul className="dictionary left-align" id="poems-list">
-        {poems.map((poem, index) => (
-          <li
-            key={`${index}-${poem}`}
-            className={`pill ${selectedPoem === poem ? "selected-poem" : ""}`}
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4, mb: 4 }}>
+        <FormControl sx={{ minWidth: 350 }}>
+          <InputLabel id="poem-select-label">Select a Poem</InputLabel>
+          <Select
+            labelId="poem-select-label"
+            id="poem-select"
+            value={selectedPoem}
+            label="Select a Poem"
+            onChange={handlePoemChange}
+            sx={{ minWidth: 350, maxWidth: 600 }}
           >
-            <a
-              href={`?poem=${encodeURIComponent(poem)}`}
-              onClick={() => handlePoemClick(poem)}
-            >
-              {poem}
-            </a>
-          </li>
-        ))}
-      </ul>
+            {poems.map((poemKey) => (
+              <MenuItem key={poemKey} value={poemKey}>
+                {poemKey}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+      {/* Render Editor for selected poem */}
+      {selectedPoem && <Editor keyWord={selectedPoem} />}
       {selectedPoem && (
         <>
-          <Editor keyWord={selectedPoem} />
           <Box display="flex" justifyContent="center" mt={2}>
             <Button
               id="delete-poem-button"
