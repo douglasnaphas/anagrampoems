@@ -40,6 +40,42 @@ const browserOptions = {
 };
 browserOptions.slowMo = slowDown;
 const waitOptions = { timeout /*, visible: true */ };
+// Opens a MUI <Select> and chooses the option whose text includes optionText.
+async function selectFromMuiDropdown(page, selectSelector, optionText, waitOptions) {
+  // Open the dropdown
+  await page.waitForSelector(selectSelector, waitOptions);
+  await page.click(selectSelector);
+
+  // Wait for the listbox to be rendered in the portal
+  await page.waitForSelector('ul[role="listbox"]', waitOptions);
+
+  // Verify options contain the expected poem
+  const listOptionTexts = await page.$$eval('li[role="option"]', els =>
+    els.map(el => (el.textContent || '').trim())
+  );
+  if (!listOptionTexts.some(t => t.includes(optionText))) {
+    throw new Error(`Expected poem not found in dropdown: "${optionText}"`);
+  }
+
+  // Click the matching option
+  await page.evaluate((text) => {
+    const items = Array.from(document.querySelectorAll('li[role="option"]'));
+    const match = items.find(li => (li.textContent || '').includes(text));
+    if (match) match.click();
+  }, optionText);
+
+  // Wait for the select’s visible value to reflect the choice
+  await page.waitForFunction(
+    (sel, val) => {
+      const n = document.querySelector(sel);
+      return n && (n.textContent || '').includes(val);
+    },
+    waitOptions,
+    selectSelector,
+    optionText
+  );
+}
+
 
 (async () => {
   ////////////////////////////////////////////////////////////////////////////////
@@ -218,19 +254,9 @@ const waitOptions = { timeout /*, visible: true */ };
           )}`
       );
     }
-    // Expect the text "Douglas Naphas" to be displayed in the dropdown menu
     const poemDropdownSelector = "#poem-select";
-    await page.waitForSelector(poemDropdownSelector, waitOptions);
-    // Get all options in the dropdown
-    const poemOptions = await page.$$eval(
-      `${poemDropdownSelector} option, ${poemDropdownSelector} [role="option"]`,
-      (options) => options.map((opt) => opt.textContent)
-    );
-    if (!poemOptions.some((text) => text.includes(douglasNaphasInputValue))) {
-      await failTest("Home page test error", "Expected poem not found in dropdown");
-    }
-    // Select the poem in the dropdown
-    await page.select(poemDropdownSelector, douglasNaphasInputValue);
+    await selectFromMuiDropdown(page, poemDropdownSelector, douglasNaphasInputValue, waitOptions);
+
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
