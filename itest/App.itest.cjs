@@ -41,38 +41,48 @@ const browserOptions = {
 browserOptions.slowMo = slowDown;
 const waitOptions = { timeout /*, visible: true */ };
 
-// Opens a MUI <Select> and chooses the option whose text includes optionText.
-async function selectFromMuiDropdown(page, selectSelector, optionText, waitOptions) {
-  // Open the dropdown
-  await page.waitForSelector(selectSelector, waitOptions);
-  await page.click(selectSelector);
+// MUI <Select> helpers
+const poemDropdownSelector = "#poem-select";
 
-  // Wait for the listbox to be rendered in the portal
+async function openMuiDropdown(page, waitOptions) {
+  await page.waitForSelector(poemDropdownSelector, waitOptions);
+  await page.click(poemDropdownSelector);
   await page.waitForSelector('ul[role="listbox"]', waitOptions);
+}
 
-  // Verify options contain the expected poem
-  const listOptionTexts = await page.$$eval('li[role="option"]', els =>
-    els.map(el => (el.textContent || '').trim())
-  );
-  if (!listOptionTexts.some(t => t.includes(optionText))) {
+async function closeMuiDropdown(page) {
+  // Escape closes the menu
+  await page.keyboard.press('Escape');
+  // No hard assertion needed here; MUI will remove the listbox
+}
+
+async function selectFromMuiDropdown(page, optionText, waitOptions) {
+  await openMuiDropdown(page, waitOptions);
+
+  // Make sure the target option exists
+  const optionExists = await page.evaluate((text) => {
+    const items = Array.from(document.querySelectorAll('li[role="option"]'));
+    return items.some(li => (li.textContent || '').includes(text));
+  }, optionText);
+  if (!optionExists) {
     throw new Error(`Expected poem not found in dropdown: "${optionText}"`);
   }
 
-  // Click the matching option
+  // Click it
   await page.evaluate((text) => {
     const items = Array.from(document.querySelectorAll('li[role="option"]'));
     const match = items.find(li => (li.textContent || '').includes(text));
-    if (match) match.click();
+    match?.click();
   }, optionText);
 
-  // Wait for the select’s visible value to reflect the choice
+  // Wait until the trigger shows the chosen value
   await page.waitForFunction(
     (sel, val) => {
-      const n = document.querySelector(sel);
-      return n && (n.textContent || '').includes(val);
+      const node = document.querySelector(sel);
+      return node && (node.textContent || '').includes(val);
     },
-    waitOptions,
-    selectSelector,
+    {},
+    poemDropdownSelector,
     optionText
   );
 }
