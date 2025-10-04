@@ -8,6 +8,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { letters, aContainsB } from "./letters";
 import { grams, flgrams } from "./grams";
 import { genAnagrams } from "./anagrams";
+import TextField from "@mui/material/TextField";
 
 const Editor = ({ keyWord }) => {
   const [commonWords, setCommonWords] = useState([]);
@@ -21,6 +22,74 @@ const Editor = ({ keyWord }) => {
   const [selectedLineWordIndex, setSelectedLineWordIndex] = useState(null);
   const [generatedGrams, setGeneratedGrams] = useState([]);
   const [selectedGramIndex, setSelectedGramIndex] = useState(null);
+  // --- Poem section state & helpers ---
+  const [poemText, setPoemText] = useState("");
+  const [poemError, setPoemError] = useState("");
+  const poemRef = React.useRef(null);
+
+  // Count letters a-z only, case-insensitive
+  const countLetters = (s = "") => {
+    const out = Object.create(null);
+    for (const ch of s.toLowerCase()) {
+      if (ch >= "a" && ch <= "z") out[ch] = (out[ch] || 0) + 1;
+    }
+    return out;
+  };
+
+  const countsLessOrEqual = (a, b) => {
+    for (const k in a) if ((a[k] || 0) > (b[k] || 0)) return false;
+    return true;
+  };
+  const countsEqual = (a, b) => {
+    const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+    for (const k of keys) if ((a[k] || 0) !== (b[k] || 0)) return false;
+    return true;
+  };
+
+  // Precompute the letter budget of the keyWord from props
+  const poemKeyCounts = React.useMemo(() => countLetters(keyWord), [keyWord]);
+
+  // Get active line given full textarea value and caret position
+  const getActiveLineInfo = (value, cursorPos) => {
+    const before = value.slice(0, cursorPos ?? 0);
+    const lineStart = before.lastIndexOf("\n") + 1;
+    let lineEnd = value.indexOf("\n", cursorPos ?? 0);
+    if (lineEnd === -1) lineEnd = value.length;
+    const lineText = value.slice(lineStart, lineEnd);
+    return { lineText, lineStart, lineEnd };
+  };
+
+  // While typing: allow only if active line's letters stay within the key's budget
+  const handlePoemTextChange = (e) => {
+    const next = e.target.value;
+    const cursorPos = poemRef.current?.selectionStart ?? next.length;
+    const { lineText } = getActiveLineInfo(next, cursorPos);
+    const used = countLetters(lineText);
+    if (countsLessOrEqual(used, poemKeyCounts)) {
+      setPoemText(next);
+      setPoemError("");
+    } else {
+      // Reject the change (do not update state)
+      setPoemError("This line would exceed letters available in the poem key.");
+    }
+  };
+
+  // On blur: if the active line is non-empty, require it to be a full anagram of the key
+  const handlePoemBlur = () => {
+    const cursorPos = poemRef.current?.selectionStart ?? poemText.length;
+    const { lineText } = getActiveLineInfo(poemText, cursorPos);
+    const used = countLetters(lineText);
+    if (lineText.trim().length === 0) {
+      setPoemError("");
+    } else {
+      setPoemError(
+        countsEqual(used, poemKeyCounts)
+          ? ""
+          : "Active line is not a full anagram of the poem key."
+      );
+    }
+  };
+
   const handleGramClick = (index) => {
     setSelectedGramIndex(index);
   };
@@ -425,6 +494,35 @@ const Editor = ({ keyWord }) => {
 
   return (
     <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Typography
+          variant="h2"
+          component="h2"
+          className="center-align"
+          id="poem-heading"
+        >
+          Poem
+        </Typography>
+
+        <TextField
+          id="poem-textarea"
+          label={`Type an anagram line for “${keyWord}”`}
+          placeholder="Type your poem here…"
+          multiline
+          minRows={4}
+          fullWidth
+          value={poemText}
+          onChange={handlePoemTextChange}
+          onBlur={handlePoemBlur}
+          inputRef={poemRef}
+          error={Boolean(poemError)}
+          helperText={
+            poemError ||
+            "Letters must fit the key (case-insensitive). Punctuation and spaces are allowed. Rule applies to the active line."
+          }
+        />
+      </Grid>
+
       <Grid item xs={6} className="grid-item">
         <Typography
           variant="h2"
