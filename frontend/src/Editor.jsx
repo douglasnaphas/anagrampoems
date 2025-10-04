@@ -26,10 +26,14 @@ const Editor = ({ keyWord }) => {
   };
 
   const handleAddGramToPoem = async () => {
-    if (selectedGramIndex === null || !generatedGrams[selectedGramIndex]) return;
+    if (selectedGramIndex === null || !generatedGrams[selectedGramIndex])
+      return;
     const gramWords = generatedGrams[selectedGramIndex];
     // Compute new lineId
-    const newLineId = poemLineIdOrder && poemLineIdOrder.length > 0 ? Math.max(...poemLineIdOrder) + 1 : 1;
+    const newLineId =
+      poemLineIdOrder && poemLineIdOrder.length > 0
+        ? Math.max(...poemLineIdOrder) + 1
+        : 1;
     try {
       // Add line to backend
       const addLineResponse = await fetch(`/backend/poem-lines`, {
@@ -42,7 +46,11 @@ const Editor = ({ keyWord }) => {
       const putWordsResponse = await fetch(`/backend/line-words`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: keyWord, lineId: newLineId, lineWords: gramWords }),
+        body: JSON.stringify({
+          key: keyWord,
+          lineId: newLineId,
+          lineWords: gramWords,
+        }),
       });
       if (!putWordsResponse.ok) throw new Error("Failed to add words to line");
       // Update local state
@@ -226,7 +234,10 @@ const Editor = ({ keyWord }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ key: keyWord, excludedWords: newExcludedWords }),
+          body: JSON.stringify({
+            key: keyWord,
+            excludedWords: newExcludedWords,
+          }),
         });
       } catch (err) {
         console.error("Error persisting excluded words", err);
@@ -237,7 +248,9 @@ const Editor = ({ keyWord }) => {
   useEffect(() => {
     const fetchExcludedWords = async () => {
       try {
-        const response = await fetch(`/backend/excluded-words?key=${encodeURIComponent(keyWord)}`);
+        const response = await fetch(
+          `/backend/excluded-words?key=${encodeURIComponent(keyWord)}`
+        );
         if (response.ok) {
           const data = await response.json();
           if (Array.isArray(data.excludedWords)) {
@@ -539,10 +552,7 @@ const Editor = ({ keyWord }) => {
             </Button>
           )}
           {selectedWord && !excludedWords.includes(selectedWord) && (
-            <Button
-              onClick={handleExcludeWord}
-              id="exclude-word-button"
-            >
+            <Button onClick={handleExcludeWord} id="exclude-word-button">
               Exclude Word
             </Button>
           )}
@@ -558,7 +568,9 @@ const Editor = ({ keyWord }) => {
                     },
                     body: JSON.stringify({ key: keyWord, word: selectedWord }),
                   });
-                  setExcludedWords(excludedWords.filter(w => w !== selectedWord));
+                  setExcludedWords(
+                    excludedWords.filter((w) => w !== selectedWord)
+                  );
                   setSelectedWord(null);
                 } catch (err) {
                   console.error("Error un-excluding word", err);
@@ -569,28 +581,30 @@ const Editor = ({ keyWord }) => {
               Un-exclude Word
             </Button>
           )}
-          {selectedLineId !== null && lines[selectedLineId] && lines[selectedLineId].length > 0 && (
-            <Button
-              onClick={async () => {
-                // Generate grams (anagrams) when a word is selected.
-                const vocabUnion = Array.from(new Set([...commonWords, ...manyWords])).filter(
-                  (w) => !excludedWords.includes(w)
-                );
-                const mustInclude = lines[selectedLineId];
-                const anagrams = [];
-                for await (const phrase of genAnagrams({
-                  key: keyWord,
-                  vocab: vocabUnion,
-                  mustInclude,
-                })) {
-                  anagrams.push(phrase);
-                }
-                setGeneratedGrams(anagrams);
-              }}
-            >
-              Generate grams
-            </Button>
-          )}
+          {selectedLineId !== null &&
+            lines[selectedLineId] &&
+            lines[selectedLineId].length > 0 && (
+              <Button
+                onClick={async () => {
+                  // Generate grams (anagrams) when a word is selected.
+                  const vocabUnion = Array.from(
+                    new Set([...commonWords, ...manyWords])
+                  ).filter((w) => !excludedWords.includes(w));
+                  const mustInclude = lines[selectedLineId];
+                  const anagrams = [];
+                  for await (const phrase of genAnagrams({
+                    key: keyWord,
+                    vocab: vocabUnion,
+                    mustInclude,
+                  })) {
+                    anagrams.push(phrase);
+                  }
+                  setGeneratedGrams(anagrams);
+                }}
+              >
+                Generate grams
+              </Button>
+            )}
         </div>
         <div className="scrollable-dictionary">
           <Typography
@@ -604,17 +618,18 @@ const Editor = ({ keyWord }) => {
           {showCommonWords && (
             <ul className="dictionary left-align">
               {commonWords
-                .filter((word) =>
-                  !excludedWords.includes(word) &&
-                  (selectedLineId
-                    ? aContainsB(
-                        keyWord,
-                        (lines[selectedLineId] || []).reduce(
-                          (wholeLine, w) => wholeLine + w,
-                          ""
-                        ) + word
-                      )
-                    : true)
+                .filter(
+                  (word) =>
+                    !excludedWords.includes(word) &&
+                    (selectedLineId
+                      ? aContainsB(
+                          keyWord,
+                          (lines[selectedLineId] || []).reduce(
+                            (wholeLine, w) => wholeLine + w,
+                            ""
+                          ) + word
+                        )
+                      : true)
                 )
                 .sort((a, b) => b.length - a.length || a.localeCompare(b))
                 .map((word, index) => (
@@ -642,17 +657,18 @@ const Editor = ({ keyWord }) => {
           {showManyWords && (
             <ul className="dictionary left-align">
               {manyWords
-                .filter((word) =>
-                  !excludedWords.includes(word) &&
-                  (selectedLineId
-                    ? aContainsB(
-                        keyWord,
-                        (lines[selectedLineId] || []).reduce(
-                          (wholeLine, w) => wholeLine + w,
-                          ""
-                        ) + word
-                      )
-                    : true)
+                .filter(
+                  (word) =>
+                    !excludedWords.includes(word) &&
+                    (selectedLineId
+                      ? aContainsB(
+                          keyWord,
+                          (lines[selectedLineId] || []).reduce(
+                            (wholeLine, w) => wholeLine + w,
+                            ""
+                          ) + word
+                        )
+                      : true)
                 )
                 .sort((a, b) => b.length - a.length || a.localeCompare(b))
                 .map((word, index) => (
@@ -667,33 +683,33 @@ const Editor = ({ keyWord }) => {
                     {word}
                   </li>
                 ))}
-              </ul>
-            )}
-            <Typography
-              variant="h3"
-              component="h3"
-              className="center-align"
-              id="excluded-words-heading"
-            >
-              Excluded words
-            </Typography>
-            {showExcludedWords && (
-              <ul className="dictionary left-align" id="excluded-words-section">
-                {excludedWords.length > 0
-                  ? excludedWords.map((word, index) => (
-                      <li
-                        key={`${index}-excluded-${word}`}
-                        className={`pill ${
-                          selectedWord === word ? "selected-word" : ""
-                        }`}
-                        onClick={() => handleWordClick(word)}
-                      >
-                        {word}
-                      </li>
-                    ))
-                  : "No excluded words"}
-              </ul>
-            )}
+            </ul>
+          )}
+          <Typography
+            variant="h3"
+            component="h3"
+            className="center-align"
+            id="excluded-words-heading"
+          >
+            Excluded words
+          </Typography>
+          {showExcludedWords && (
+            <ul className="dictionary left-align" id="excluded-words-section">
+              {excludedWords.length > 0
+                ? excludedWords.map((word, index) => (
+                    <li
+                      key={`${index}-excluded-${word}`}
+                      className={`pill ${
+                        selectedWord === word ? "selected-word" : ""
+                      }`}
+                      onClick={() => handleWordClick(word)}
+                    >
+                      {word}
+                    </li>
+                  ))
+                : "No excluded words"}
+            </ul>
+          )}
           <Typography
             variant="h3"
             component="h3"
@@ -707,7 +723,9 @@ const Editor = ({ keyWord }) => {
               ? generatedGrams.map((gramArray, index) => (
                   <li
                     key={index}
-                    className={`pill${selectedGramIndex === index ? " selected-word" : ""}`}
+                    className={`pill${
+                      selectedGramIndex === index ? " selected-word" : ""
+                    }`}
                     onClick={() => handleGramClick(index)}
                   >
                     {gramArray.join(" ")}
@@ -716,10 +734,7 @@ const Editor = ({ keyWord }) => {
               : "No grams generated"}
           </ul>
           {selectedGramIndex !== null && (
-            <Button
-              onClick={handleAddGramToPoem}
-              id="add-gram-to-poem-button"
-            >
+            <Button onClick={handleAddGramToPoem} id="add-gram-to-poem-button">
               Add selected gram as new line
             </Button>
           )}
