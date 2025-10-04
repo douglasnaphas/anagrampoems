@@ -56,46 +56,72 @@ async function closeMuiDropdown(page) {
   // No hard assertion needed here; MUI will remove the listbox
 }
 
-async function selectFromMuiDropdown(page, optionText, waitOptions) {
-  await openMuiDropdown(page, waitOptions);
+async function selectFromMuiDropdown(page, selectSelector, optionText, waitOptions) {
+  // Open the dropdown
+  await page.waitForSelector(selectSelector, waitOptions);
+  await page.click(selectSelector);
 
-  // Make sure the target option exists
-  const optionExists = await page.evaluate((text) => {
-    const items = Array.from(document.querySelectorAll('li[role="option"]'));
-    return items.some(li => (li.textContent || '').includes(text));
-  }, optionText);
-  if (!optionExists) {
+  // Wait for the listbox to render in the portal
+  await page.waitForSelector('ul[role="listbox"]', waitOptions);
+  await page.waitForSelector('ul[role="listbox"] li[role="option"]', waitOptions);
+
+  // Normalize function for robust matching
+  const norm = s => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
+  const want = norm(optionText);
+
+  // Collect option texts
+  const listOptionTexts = await page.$$eval('li[role="option"]', els =>
+    els.map(el => (el.textContent || '').replace(/\s+/g, ' ').trim())
+  );
+
+  // Fail early with a helpful message if not present
+  if (!listOptionTexts.some(t => norm(t).includes(want))) {
+    // Optional: console.log for CI debugging
+    console.log('Dropdown options:', listOptionTexts);
     throw new Error(`Expected poem not found in dropdown: "${optionText}"`);
   }
 
-  // Click it
+  // Click the first matching option
   await page.evaluate((text) => {
+    const norm = s => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
+    const want = norm(text);
     const items = Array.from(document.querySelectorAll('li[role="option"]'));
-    const match = items.find(li => (li.textContent || '').includes(text));
-    match?.click();
+    const match = items.find(li => norm(li.textContent).includes(want));
+    match && match.click();
   }, optionText);
 
-  // Wait until the trigger shows the chosen value
+  // Wait until the visible trigger reflects the choice
   await page.waitForFunction(
     (sel, val) => {
-      const node = document.querySelector(sel);
-      return node && (node.textContent || '').includes(val);
+      const n = document.querySelector(sel);
+      const norm = s => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
+      return n && norm(n.textContent).includes(norm(val));
     },
-    {},
-    poemDropdownSelector,
+    waitOptions,
+    selectSelector,
     optionText
   );
 }
 
-async function dropdownOptionsContain(page, text, waitOptions) {
-  await openMuiDropdown(page, waitOptions);
+// Utility to check presence/absence in the dropdown
+async function dropdownOptionsContain(page, selectSelector, text, waitOptions) {
+  await page.waitForSelector(selectSelector, waitOptions);
+  await page.click(selectSelector);
+  await page.waitForSelector('ul[role="listbox"]', waitOptions);
+
   const present = await page.evaluate((t) => {
-    const items = Array.from(document.querySelectorAll('li[role="option"]'));
-    return items.some(li => (li.textContent || '').includes(t));
+    const norm = s => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
+    const want = norm(t);
+    return Array.from(document.querySelectorAll('li[role="option"]'))
+      .some(li => norm(li.textContent).includes(want));
   }, text);
-  await closeMuiDropdown(page);
+
+  // Close the menu (Escape)
+  await page.keyboard.press('Escape');
+
   return present;
 }
+
 
 
 (async () => {
@@ -275,9 +301,14 @@ async function dropdownOptionsContain(page, text, waitOptions) {
           )}`
       );
     }
-    const poemDropdownSelector = "#poem-select";
-    await selectFromMuiDropdown(page, poemDropdownSelector, douglasNaphasInputValue, waitOptions);
+    const poemDropdownSelector = '#poem-select';
 
+    await selectFromMuiDropdown(
+      page,
+      poemDropdownSelector,
+      douglasNaphasInputValue,
+      waitOptions
+    );
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
@@ -405,13 +436,16 @@ async function dropdownOptionsContain(page, text, waitOptions) {
     }
 
     // The poem should no longer appear in the dropdown options
-    const stillInDropdown = await dropdownOptionsContain(
+    const stillThere = await dropdownOptionsContain(
       page,
+      poemDropdownSelector,
       douglasNaphasInputValue,
       waitOptions
     );
-    if (stillInDropdown) {
-      await failTest("Poem test error", "Expected poem to be     deleted");
+    if (stillThere) {
+      await failTest(
+        "Poem test error", "Expected poem to be deleted"
+      );
     }
 
 

@@ -107,7 +107,7 @@ async function selectFromMuiDropdown(page, selectSelector, optionText, waitOptio
 async function dropdownOptionsContain(page, selectSelector, text, waitOptions) {
   await page.waitForSelector(selectSelector, waitOptions);
   await page.click(selectSelector);
-  await page.waitForSelector('ul[role="listbox"] li[role="option"]', waitOptions);
+  await page.waitForSelector('ul[role="listbox"]', waitOptions);
 
   const present = await page.evaluate((t) => {
     const norm = s => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
