@@ -22,6 +22,14 @@ function App() {
   const [poems, setPoems] = React.useState([]);
   const [selectedPoem, setSelectedPoem] = React.useState("");
   const [openDialog, setOpenDialog] = useState(false);
+  // Capture any initial 'poem' search param so we can ensure the dropdown reflects it
+  const [urlPoem] = React.useState(() => {
+    try {
+      return new URLSearchParams(window.location.search).get("poem") || "";
+    } catch (e) {
+      return "";
+    }
+  });
 
   const whoami = async () => {
     try {
@@ -45,8 +53,17 @@ function App() {
         throw new Error("Network response was not ok to GET /backend/poems");
       }
       const getPoemsData = await response.json();
-      setPoems(getPoemsData);
-      if (getPoemsData.length > 0) setSelectedPoem(getPoemsData[0]);
+      // If the URL requested a poem that isn't in the fetched list, include it so the Select can display it.
+      const merged = urlPoem && !getPoemsData.includes(urlPoem)
+        ? [urlPoem, ...getPoemsData]
+        : getPoemsData;
+      setPoems(merged);
+      // Prefer the URL param if provided; otherwise default to first poem only when nothing selected yet
+      if (urlPoem) {
+        setSelectedPoem(urlPoem);
+      } else if (!selectedPoem && merged.length > 0) {
+        setSelectedPoem(merged[0]);
+      }
     } catch (error) {
       console.error("Error fetching GET /backend/poems:", error);
     }
@@ -55,14 +72,27 @@ function App() {
     getPoems();
   }, []);
 
+  // On initial load ensure the Select reflects any poem in the URL.
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const poem = params.get("poem");
-    if (poem) {
-      const decodedPoem = decodeURIComponent(poem);
-      setSelectedPoem(decodedPoem);
+    if (urlPoem) setSelectedPoem(urlPoem);
+  }, [urlPoem]);
+
+  // Keep the URL search param in sync whenever selectedPoem changes.
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (selectedPoem) {
+        params.set("poem", selectedPoem);
+      } else {
+        params.delete("poem");
+      }
+      const newSearch = params.toString();
+      const newUrl = window.location.pathname + (newSearch ? `?${newSearch}` : "");
+      window.history.replaceState({}, "", newUrl);
+    } catch (e) {
+      // ignore URL sync errors in unusual environments
     }
-  }, []);
+  }, [selectedPoem]);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);

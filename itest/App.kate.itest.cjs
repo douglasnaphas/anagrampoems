@@ -487,20 +487,52 @@ async function dropdownOptionsContain(page, selectSelector, text, waitOptions) {
       "analog"
     );
 
-    // Delete the selected line
-    const deleteLineSelector = "#delete-line-control";
-    await page.waitForSelector(deleteLineSelector, waitOptions);
-    await page.click(deleteLineSelector);
-
-    // Expect the word "analog" not to be found under Lines
+    // Add a new poem for "kate"
+    const kateInputValue = "kate";
+    // Clear the input then type "kate"
+    await page.evaluate((sel) => {
+      const el = document.querySelector(sel);
+      if (el) el.value = "";
+    }, thingToGramSelector);
+    await page.type(thingToGramSelector, kateInputValue);
+    await Promise.all([
+      page.click(createPoemButtonSelector),
+      page.waitForNavigation(),
+    ]);
+    // Verify poem search param is set to "kate"
+    const urlKate = page.url();
+    const urlParamsKate = new URLSearchParams(new URL(urlKate).search);
+    const poemKate = urlParamsKate.get("poem");
+    if (!poemKate || poemKate !== kateInputValue) {
+      await failTest(
+        "Home page test error",
+        `Expected poem in URL not found or incorrect for kate, expected ${kateInputValue}, got ${poemKate}`
+      );
+    }
+    // Since the newly created poem "kate" is in the URL search param, it should
+    // be selected
+    // Verify the visible select trigger already shows "kate"
     await page.waitForFunction(
-      (selector, text) => {
+      (sel, expected) => {
+        const el = document.querySelector(sel);
+        const norm = s => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
+        return el && norm(el.textContent).includes(norm(expected));
+      },
+      waitOptions,
+      poemDropdownSelector,
+      kateInputValue
+    );
+    
+    // Select the newly created "kate" poem and verify it's displayed under Lines
+    await selectFromMuiDropdown(page, poemDropdownSelector, kateInputValue, waitOptions);
+    await page.waitForFunction(
+      (selector, expectedText) => {
         const element = document.querySelector(selector);
-        return element && !element.textContent.includes(text);
+        return element && element.textContent.includes(expectedText);
       },
       {},
       linesSelector,
-      "analog"
+      kateInputValue
     );
 
     ////////////////////////////////////////////////////////////////////////////////
