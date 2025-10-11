@@ -1,7 +1,13 @@
-// backend/putPoemText.js
-const AWS = require("aws-sdk"); // or v3 client if you already use it elsewhere
-const ddb = new AWS.DynamoDB.DocumentClient();
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const {
+  DynamoDBDocumentClient,
+  UpdateCommand,
+} = require("@aws-sdk/lib-dynamodb");
 const schema = require("./schema");
+
+// v3 client setup
+const ddbClient = new DynamoDBClient({});
+const ddb = DynamoDBDocumentClient.from(ddbClient);
 
 module.exports = async function putPoemText(req, res) {
   try {
@@ -23,8 +29,8 @@ module.exports = async function putPoemText(req, res) {
 
     const now = new Date().toISOString();
 
-    await ddb
-      .update({
+    await ddb.send(
+      new UpdateCommand({
         TableName: schema.TABLE_NAME,
         Key,
         UpdateExpression: "SET #text = :text, updated_at = :now",
@@ -32,7 +38,7 @@ module.exports = async function putPoemText(req, res) {
         ExpressionAttributeValues: { ":text": text, ":now": now },
         ReturnValues: "NONE",
       })
-      .promise();
+    );
 
     return res.status(204).end();
   } catch (err) {
