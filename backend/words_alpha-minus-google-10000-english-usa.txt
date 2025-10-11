@@ -28529,11 +28529,7 @@ bazookamen
 bazookas
 bazoos
 bazzite
-bbl
 bbls
-bcd
-bcf
-bch
 bchs
 bde
 bdellatomy
@@ -28552,11 +28548,9 @@ bdelloura
 bdellouridae
 bdellovibrio
 bdft
-bdl
 bdle
 bdls
 bdrm
-bds
 bea
 beachboy
 beachboys
@@ -32212,7 +32206,6 @@ bhat
 bhava
 bhavan
 bhavani
-bhd
 bheesty
 bheestie
 bheesties
@@ -32236,7 +32229,6 @@ bhoots
 bhotia
 bhotiya
 bhowani
-bhp
 bhumidar
 bhumij
 bhunder
@@ -34472,13 +34464,10 @@ bizzarro
 bjorne
 bkbndr
 bkcy
-bkg
 bkgd
 bklr
 bkpr
 bkpt
-bks
-bkt
 blaasop
 blab
 blabbed
@@ -34983,7 +34972,6 @@ blazonment
 blazonry
 blazonries
 blazons
-bld
 bldg
 bldr
 blea
@@ -35371,7 +35359,6 @@ blizzardy
 blizzardly
 blizzardous
 blizzards
-blk
 blksize
 blo
 bloat
@@ -35694,7 +35681,6 @@ blowziest
 blowzily
 blowziness
 blowzing
-bls
 blub
 blubbed
 blubber
@@ -35945,7 +35931,6 @@ blusterous
 blusterously
 blusters
 blutwurst
-bnf
 boa
 boaedon
 boagane
@@ -38279,8 +38264,6 @@ bozos
 bozze
 bozzetto
 bpi
-bps
-bpt
 braata
 brab
 brabagious
@@ -39932,7 +39915,6 @@ britzskas
 bryum
 briza
 brizz
-brl
 bro
 broach
 broached
@@ -40556,7 +40538,6 @@ browses
 browsick
 browst
 browzer
-brr
 brrr
 bruang
 brubru
@@ -40764,11 +40745,8 @@ brutus
 bruxism
 bruxisms
 bruzz
-bsf
-bsh
 bskt
 btise
-btl
 btry
 btu
 bu
@@ -42629,10 +42607,8 @@ buzzwig
 buzzwigs
 buzzword
 buzzwords
-bvt
 bwana
 bwanas
-bxs
 caaba
 caam
 caama
@@ -48937,13 +48913,8 @@ cchaddoorck
 ccid
 ccitt
 cckw
-ccm
 ccoya
-ccw
 ccws
-cdf
-cdg
-cdr
 ceanothus
 cearin
 cease
@@ -50423,13 +50394,7 @@ ceviches
 cevine
 cevitamic
 cezannesque
-cfd
-cfh
 cfi
-cfm
-cfs
-cgm
-cgs
 cha
 chaa
 chab
@@ -52567,7 +52532,6 @@ chewinks
 chews
 chewstick
 chez
-chg
 chhatri
 chia
 chiack
@@ -53753,9 +53717,7 @@ chlorpropamide
 chlorprophenpyridamine
 chlorsalol
 chlortetracycline
-chm
 chmn
-chn
 chnuphis
 choachyte
 choak
@@ -54979,7 +54941,6 @@ chroococcoid
 chroococcus
 chrosperma
 chrotta
-chs
 chteau
 chthonian
 chthonic
@@ -57413,7 +57374,6 @@ cixo
 cizar
 cize
 cyzicene
-ckw
 clabber
 clabbered
 clabbery
@@ -58629,7 +58589,6 @@ clivias
 clivis
 clivises
 clivus
-clk
 clo
 cloaca
 cloacae
@@ -58995,7 +58954,6 @@ clowre
 clowring
 cloxacillin
 cloze
-clr
 clubability
 clubable
 clubbability
@@ -59136,10 +59094,8 @@ cluttery
 cluttering
 clutterment
 clutters
-cmd
 cmdg
 cmdr
-cml
 cnemapophysis
 cnemial
 cnemic
@@ -69685,13 +69641,8 @@ coziness
 cozinesses
 cozing
 cozzes
-cpd
 cpi
-cpl
-cpm
 cpo
-cps
-cpt
 cpus
 cputime
 craal
@@ -70266,7 +70217,6 @@ craziness
 crazing
 crazingmill
 crazyweed
-crc
 crcao
 crche
 cre
@@ -71410,7 +71360,6 @@ crizzel
 crizzle
 crizzled
 crizzling
-crl
 cro
 croak
 croaked
@@ -71938,7 +71887,6 @@ crozle
 crozzle
 crozzly
 crpe
-crs
 crts
 cru
 crub
@@ -72215,16 +72163,12 @@ crwth
 crwths
 crzette
 csardas
-csc
 csch
 csect
 csects
 csi
-csk
 csmp
 csnet
-csp
-csw
 cte
 ctelette
 ctenacanthus
@@ -72259,14 +72203,9 @@ ctenostomata
 ctenostomatous
 ctenostome
 ctetology
-ctf
-ctg
 ctge
 ctimo
-ctn
 cto
-ctr
-cts
 cuadra
 cuadrilla
 cuadrillas
@@ -73729,11 +73668,9 @@ cuvierian
 cuvies
 cuzceno
 cwierc
-cwm
 cwms
 cwo
 cwrite
-cwt
 czar
 czardas
 czardases
@@ -75174,19 +75111,16 @@ dazzles
 dazzling
 dazzlingly
 dazzlingness
-dbl
 dbms
 dbridement
 dbrn
 dca
-dcb
 dcbname
 dclass
 dcollet
 dcolletage
 dcor
 ddname
-ddt
 dea
 deaccession
 deaccessioned
@@ -81459,7 +81393,6 @@ dezincking
 dezincs
 dezinkify
 dfault
-dft
 dgag
 dghaisa
 dha
@@ -87948,11 +87881,6 @@ djinny
 djinns
 djins
 djuka
-dkg
-dkl
-dkm
-dks
-dlr
 dlvy
 dmarche
 dmod
@@ -89788,7 +89716,6 @@ dozinesses
 dozing
 dozzle
 dozzled
-dpt
 drab
 draba
 drabant
@@ -90951,10 +90878,7 @@ dsect
 dsects
 dsname
 dsnames
-dsp
-dsr
 dsri
-dtd
 dtente
 dtset
 duad
@@ -91958,7 +91882,6 @@ dwine
 dwined
 dwines
 dwining
-dwt
 dzeren
 dzerin
 dzeron
@@ -107355,8 +107278,6 @@ fcy
 fcomp
 fconv
 fconvert
-fcp
-fcs
 fdname
 fdnames
 fdtype
@@ -108664,7 +108585,6 @@ fezzes
 fezzy
 fezziwig
 ffa
-fgn
 fgrid
 fhrer
 fiacre
@@ -110928,10 +110848,8 @@ flaxwench
 flaxwife
 flaxwoman
 flaxwort
-flb
 flche
 flchette
-fld
 fldxt
 flea
 fleabag
@@ -111428,7 +111346,6 @@ flywire
 flywort
 flix
 flixweed
-fll
 flnerie
 flneur
 flneuse
@@ -112247,7 +112164,6 @@ fluxmeter
 fluxroot
 fluxure
 fluxweed
-fmt
 fname
 fnese
 foal
@@ -114655,8 +114571,6 @@ foziest
 foziness
 fozinesses
 fplot
-fpm
-fps
 fpsps
 fra
 frab
@@ -116015,10 +115929,8 @@ froze
 frozenhearted
 frozenly
 frozenness
-frs
 frsiket
 frsikets
-frt
 frubbish
 fruchtschiefer
 fructed
@@ -116191,7 +116103,6 @@ fruz
 frwy
 fsiest
 fstore
-fth
 fthm
 ftncmd
 ftnerr
@@ -119421,11 +119332,9 @@ gazpacho
 gazpachos
 gazump
 gazzetta
-gcd
 gconv
 gconvert
 gdinfo
-gds
 geadephaga
 geadephagous
 geal
@@ -120824,7 +120733,6 @@ gewgawry
 gewgaws
 gez
 gezerah
-ggr
 ghaffir
 ghafir
 ghain
@@ -122402,8 +122310,6 @@ glazily
 glaziness
 glazing
 glazings
-glb
-gld
 glead
 gleam
 gleamed
@@ -123135,7 +123041,6 @@ glozer
 glozes
 glozing
 glozingly
-glt
 glub
 glucaemia
 glucagon
@@ -123475,7 +123380,6 @@ gnotobiotic
 gnotobiotically
 gnotobiotics
 gnow
-gns
 gnus
 goa
 goad
@@ -124729,9 +124633,6 @@ gozzan
 gozzard
 gpad
 gpcd
-gpd
-gph
-gpm
 gpss
 gra
 graafian
@@ -125997,7 +125898,6 @@ grewsomer
 grewsomest
 grewt
 grex
-grf
 gry
 gribane
 gribble
@@ -126666,8 +126566,6 @@ growze
 grozart
 grozer
 grozet
-grr
-grs
 grub
 grubbed
 grubber
@@ -126845,13 +126743,9 @@ grutched
 grutches
 grutching
 grutten
-grx
-gtc
-gtd
 gte
 gteau
 gthite
-gtt
 gu
 guaba
 guacacoa
@@ -130670,9 +130564,6 @@ hazzan
 hazzanim
 hazzans
 hazzanut
-hcb
-hcf
-hcl
 hconvert
 hdbk
 hdkf
@@ -134164,9 +134055,7 @@ hezekiah
 hezron
 hezronites
 hgrnotine
-hgt
 hgwy
-hhd
 hy
 hia
 hyacine
@@ -138007,7 +137896,6 @@ hivite
 hyzone
 hizz
 hizzie
-hld
 hler
 hlidhskjalf
 hlithskjalf
@@ -140514,7 +140402,6 @@ hsi
 hsien
 hsuan
 htel
-hts
 huaca
 huaco
 huajillo
@@ -141332,7 +141219,6 @@ hvy
 hwa
 hwan
 hwyl
-hwt
 yaba
 yabber
 yabbered
@@ -156135,8 +156021,6 @@ jazzist
 jazzlike
 jazzman
 jazzmen
-jcl
-jct
 jctn
 jealous
 jealouse
@@ -156821,15 +156705,12 @@ jixie
 jizya
 jizyah
 jizzen
-jms
 jnana
 jnanayoga
 jnanamarga
 jnanas
 jnanashakti
 jnanendriya
-jnd
-jnt
 joachim
 joachimite
 joanna
@@ -159512,8 +159393,6 @@ kewpie
 kex
 kexes
 kexy
-kgf
-kgr
 kha
 khaddar
 khaddars
@@ -160650,7 +160529,6 @@ klismos
 klister
 klystron
 klystrons
-kln
 klockmannite
 kloesse
 klom
@@ -161473,8 +161351,6 @@ kowtowing
 kowtows
 kozo
 kozuka
-kpc
-kph
 kpuesi
 kra
 kraal
@@ -161618,7 +161494,6 @@ kroons
 krosa
 krouchka
 kroushka
-krs
 kru
 krubi
 krubis
@@ -164655,14 +164530,10 @@ lazurite
 lazurites
 lazzarone
 lazzaroni
-lbf
 lbinit
-lbw
 lca
-lcm
 lconvert
 lcsymbol
-ldg
 ldinfo
 lea
 leach
@@ -166469,8 +166340,6 @@ lexis
 lexological
 lezghian
 lgth
-lhb
-lhd
 lherzite
 lherzolite
 lhiamba
@@ -169060,14 +168929,12 @@ llano
 llanos
 llareta
 llautu
-llb
 ller
 lleu
 llew
 llyn
 lludd
 lndg
-lnr
 loa
 loach
 loaches
@@ -170640,12 +170507,8 @@ lozenges
 lozengeways
 lozengewise
 lozengy
-lpm
 lrecisianism
 lrecl
-lsc
-lst
-ltr
 luau
 luaus
 lub
@@ -171492,12 +171355,8 @@ luzula
 lvalue
 lvalues
 lvov
-lwl
-lwm
 lwo
 lwop
-lwp
-lxx
 maad
 maam
 maamselle
@@ -176383,7 +176242,6 @@ mazzinianism
 mazzinist
 mbaya
 mbalolo
-mbd
 mbeuer
 mbira
 mbiras
@@ -176393,8 +176251,6 @@ mbuba
 mbunda
 mccarthyism
 mccoy
-mcf
-mcg
 mcintosh
 mckay
 mcphail
@@ -180241,14 +180097,7 @@ mezzotinted
 mezzotinter
 mezzotinting
 mezzotinto
-mfd
-mfg
-mfr
 mgal
-mgd
-mgr
-mgt
-mhg
 mho
 mhometer
 mhorr
@@ -185395,13 +185244,9 @@ mizzles
 mizzly
 mizzling
 mizzonite
-mks
-mkt
 mktg
 mlange
 mlechchha
-mlx
-mmf
 mmfd
 mmmm
 mna
@@ -188899,7 +188744,6 @@ mozzetta
 mozzettas
 mozzette
 mpangwe
-mpb
 mpbs
 mphps
 mpondo
@@ -188912,18 +188756,11 @@ mru
 msalliance
 msec
 msink
-msl
 msource
-mss
 mster
-mtd
-mtg
 mtge
 mtier
-mtn
-mts
 mtscmd
-mtx
 muang
 mubarat
 mucago
@@ -190790,7 +190627,6 @@ muzzlewood
 muzzling
 mwa
 mwalimu
-mxd
 mzee
 mzungu
 naa
@@ -191934,7 +191770,6 @@ nazirite
 naziritic
 nazis
 nazism
-nbg
 nco
 ndoderm
 nea
@@ -203470,7 +203305,6 @@ npfx
 nrarucu
 nritta
 nsec
-nth
 nuadu
 nuagism
 nuagist
@@ -222149,13 +221983,7 @@ paxwax
 paxwaxes
 pazaree
 pazend
-pbx
 pbxes
-pcf
-pcm
-pdl
-pdn
-pdq
 pea
 peaberry
 peabird
@@ -226437,19 +226265,15 @@ pezizoid
 pezograph
 pezophaps
 pfaffian
-pfc
-pfd
 pfeffernuss
 pfeifferella
 pfennig
 pfennige
 pfennigs
-pfg
 pflag
 pfui
 pfund
 pfunde
-pfx
 pgntt
 pgnttrp
 phaca
@@ -229199,7 +229023,6 @@ phots
 photuria
 phousdar
 phpht
-phr
 phractamphibia
 phragma
 phragmidium
@@ -229341,7 +229164,6 @@ phronimidae
 phrontistery
 phrontisterion
 phrontisterium
-pht
 phtalic
 phthalacene
 phthalan
@@ -232186,10 +232008,7 @@ pizzerias
 pizzicato
 pizzle
 pizzles
-pkg
 pkgs
-pks
-pkt
 pkwy
 placability
 placabilty
@@ -233690,7 +233509,6 @@ plexors
 plexure
 plexus
 plexuses
-plf
 pli
 ply
 pliability
@@ -234333,9 +234151,7 @@ pluvioscopic
 pluviose
 pluviosity
 pluvious
-pmk
 pmsg
-pmt
 pnce
 pneodynamics
 pneograph
@@ -238579,14 +238395,7 @@ pozzolans
 pozzuolana
 pozzuolanic
 ppa
-ppb
-ppd
-pph
 ppi
-ppl
-ppr
-pps
-ppt
 pptn
 praam
 praams
@@ -243759,7 +243568,6 @@ prezygapophysis
 prezygomatic
 prezonal
 prezone
-prf
 pry
 pria
 priacanthid
@@ -244316,7 +244124,6 @@ prizewinning
 prizeworthy
 prizing
 prlate
-prn
 proa
 proabolition
 proabolitionist
@@ -247504,8 +247311,6 @@ prozygapophysis
 prozymite
 prozone
 prozoning
-prp
-prs
 prude
 prudely
 prudelike
@@ -248532,7 +248337,6 @@ pseudozealously
 pseudozoea
 pseudozoogloeal
 pseudozoological
-psf
 psha
 pshav
 pshaw
@@ -248940,7 +248744,6 @@ psovie
 pssimistical
 psst
 psuedo
-psw
 pta
 ptarmic
 ptarmica
@@ -249102,7 +248905,6 @@ pterostigmatical
 pterotheca
 pterothorax
 pterotic
-ptg
 ptyalagogic
 ptyalagogue
 ptyalectases
@@ -249165,8 +248967,6 @@ ptomatropine
 ptoses
 ptosis
 ptotic
-ptp
-ptt
 ptts
 pu
 pua
@@ -250635,10 +250435,7 @@ puzzlingness
 puzzlings
 puzzolan
 puzzolana
-pvt
 pwca
-pwr
-pwt
 qabbala
 qabbalah
 qadarite
@@ -250673,13 +250470,8 @@ qiviuts
 qoheleth
 qoph
 qophs
-qqv
-qrs
 qtam
-qtd
 qto
-qtr
-qts
 qu
 qua
 quaalude
@@ -254508,12 +254300,10 @@ razzle
 razzly
 razzmatazz
 rbound
-rcd
 rchauff
 rchitect
 rclame
 rcpt
-rct
 rcvr
 rea
 reaal
@@ -264460,11 +264250,8 @@ rezone
 rezoned
 rezones
 rezoning
-rfb
 rfound
 rfree
-rfs
-rfz
 rgen
 rgisseur
 rglement
@@ -264594,8 +264381,6 @@ rhatany
 rhatania
 rhatanies
 rhatikon
-rhb
-rhd
 rhe
 rhea
 rheadine
@@ -266192,12 +265977,9 @@ rizzle
 rizzom
 rizzomed
 rizzonite
-rld
 rle
 rly
 rmoulade
-rms
-rnd
 roach
 roachback
 roached
@@ -267731,14 +267513,11 @@ rozener
 rozum
 rozzer
 rozzers
-rps
-rpt
 rrhiza
 rsum
 rsvp
 rte
 rti
-rtw
 rua
 ruach
 ruana
@@ -268611,7 +268390,6 @@ rutuli
 ruvid
 rux
 rvulsant
-rwd
 rwy
 rwound
 saa
@@ -272581,10 +272359,8 @@ sceuophylacium
 sceuophylax
 sceuophorion
 scewing
-scf
 scfh
 scfm
-sch
 schaapsteker
 schadchan
 schadenfreude
@@ -274019,7 +273795,6 @@ scowman
 scowmen
 scows
 scowther
-scr
 scrab
 scrabble
 scrabbled
@@ -274636,7 +274411,6 @@ scrutinously
 scruto
 scrutoire
 scruze
-sct
 sctd
 scubas
 scud
@@ -274893,7 +274667,6 @@ sdeath
 sdeign
 sdlc
 sdrucciola
-sds
 sdump
 seabag
 seabags
@@ -279347,7 +279120,6 @@ sexupara
 sexuparous
 sezession
 sferics
-sfm
 sfogato
 sfoot
 sforzando
@@ -279357,12 +279129,10 @@ sforzatos
 sfree
 sfumato
 sfumatos
-sfz
 sgabelli
 sgabello
 sgabellos
 sgad
-sgd
 sgraffiato
 sgraffiti
 sgraffito
@@ -280493,7 +280263,6 @@ shewing
 shewn
 shews
 shfsep
-shh
 shi
 shy
 shia
@@ -281410,9 +281179,7 @@ showshop
 showstopper
 showup
 showworthy
-shp
 shpt
-shr
 shrab
 shradd
 shraddha
@@ -281606,7 +281373,6 @@ shrunk
 shrunken
 shrups
 shruti
-sht
 shtchee
 shtetel
 shtetl
@@ -286030,7 +285796,6 @@ slavs
 slaw
 slawbank
 slaws
-sld
 sleathy
 sleave
 sleaved
@@ -286660,7 +286425,6 @@ slowwitted
 slowwittedly
 slowworm
 slowworms
-slt
 slub
 slubbed
 slubber
@@ -287138,7 +286902,6 @@ smitting
 smittle
 smittleish
 smittlish
-sml
 smock
 smocked
 smocker
@@ -292329,7 +292092,6 @@ spivvy
 spivving
 spizella
 spizzerinctum
-spl
 splachnaceae
 splachnaceous
 splachnoid
@@ -293160,7 +292922,6 @@ spoutless
 spoutlike
 spoutman
 spouts
-spp
 sprachgefuhl
 sprachle
 sprack
@@ -293436,8 +293197,6 @@ sprunt
 spruntly
 sprusado
 sprush
-sps
-spt
 spud
 spudboy
 spudded
@@ -293586,8 +293345,6 @@ sputum
 sputumary
 sputumose
 sputumous
-sqd
-sqq
 sqrt
 squab
 squabash
@@ -294130,7 +293887,6 @@ ssed
 ssi
 ssing
 ssort
-ssp
 sstor
 ssu
 sta
@@ -296150,7 +295906,6 @@ stewpans
 stewpond
 stewpot
 stews
-stg
 stge
 sthene
 sthenia
@@ -296794,9 +296549,7 @@ styward
 styx
 styxian
 stizolobium
-stk
 stlg
-stm
 stoa
 stoach
 stoae
@@ -305611,7 +305364,6 @@ svarajes
 svarajs
 svarloka
 svastika
-svc
 svce
 svedberg
 svedbergs
@@ -309015,11 +308767,9 @@ tazia
 tazza
 tazzas
 tazze
-tbs
 tbsp
 tbssaraglot
 tcawi
-tch
 tchai
 tchaikovsky
 tchapan
@@ -309042,8 +308792,6 @@ tchincou
 tchr
 tchu
 tchwi
-tck
-tdr
 teaberry
 teaberries
 teaboard
@@ -311966,9 +311714,6 @@ tezcatzoncatl
 tezcucan
 tezkere
 tezkirah
-tfr
-tgn
-tgt
 tha
 thack
 thacked
@@ -316253,24 +315998,18 @@ tjenkal
 tji
 tjosite
 tjurunga
-tkt
 tlaco
 tlakluit
 tlapallan
 tlascalan
 tlingit
-tln
 tlo
-tlr
 tmema
 tmemata
 tmeses
 tmesipteris
 tmesis
-tmh
-tng
 tnpk
-tnt
 toa
 toad
 toadback
@@ -318329,13 +318068,8 @@ toxotidae
 toze
 tozee
 tozer
-tpd
-tph
 tpi
-tpk
 tpke
-tpm
-tps
 tra
 trabacoli
 trabacolo
@@ -320321,7 +320055,6 @@ trewel
 trews
 trewsman
 trewsmen
-trf
 triable
 triableness
 triac
@@ -322660,10 +322393,7 @@ trows
 trowsers
 trowth
 trowths
-trp
 trpset
-trs
-trt
 truancy
 truancies
 truandise
@@ -323007,7 +322737,6 @@ tsine
 tsingtauite
 tsiology
 tsitsith
-tsk
 tsked
 tsking
 tsks
@@ -323018,9 +322747,6 @@ tsktsks
 tsoneca
 tsonecan
 tsotsi
-tsp
-tss
-tst
 tsuba
 tsubo
 tsuga
@@ -324691,8 +324417,6 @@ twos
 twoscore
 twosome
 twosomes
-twp
-txt
 tzaam
 tzaddik
 tzaddikim
@@ -352409,7 +352133,6 @@ vrouw
 vrouws
 vrow
 vrows
-vss
 vu
 vucom
 vucoms
@@ -355491,7 +355214,6 @@ whewer
 whewl
 whews
 whewt
-whf
 whiba
 whichever
 whichsoever
@@ -356159,8 +355881,6 @@ whosoever
 whosome
 whosomever
 whosumdever
-whr
-whs
 whse
 whsle
 whud
@@ -357485,7 +357205,6 @@ wizes
 wizier
 wizzen
 wizzens
-wjc
 wkly
 wlatful
 wlatsome
@@ -357494,7 +357213,6 @@ wlench
 wlity
 wloka
 wlonkhede
-wmk
 wo
 woa
 woad
@@ -358441,7 +358159,6 @@ wowserism
 wowsers
 wowt
 wowwows
-wpm
 wrabbe
 wrabill
 wrack
@@ -358961,7 +358678,6 @@ xantippe
 xarque
 xat
 xaverian
-xcl
 xctl
 xdiv
 xebec
@@ -359338,7 +359054,6 @@ xxi
 xxii
 xxiii
 xxiv
-xxv
 zabaean
 zabaglione
 zabaione
