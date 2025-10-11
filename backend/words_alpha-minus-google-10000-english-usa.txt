@@ -32182,7 +32182,6 @@ bezzle
 bezzled
 bezzling
 bezzo
-bf
 bhabar
 bhadon
 bhaga
@@ -35946,7 +35945,6 @@ blusterous
 blusterously
 blusters
 blutwurst
-bn
 bnf
 boa
 boaedon
@@ -42631,13 +42629,10 @@ buzzwig
 buzzwigs
 buzzword
 buzzwords
-bv
 bvt
 bwana
 bwanas
-bx
 bxs
-bz
 caaba
 caam
 caama
@@ -57418,7 +57413,6 @@ cixo
 cizar
 cize
 cyzicene
-ck
 ckw
 clabber
 clabbered
@@ -69700,7 +69694,6 @@ cps
 cpt
 cpus
 cputime
-cq
 craal
 craaled
 craaling
@@ -87963,7 +87956,6 @@ dlr
 dlvy
 dmarche
 dmod
-dn
 dnieper
 doa
 doab
@@ -91967,7 +91959,6 @@ dwined
 dwines
 dwining
 dwt
-dz
 dzeren
 dzerin
 dzeron
@@ -107359,7 +107350,6 @@ fazendas
 fazendeiro
 fazes
 fazing
-fb
 fchar
 fcy
 fcomp
@@ -112258,7 +112248,6 @@ fluxroot
 fluxure
 fluxweed
 fmt
-fn
 fname
 fnese
 foal
@@ -117216,9 +117205,7 @@ fuzziness
 fuzzing
 fuzzle
 fuzztail
-fv
 fwelling
-fz
 gaatch
 gab
 gabardine
@@ -123338,7 +123325,6 @@ gluttonousness
 gluttons
 gmelina
 gmelinite
-gn
 gnabble
 gnaeus
 gnamma
@@ -127896,7 +127882,6 @@ guzzler
 guzzlers
 guzzles
 guzzling
-gv
 gwag
 gwantus
 gweduc
@@ -134178,8 +134163,6 @@ hexsub
 hezekiah
 hezron
 hezronites
-hf
-hg
 hgrnotine
 hgt
 hgwy
@@ -138030,7 +138013,6 @@ hlidhskjalf
 hlithskjalf
 hlorrithi
 hlqn
-hm
 hny
 hoactzin
 hoactzines
@@ -141346,9 +141328,7 @@ huzzaing
 huzzard
 huzzas
 huzzy
-hv
 hvy
-hw
 hwa
 hwan
 hwyl
@@ -156576,7 +156556,6 @@ jezebels
 jezekite
 jeziah
 jezreelite
-jg
 jger
 jharal
 jheel
@@ -157370,7 +157349,6 @@ jows
 jowser
 jowter
 jozy
-jt
 ju
 juamave
 juang
@@ -158827,7 +158805,6 @@ kazoos
 kazuhiro
 kbar
 kbps
-kc
 kcal
 kea
 keach
@@ -160601,7 +160578,6 @@ kizilbash
 kjeldahl
 kjeldahlization
 kjeldahlize
-kl
 klaberjass
 klafter
 klaftern
@@ -160710,7 +160686,6 @@ klva
 kmel
 kmet
 kmole
-kn
 knab
 knabble
 knack
@@ -161501,7 +161476,6 @@ kozuka
 kpc
 kph
 kpuesi
-kr
 kra
 kraal
 kraaled
@@ -161663,7 +161637,6 @@ ksar
 kshatriya
 kshatriyahood
 ksi
-kt
 kthibh
 kua
 kuan
@@ -161840,7 +161813,6 @@ kuttaur
 kuvasz
 kuvaszok
 kuvera
-kv
 kvah
 kvar
 kvarner
@@ -166497,7 +166469,6 @@ lexis
 lexological
 lezghian
 lgth
-lh
 lhb
 lhd
 lherzite
@@ -170670,7 +170641,6 @@ lozengeways
 lozengewise
 lozengy
 lpm
-lr
 lrecisianism
 lrecl
 lsc
@@ -171519,7 +171489,6 @@ luxurist
 luxurity
 luxus
 luzula
-lv
 lvalue
 lvalues
 lvov
@@ -171528,7 +171497,6 @@ lwm
 lwo
 lwop
 lwp
-lx
 lxx
 maad
 maam
@@ -185427,7 +185395,6 @@ mizzles
 mizzly
 mizzling
 mizzonite
-mk
 mks
 mkt
 mktg
@@ -238621,7 +238588,6 @@ ppr
 pps
 ppt
 pptn
-pq
 praam
 praams
 prabble
@@ -250692,7 +250658,6 @@ qe
 qed
 qere
 qeri
-qh
 qy
 qiana
 qibla
@@ -250705,17 +250670,11 @@ qintar
 qintars
 qiviut
 qiviuts
-ql
-qm
-qn
 qoheleth
 qoph
 qophs
-qp
 qqv
-qr
 qrs
-qs
 qtam
 qtd
 qto
@@ -252422,7 +252381,6 @@ qurshes
 qurti
 qurush
 qurushes
-qv
 raad
 raadzaal
 raanan
@@ -312009,7 +311967,6 @@ tezcucan
 tezkere
 tezkirah
 tfr
-tg
 tgn
 tgt
 tha
@@ -316296,7 +316253,6 @@ tjenkal
 tji
 tjosite
 tjurunga
-tk
 tkt
 tlaco
 tlakluit
@@ -348673,7 +348629,6 @@ vawntie
 vaws
 vax
 vazimba
-vd
 veadar
 veadore
 veal
@@ -351819,7 +351774,6 @@ vizors
 vizsla
 vizslas
 vizzy
-vl
 vlach
 vladimir
 vladislav
@@ -352435,7 +352389,6 @@ vowmaking
 vows
 vowson
 vox
-vr
 vraic
 vraicker
 vraicking
@@ -352591,7 +352544,6 @@ vulvouterine
 vulvovaginal
 vulvovaginitis
 vum
-vv
 vvll
 waac
 waag
@@ -354319,7 +354271,6 @@ waxworms
 wazir
 wazirate
 wazirship
-wd
 wea
 weakbrained
 weaken
@@ -355160,9 +355111,6 @@ wevet
 wewenoc
 wezen
 wezn
-wf
-wg
-wh
 wha
 whabby
 whack
@@ -357538,9 +357486,7 @@ wizier
 wizzen
 wizzens
 wjc
-wk
 wkly
-wl
 wlatful
 wlatsome
 wlecche
@@ -359015,10 +358961,8 @@ xantippe
 xarque
 xat
 xaverian
-xc
 xcl
 xctl
-xd
 xdiv
 xebec
 xebecs
@@ -359383,16 +359327,13 @@ xoanon
 xoanona
 xonotlite
 xosa
-xr
 xray
 xref
-xs
 xu
 xurel
 xvi
 xvii
 xviii
-xw
 xxi
 xxii
 xxiii
@@ -360266,7 +360207,6 @@ zlotych
 zloties
 zlotys
 zmudz
-zn
 zo
 zoa
 zoacum
@@ -360722,7 +360662,6 @@ zouave
 zouaves
 zounds
 zowie
-zs
 zubeneschamali
 zubr
 zuccarino
