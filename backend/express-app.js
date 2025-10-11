@@ -28,6 +28,8 @@ const putLineWords = require("./putLineWords");
 const deletePoems = require("./deletePoems");
 const checkKeyMiddleware = require("./checkKeyMiddleware");
 const putPoems = require("./putPoems");
+const putPoemText = require("./putPoemText");
+const getPoemText = require("./getPoemText");
 const deletePoemLines = require("./deletePoemLines");
 
 router.get("/", (req, res) => {
@@ -63,6 +65,8 @@ router.post("/poem-lines", bodyParser.json(), postPoemLines);
 router.post("/line-order", bodyParser.json(), postLineOrder);
 router.put("/line-words", bodyParser.json(), putLineWords);
 router.put("/poems", bodyParser.json(), putPoems);
+router.put("/poem-text", bodyParser.json(), putPoemText);
+router.get("/poem-text", getPoemText);
 router.delete("/poems", deletePoems);
 router.delete("/poem-lines", deletePoemLines);
 router.put("/excluded-words", bodyParser.json(), putExcludedWords);

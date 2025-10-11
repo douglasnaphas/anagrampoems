@@ -9,6 +9,8 @@ import { letters, aContainsB } from "./letters";
 import { grams, flgrams } from "./grams";
 import { genAnagrams } from "./anagrams";
 import TextField from "@mui/material/TextField";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Editor = ({ keyWord }) => {
   const [commonWords, setCommonWords] = useState([]);
@@ -23,9 +25,46 @@ const Editor = ({ keyWord }) => {
   const [generatedGrams, setGeneratedGrams] = useState([]);
   const [selectedGramIndex, setSelectedGramIndex] = useState(null);
   // --- Poem section state & helpers ---
+  // Poem text + persistence state
   const [poemText, setPoemText] = useState("");
   const [poemError, setPoemError] = useState("");
+  const [poemDirty, setPoemDirty] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveOk, setSaveOk] = useState(false); // flips true briefly after a
+  // successful save
   const poemRef = React.useRef(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadPoem = async () => {
+      try {
+        const resp = await fetch(
+          `/backend/poem-text?key=${encodeURIComponent(keyWord)}`
+        );
+        if (!resp.ok) throw new Error("GET /backend/poem failed");
+        const poem = await resp.json();
+        if (!cancelled) {
+          const initial = typeof poem?.text === "string" ? poem.text : "";
+          setPoemText(initial);
+          setPoemDirty(false);
+          setSaveOk(false);
+          setPoemError(""); // reset any prior error
+        }
+      } catch (e) {
+        console.error("Failed to load poem text:", e);
+        if (!cancelled) {
+          setPoemText("");
+          setPoemDirty(false);
+        }
+      }
+    };
+
+    loadPoem();
+    return () => {
+      cancelled = true;
+    };
+  }, [keyWord]);
 
   // Count letters a-z only, case-insensitive
   const countLetters = (s = "") => {
@@ -68,26 +107,48 @@ const Editor = ({ keyWord }) => {
     if (countsLessOrEqual(used, poemKeyCounts)) {
       setPoemText(next);
       setPoemError("");
+      setPoemDirty(true);
+      setSaveOk(false);
     } else {
       // Reject the change (do not update state)
       setPoemError("This line would exceed letters available in the poem key.");
     }
   };
 
+  const savePoemText = async () => {
+    setSaving(true);
+    setSaveOk(false);
+    try {
+      const resp = await fetch("/backend/poem-text", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        // credentials: "include", // add if your other calls use it
+        body: JSON.stringify({ key: keyWord, text: poemText }),
+      });
+      if (!resp.ok) throw new Error("PUT /backend/poem-text failed");
+      setPoemDirty(false);
+      setSaveOk(true);
+    } catch (e) {
+      console.error("Failed to save poem text:", e);
+      // Keep dirty=true so the user still sees "changes unsaved"
+    } finally {
+      setSaving(false);
+    }
+  };
+
   // On blur: if the active line is non-empty, require it to be a full anagram of the key
-  const handlePoemBlur = () => {
+  const handlePoemBlur = async () => {
     const cursorPos = poemRef.current?.selectionStart ?? poemText.length;
     const { lineText } = getActiveLineInfo(poemText, cursorPos);
     const used = countLetters(lineText);
-    if (lineText.trim().length === 0) {
-      setPoemError("");
-    } else {
-      setPoemError(
-        countsEqual(used, poemKeyCounts)
-          ? ""
-          : "Active line is not a full anagram of the poem key."
-      );
+
+    if (lineText.trim().length > 0 && !countsEqual(used, poemKeyCounts)) {
+      setPoemError("Active line is not a full anagram of the poem key.");
+      return; // don't save invalid text on blur
     }
+
+    setPoemError("");
+    if (poemDirty) await savePoemText();
   };
 
   const handleGramClick = (index) => {
@@ -521,7 +582,29 @@ const Editor = ({ keyWord }) => {
             "Letters must fit the key (case-insensitive). Punctuation and spaces are allowed. Rule applies to the active line."
           }
         />
+
+        {/* Subtle save indicator */}
+        <Typography
+          variant="caption"
+          sx={{ display: "block", mt: 0.5, opacity: 0.8 }}
+        >
+          {saving
+            ? "saving…"
+            : poemDirty
+            ? "changes unsaved"
+            : saveOk
+            ? "✓ changes saved"
+            : " "}
+        </Typography>
       </Grid>
+
+      {/* Page-wide lock while saving */}
+      <Backdrop
+        open={saving}
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }}
+      >
+        <CircularProgress />
+      </Backdrop>
 
       <Grid item xs={6} className="grid-item">
         <Typography
