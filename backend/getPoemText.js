@@ -1,8 +1,11 @@
-// backend/getPoemText.js
-const AWS = require("aws-sdk");
-const ddb = new AWS.DynamoDB.DocumentClient();
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBDocumentClient, GetCommand } = require("@aws-sdk/lib-dynamodb");
 
 const schema = require("./schema");
+
+// v3 client setup
+const ddbClient = new DynamoDBClient({});
+const ddb = DynamoDBDocumentClient.from(ddbClient);
 
 module.exports = async function getPoemText(req, res) {
   try {
@@ -24,14 +27,14 @@ module.exports = async function getPoemText(req, res) {
       [schema.SORT_KEY]: `text#${key}`,
     };
 
-    const result = await ddb
-      .get({
+    const result = await ddb.send(
+      new GetCommand({
         TableName: schema.TABLE_NAME,
         Key,
         ProjectionExpression: "#text",
         ExpressionAttributeNames: { "#text": "text" },
       })
-      .promise();
+    );
 
     if (!result.Item) {
       return res.status(404).json({ error: "Poem not found." });
