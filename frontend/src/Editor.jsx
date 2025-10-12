@@ -34,6 +34,17 @@ const Editor = ({ keyWord }) => {
   // successful save
   const poemRef = React.useRef(null);
 
+  // Poem-focused display filter state:
+  const [isPoemFocused, setIsPoemFocused] = useState(false);
+  const [activePoemLineText, setActivePoemLineText] = useState("");
+
+  // Helper to update the active poem-line based on caret position
+  const updateActivePoemLine = () => {
+    const cursorPos = poemRef.current?.selectionStart ?? poemText.length;
+    const { lineText } = getActiveLineInfo(poemText, cursorPos);
+    setActivePoemLineText(lineText || "");
+  };
+
   useEffect(() => {
     let cancelled = false;
 
@@ -109,6 +120,10 @@ const Editor = ({ keyWord }) => {
       setPoemError("");
       setPoemDirty(true);
       setSaveOk(false);
+      if (isPoemFocused) {
+        // keep the active-poem-line in sync while typing
+        setActivePoemLineText(lineText || "");
+      }
     } else {
       // Reject the change (do not update state)
       setPoemError("This line would exceed letters available in the poem key.");
@@ -148,7 +163,20 @@ const Editor = ({ keyWord }) => {
     }
 
     setPoemError("");
+    // clear poem-focused filter when leaving textarea
+    setIsPoemFocused(false);
+    setActivePoemLineText("");
     if (poemDirty) await savePoemText();
+  };
+
+  const handlePoemFocus = () => {
+    setIsPoemFocused(true);
+    updateActivePoemLine();
+  };
+
+  // Keep active line updated for clicks / caret moves
+  const handlePoemInteraction = () => {
+    if (isPoemFocused) updateActivePoemLine();
   };
 
   const handleGramClick = (index) => {
@@ -280,6 +308,45 @@ const Editor = ({ keyWord }) => {
     fetchLines();
     fetchPoem();
   }, [keyWord]);
+
+  // Compute the "display base" used for filtering:
+  // - If poem textarea is focused, use the active poem-line text.
+  // - Otherwise, if a line in Lines is selected, use its concatenated words.
+  const displayBase = (() => {
+    if (isPoemFocused && activePoemLineText && activePoemLineText.trim() !== "") {
+      return activePoemLineText;
+    }
+    if (selectedLineId !== null && lines[selectedLineId]) {
+      return (lines[selectedLineId] || []).reduce((s, w) => s + w, "");
+    }
+    return null;
+  })();
+  const normalizedBase = displayBase
+    ? String(displayBase).replace(/[^a-zA-Z]/g, "")
+    : null;
+
+  // Filtered lists to render
+  const filteredCommonWords = commonWords
+    .filter(
+      (word) =>
+        !excludedWords.includes(word) &&
+        (normalizedBase ? aContainsB(keyWord, normalizedBase + word) : true)
+    )
+    .sort((a, b) => b.length - a.length || a.localeCompare(b));
+
+  const filteredManyWords = manyWords
+    .filter(
+      (word) =>
+        !excludedWords.includes(word) &&
+        (normalizedBase ? aContainsB(keyWord, normalizedBase + word) : true)
+    )
+    .sort((a, b) => b.length - a.length || a.localeCompare(b));
+
+  const filteredGrams = generatedGrams.filter((gramArray) => {
+    if (!normalizedBase) return true;
+    const gramConcat = (gramArray || []).join("");
+    return aContainsB(keyWord, normalizedBase + gramConcat);
+  });
 
   const handleAddLine = async () => {
     // Compute the new lineId
@@ -575,6 +642,7 @@ const Editor = ({ keyWord }) => {
           value={poemText}
           onChange={handlePoemTextChange}
           onBlur={handlePoemBlur}
+          onFocus={handlePoemFocus}
           inputRef={poemRef}
           error={Boolean(poemError)}
           helperText={
@@ -798,33 +866,16 @@ const Editor = ({ keyWord }) => {
           </Typography>
           {showCommonWords && (
             <ul className="dictionary left-align">
-              {commonWords
-                .filter(
-                  (word) =>
-                    !excludedWords.includes(word) &&
-                    (selectedLineId
-                      ? aContainsB(
-                          keyWord,
-                          (lines[selectedLineId] || []).reduce(
-                            (wholeLine, w) => wholeLine + w,
-                            ""
-                          ) + word
-                        )
-                      : true)
-                )
-                .sort((a, b) => b.length - a.length || a.localeCompare(b))
-                .map((word, index) => (
-                  <li
-                    key={`${index}-${word}`}
-                    id={`common-word-${word}`}
-                    className={`pill ${
-                      selectedWord === word ? "selected-word" : ""
-                    }`}
-                    onClick={() => handleWordClick(word)}
-                  >
-                    {word}
-                  </li>
-                ))}
+              {filteredCommonWords.map((word, index) => (
+                <li
+                  key={`${index}-${word}`}
+                  id={`common-word-${word}`}
+                  className={`pill ${selectedWord === word ? "selected-word" : ""}`}
+                  onClick={() => handleWordClick(word)}
+                >
+                  {word}
+                </li>
+              ))}
             </ul>
           )}
           <Typography
@@ -837,33 +888,16 @@ const Editor = ({ keyWord }) => {
           </Typography>
           {showManyWords && (
             <ul className="dictionary left-align">
-              {manyWords
-                .filter(
-                  (word) =>
-                    !excludedWords.includes(word) &&
-                    (selectedLineId
-                      ? aContainsB(
-                          keyWord,
-                          (lines[selectedLineId] || []).reduce(
-                            (wholeLine, w) => wholeLine + w,
-                            ""
-                          ) + word
-                        )
-                      : true)
-                )
-                .sort((a, b) => b.length - a.length || a.localeCompare(b))
-                .map((word, index) => (
-                  <li
-                    key={`${index}-${word}`}
-                    id={`many-word-${word}`}
-                    className={`pill ${
-                      selectedWord === word ? "selected-word" : ""
-                    }`}
-                    onClick={() => handleWordClick(word)}
-                  >
-                    {word}
-                  </li>
-                ))}
+              {filteredManyWords.map((word, index) => (
+                <li
+                  key={`${index}-${word}`}
+                  id={`many-word-${word}`}
+                  className={`pill ${selectedWord === word ? "selected-word" : ""}`}
+                  onClick={() => handleWordClick(word)}
+                >
+                  {word}
+                </li>
+              ))}
             </ul>
           )}
           <Typography
@@ -900,13 +934,11 @@ const Editor = ({ keyWord }) => {
             Grams
           </Typography>
           <ul className="dictionary left-align" id="grams-section">
-            {generatedGrams.length > 0
-              ? generatedGrams.map((gramArray, index) => (
+            {filteredGrams.length > 0
+              ? filteredGrams.map((gramArray, index) => (
                   <li
                     key={index}
-                    className={`pill${
-                      selectedGramIndex === index ? " selected-word" : ""
-                    }`}
+                    className={`pill${selectedGramIndex === index ? " selected-word" : ""}`}
                     onClick={() => handleGramClick(index)}
                   >
                     {gramArray.join(" ")}
