@@ -313,7 +313,11 @@ const Editor = ({ keyWord }) => {
   // - If poem textarea is focused, use the active poem-line text.
   // - Otherwise, if a line in Lines is selected, use its concatenated words.
   const displayBase = (() => {
-    if (isPoemFocused && activePoemLineText && activePoemLineText.trim() !== "") {
+    if (
+      isPoemFocused &&
+      activePoemLineText &&
+      activePoemLineText.trim() !== ""
+    ) {
       return activePoemLineText;
     }
     if (selectedLineId !== null && lines[selectedLineId]) {
@@ -342,11 +346,19 @@ const Editor = ({ keyWord }) => {
     )
     .sort((a, b) => b.length - a.length || a.localeCompare(b));
 
-  const filteredGrams = generatedGrams.filter((gramArray) => {
-    if (!normalizedBase) return true;
-    const gramConcat = (gramArray || []).join("");
-    return aContainsB(keyWord, normalizedBase + gramConcat);
-  });
+  const poemFilteringActive =
+    isPoemFocused && activePoemLineText && activePoemLineText.trim() !== "";
+
+  const gramsToShow = React.useMemo(() => {
+    if (poemFilteringActive) {
+      const need = countLetters(activePoemLineText);
+      return generatedGrams.filter((ga) =>
+        countsLessOrEqual(need, countLetters((ga || []).join("")))
+      );
+    }
+    // Not poem-focused: don't re-filter; mustInclude already applied
+    return generatedGrams;
+  }, [poemFilteringActive, activePoemLineText, generatedGrams]);
 
   const handleAddLine = async () => {
     // Compute the new lineId
@@ -460,6 +472,13 @@ const Editor = ({ keyWord }) => {
     };
     fetchExcludedWords();
   }, [keyWord]);
+
+  useEffect(() => {
+    // Clear any stale grams whenever the key, selected line,
+    // or the selected line's words change.
+    setGeneratedGrams([]);
+    setSelectedGramIndex(null);
+  }, [keyWord, selectedLineId, JSON.stringify(lines[selectedLineId] || [])]);
 
   const handleAddWordToLine = async () => {
     if (selectedLineId === null || selectedWord === null) return;
@@ -849,6 +868,7 @@ const Editor = ({ keyWord }) => {
                     anagrams.push(phrase);
                   }
                   setGeneratedGrams(anagrams);
+                  setSelectedGramIndex(null);
                 }}
               >
                 Generate grams
@@ -870,7 +890,9 @@ const Editor = ({ keyWord }) => {
                 <li
                   key={`${index}-${word}`}
                   id={`common-word-${word}`}
-                  className={`pill ${selectedWord === word ? "selected-word" : ""}`}
+                  className={`pill ${
+                    selectedWord === word ? "selected-word" : ""
+                  }`}
                   onClick={() => handleWordClick(word)}
                 >
                   {word}
@@ -892,7 +914,9 @@ const Editor = ({ keyWord }) => {
                 <li
                   key={`${index}-${word}`}
                   id={`many-word-${word}`}
-                  className={`pill ${selectedWord === word ? "selected-word" : ""}`}
+                  className={`pill ${
+                    selectedWord === word ? "selected-word" : ""
+                  }`}
                   onClick={() => handleWordClick(word)}
                 >
                   {word}
@@ -934,11 +958,13 @@ const Editor = ({ keyWord }) => {
             Grams
           </Typography>
           <ul className="dictionary left-align" id="grams-section">
-            {filteredGrams.length > 0
-              ? filteredGrams.map((gramArray, index) => (
+            {gramsToShow.length > 0
+              ? gramsToShow.map((gramArray, index) => (
                   <li
                     key={index}
-                    className={`pill${selectedGramIndex === index ? " selected-word" : ""}`}
+                    className={`pill${
+                      selectedGramIndex === index ? " selected-word" : ""
+                    }`}
                     onClick={() => handleGramClick(index)}
                   >
                     {gramArray.join(" ")}
@@ -946,6 +972,7 @@ const Editor = ({ keyWord }) => {
                 ))
               : "No grams generated"}
           </ul>
+
           {selectedGramIndex !== null && (
             <Button onClick={handleAddGramToPoem} id="add-gram-to-poem-button">
               Add selected gram as new line
