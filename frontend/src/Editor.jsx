@@ -1,13 +1,8 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
-import { Typography, Button, Box } from "@mui/material";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { letters, aContainsB } from "./letters";
-import { grams, flgrams } from "./grams";
-import { genAnagrams } from "./anagrams";
+import { Typography, Button } from "@mui/material";
+import { aContainsB } from "./letters";
 import TextField from "@mui/material/TextField";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -17,13 +12,7 @@ const Editor = ({ keyWord }) => {
   const [manyWords, setManyWords] = useState([]);
   const [showCommonWords, setShowCommonWords] = useState(true);
   const [showManyWords, setShowManyWords] = useState(true);
-  const [lines, setLines] = useState({});
-  const [poemLineIdOrder, setPoemLineIdOrder] = useState([]);
-  const [selectedLineId, setSelectedLineId] = useState(null);
   const [selectedWord, setSelectedWord] = useState(null);
-  const [selectedLineWordIndex, setSelectedLineWordIndex] = useState(null);
-  const [generatedGrams, setGeneratedGrams] = useState([]);
-  const [selectedGramIndex, setSelectedGramIndex] = useState(null);
   // --- Poem section state & helpers ---
   // Poem text + persistence state
   const [poemText, setPoemText] = useState("");
@@ -162,7 +151,6 @@ const Editor = ({ keyWord }) => {
       return; // don't save invalid text on blur
     }
 
-    setPoemError("");
     // clear poem-focused filter when leaving textarea
     setIsPoemFocused(false);
     setActivePoemLineText("");
@@ -174,51 +162,6 @@ const Editor = ({ keyWord }) => {
     updateActivePoemLine();
   };
 
-  // Keep active line updated for clicks / caret moves
-  const handlePoemInteraction = () => {
-    if (isPoemFocused) updateActivePoemLine();
-  };
-
-  const handleGramClick = (index) => {
-    setSelectedGramIndex(index);
-  };
-
-  const handleAddGramToPoem = async () => {
-    if (selectedGramIndex === null || !generatedGrams[selectedGramIndex])
-      return;
-    const gramWords = generatedGrams[selectedGramIndex];
-    // Compute new lineId
-    const newLineId =
-      poemLineIdOrder && poemLineIdOrder.length > 0
-        ? Math.max(...poemLineIdOrder) + 1
-        : 1;
-    try {
-      // Add line to backend
-      const addLineResponse = await fetch(`/backend/poem-lines`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: keyWord, lineId: newLineId }),
-      });
-      if (!addLineResponse.ok) throw new Error("Failed to add line");
-      // Add words to line
-      const putWordsResponse = await fetch(`/backend/line-words`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          key: keyWord,
-          lineId: newLineId,
-          lineWords: gramWords,
-        }),
-      });
-      if (!putWordsResponse.ok) throw new Error("Failed to add words to line");
-      // Update local state
-      setLines((prevLines) => ({ ...prevLines, [newLineId]: gramWords }));
-      setPoemLineIdOrder((prevOrder) => [...prevOrder, newLineId]);
-      setSelectedGramIndex(null);
-    } catch (err) {
-      console.error("Error adding gram to poem", err);
-    }
-  };
   const [excludedWords, setExcludedWords] = useState([]);
   const [showExcludedWords, setShowExcludedWords] = useState(true);
 
@@ -265,48 +208,8 @@ const Editor = ({ keyWord }) => {
       }
     };
 
-    const fetchLines = async () => {
-      try {
-        const response = await fetch(
-          `/backend/poem-lines?key=${encodeURIComponent(keyWord)}`
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok, fetching lines");
-        }
-        const data = await response.json();
-        if (data && typeof data === "object") {
-          setLines(data);
-        } else {
-          console.error("Invalid data format for lines:", data);
-        }
-      } catch (error) {
-        console.error("Error fetching lines:", error);
-      }
-    };
-
-    const fetchPoem = async () => {
-      try {
-        const response = await fetch(
-          `/backend/poem?key=${encodeURIComponent(keyWord)}`
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok, fetching poem");
-        }
-        const data = await response.json();
-        if (data && typeof data === "object") {
-          setPoemLineIdOrder(data.poem_line_id_order);
-        } else {
-          console.error("Invalid data format for poem:", data);
-        }
-      } catch (error) {
-        console.error("Error fetching poem:", error);
-      }
-    };
-
     fetchCommonWords();
     fetchManyWords();
-    fetchLines();
-    fetchPoem();
   }, [keyWord]);
 
   // Compute the "display base" used for filtering:
@@ -319,9 +222,6 @@ const Editor = ({ keyWord }) => {
       activePoemLineText.trim() !== ""
     ) {
       return activePoemLineText;
-    }
-    if (selectedLineId !== null && lines[selectedLineId]) {
-      return (lines[selectedLineId] || []).reduce((s, w) => s + w, "");
     }
     return null;
   })();
@@ -345,87 +245,6 @@ const Editor = ({ keyWord }) => {
         (normalizedBase ? aContainsB(keyWord, normalizedBase + word) : true)
     )
     .sort((a, b) => b.length - a.length || a.localeCompare(b));
-
-  const poemFilteringActive =
-    isPoemFocused && activePoemLineText && activePoemLineText.trim() !== "";
-
-  const gramsToShow = React.useMemo(() => {
-    if (poemFilteringActive) {
-      const need = countLetters(activePoemLineText);
-      return generatedGrams.filter((ga) =>
-        countsLessOrEqual(need, countLetters((ga || []).join("")))
-      );
-    }
-    // Not poem-focused: don't re-filter; mustInclude already applied
-    return generatedGrams;
-  }, [poemFilteringActive, activePoemLineText, generatedGrams]);
-
-  const handleAddLine = async () => {
-    // Compute the new lineId
-    const newLineId = poemLineIdOrder ? Math.max(...poemLineIdOrder) + 1 : 1;
-
-    try {
-      const response = await fetch(`/backend/poem-lines`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ key: keyWord, lineId: newLineId }),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok, adding line");
-      }
-
-      // Update lines and poemLineIdOrder based on the previous values
-      setLines((prevLines) => ({
-        ...prevLines,
-        [newLineId]: [],
-      }));
-      setPoemLineIdOrder((prevOrder) => [...prevOrder, newLineId]);
-    } catch (error) {
-      console.error("Error adding line:", error);
-    }
-  };
-
-  const handleLineClick = (lineId) => {
-    setSelectedLineId(lineId);
-  };
-
-  const handleMoveLine = async (direction) => {
-    if (selectedLineId === null) return;
-
-    const currentIndex = poemLineIdOrder.indexOf(selectedLineId);
-    if (currentIndex === -1) return;
-
-    const newIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
-    if (newIndex < 0 || newIndex >= poemLineIdOrder.length) return;
-
-    const newPoemLineIdOrder = [...poemLineIdOrder];
-    [newPoemLineIdOrder[currentIndex], newPoemLineIdOrder[newIndex]] = [
-      newPoemLineIdOrder[newIndex],
-      newPoemLineIdOrder[currentIndex],
-    ];
-
-    try {
-      const response = await fetch(`/backend/line-order`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          key: keyWord,
-          poemLineIdOrder: newPoemLineIdOrder,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok, updating line order");
-      }
-
-      setPoemLineIdOrder(newPoemLineIdOrder);
-    } catch (error) {
-      console.error("Error updating line order:", error);
-    }
-  };
 
   const handleWordClick = (word) => {
     setSelectedWord(word);
@@ -472,172 +291,6 @@ const Editor = ({ keyWord }) => {
     };
     fetchExcludedWords();
   }, [keyWord]);
-
-  useEffect(() => {
-    // Clear any stale grams whenever the key, selected line,
-    // or the selected line's words change.
-    setGeneratedGrams([]);
-    setSelectedGramIndex(null);
-  }, [keyWord, selectedLineId, JSON.stringify(lines[selectedLineId] || [])]);
-
-  const handleAddWordToLine = async () => {
-    if (selectedLineId === null || selectedWord === null) return;
-
-    const newLineWords = [...lines[selectedLineId], selectedWord];
-
-    try {
-      const response = await fetch(`/backend/line-words`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          key: keyWord,
-          lineId: selectedLineId,
-          lineWords: newLineWords,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok, updating line words");
-      }
-
-      // Update lines state with the new word list for the selected line
-      setLines((prevLines) => ({
-        ...prevLines,
-        [selectedLineId]: newLineWords,
-      }));
-    } catch (error) {
-      console.error("Error updating line words:", error);
-    }
-  };
-
-  const handleDeleteLine = async () => {
-    if (selectedLineId === null) return;
-
-    const newPoemLineIdOrder = poemLineIdOrder.filter(
-      (lineId) => lineId !== selectedLineId
-    );
-
-    try {
-      const response = await fetch(
-        `/backend/poem-lines?key=${encodeURIComponent(
-          keyWord
-        )}&lineId=${selectedLineId}&poemLineIdOrder=${encodeURIComponent(
-          JSON.stringify(newPoemLineIdOrder)
-        )}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok, deleting line");
-      }
-
-      // Update lines state to remove the selected line
-      setLines((prevLines) => {
-        const newLines = { ...prevLines };
-        delete newLines[selectedLineId];
-        return newLines;
-      });
-
-      // Update poemLineIdOrder state to remove the selected line
-      setPoemLineIdOrder(newPoemLineIdOrder);
-
-      // Clear the selected line
-      setSelectedLineId(null);
-    } catch (error) {
-      console.error("Error deleting line:", error);
-    }
-  };
-
-  const handleLineWordClick = (index) => {
-    setSelectedLineWordIndex(index);
-  };
-
-  const handleRemoveWordFromLine = async () => {
-    if (selectedLineId === null || selectedLineWordIndex === null) return;
-
-    const newLineWords = lines[selectedLineId].filter(
-      (_, index) => index !== selectedLineWordIndex
-    );
-
-    try {
-      const response = await fetch(`/backend/line-words`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          key: keyWord,
-          lineId: selectedLineId,
-          lineWords: newLineWords,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok, updating line words");
-      }
-
-      setLines((prevLines) => ({
-        ...prevLines,
-        [selectedLineId]: newLineWords,
-      }));
-      setSelectedLineWordIndex(null);
-    } catch (error) {
-      console.error("Error updating line words:", error);
-    }
-  };
-
-  const handleMoveWord = async (direction) => {
-    if (selectedLineId === null || selectedLineWordIndex === null) return;
-
-    const currentIndex = selectedLineWordIndex;
-    const newIndex = direction === "left" ? currentIndex - 1 : currentIndex + 1;
-    if (newIndex < 0 || newIndex >= lines[selectedLineId].length) return;
-
-    const newLineWords = [...lines[selectedLineId]];
-    [newLineWords[currentIndex], newLineWords[newIndex]] = [
-      newLineWords[newIndex],
-      newLineWords[currentIndex],
-    ];
-
-    try {
-      const response = await fetch(`/backend/line-words`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          key: keyWord,
-          lineId: selectedLineId,
-          lineWords: newLineWords,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error(
-          "Network response was not ok, updating line words on move"
-        );
-      }
-
-      setLines((prevLines) => ({
-        ...prevLines,
-        [selectedLineId]: newLineWords,
-      }));
-      setSelectedLineWordIndex(newIndex);
-    } catch (error) {
-      console.error("Error updating line words:", error);
-    }
-  };
-
-  const fullGram = (id) => {
-    const lineText = (lines[id] || []).reduce(
-      (wholeLine, word) => wholeLine + word,
-      ""
-    );
-    if (aContainsB(keyWord, lineText) && aContainsB(lineText, keyWord)) {
-      return true;
-    }
-    return false;
-  };
 
   return (
     <Grid container spacing={2}>
@@ -712,26 +365,6 @@ const Editor = ({ keyWord }) => {
           <Button onClick={() => setShowExcludedWords(!showExcludedWords)}>
             {showExcludedWords ? "Hide" : "Show"} Excluded words
           </Button>
-          {selectedLineId && selectedWord && (
-            <Button
-              id="add-word-to-line-button"
-              Add
-              commentMore
-              actions
-              onClick={handleAddWordToLine}
-              disabled={
-                !aContainsB(
-                  keyWord,
-                  (lines[selectedLineId] || []).reduce(
-                    (wholeLine, word) => wholeLine + word,
-                    ""
-                  ) + selectedWord
-                )
-              }
-            >
-              <ArrowBackIcon />
-            </Button>
-          )}
           {selectedWord && !excludedWords.includes(selectedWord) && (
             <Button onClick={handleExcludeWord} id="exclude-word-button">
               Exclude Word
@@ -762,31 +395,6 @@ const Editor = ({ keyWord }) => {
               Un-exclude Word
             </Button>
           )}
-          {selectedLineId !== null &&
-            lines[selectedLineId] &&
-            lines[selectedLineId].length > 0 && (
-              <Button
-                onClick={async () => {
-                  // Generate grams (anagrams) when a word is selected.
-                  const vocabUnion = Array.from(
-                    new Set([...commonWords, ...manyWords])
-                  ).filter((w) => !excludedWords.includes(w));
-                  const mustInclude = lines[selectedLineId];
-                  const anagrams = [];
-                  for await (const phrase of genAnagrams({
-                    key: keyWord,
-                    vocab: vocabUnion,
-                    mustInclude,
-                  })) {
-                    anagrams.push(phrase);
-                  }
-                  setGeneratedGrams(anagrams);
-                  setSelectedGramIndex(null);
-                }}
-              >
-                Generate grams
-              </Button>
-            )}
         </div>
         <div className="scrollable-dictionary">
           <Typography
@@ -861,35 +469,6 @@ const Editor = ({ keyWord }) => {
                   ))
                 : "No excluded words"}
             </ul>
-          )}
-          <Typography
-            variant="h3"
-            component="h3"
-            className="center-align"
-            id="grams-heading"
-          >
-            Grams
-          </Typography>
-          <ul className="dictionary left-align" id="grams-section">
-            {gramsToShow.length > 0
-              ? gramsToShow.map((gramArray, index) => (
-                  <li
-                    key={index}
-                    className={`pill${
-                      selectedGramIndex === index ? " selected-word" : ""
-                    }`}
-                    onClick={() => handleGramClick(index)}
-                  >
-                    {gramArray.join(" ")}
-                  </li>
-                ))
-              : "No grams generated"}
-          </ul>
-
-          {selectedGramIndex !== null && (
-            <Button onClick={handleAddGramToPoem} id="add-gram-to-poem-button">
-              Add selected gram as new line
-            </Button>
           )}
         </div>
       </Grid>
