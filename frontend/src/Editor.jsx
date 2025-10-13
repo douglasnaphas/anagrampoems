@@ -148,7 +148,8 @@ const Editor = ({ keyWord }) => {
 
     if (lineText.trim().length > 0 && !countsEqual(used, poemKeyCounts)) {
       setPoemError("Active line is not a full anagram of the poem key.");
-      return; // don't save invalid text on blur
+    } else {
+      setPoemError("");
     }
 
     // clear poem-focused filter when leaving textarea
@@ -161,6 +162,15 @@ const Editor = ({ keyWord }) => {
     setIsPoemFocused(true);
     updateActivePoemLine();
   };
+
+  // save the text periodically even if the textarea remains in focus
+  useEffect(() => {
+    if (!poemDirty) return;
+    const t = setTimeout(() => {
+      savePoemText();
+    }, 1000); // 1s after last keystroke
+    return () => clearTimeout(t);
+  }, [poemText, poemDirty]);
 
   const [excludedWords, setExcludedWords] = useState([]);
   const [showExcludedWords, setShowExcludedWords] = useState(true);
