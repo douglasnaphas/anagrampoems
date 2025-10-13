@@ -42,7 +42,7 @@ const Editor = ({ keyWord }) => {
         const resp = await fetch(
           `/backend/poem-text?key=${encodeURIComponent(keyWord)}`
         );
-        if (!resp.ok) throw new Error("GET /backend/poem failed");
+        if (!resp.ok) throw new Error("GET /backend/poem-text failed");
         const poem = await resp.json();
         if (!cancelled) {
           const initial = typeof poem?.text === "string" ? poem.text : "";
