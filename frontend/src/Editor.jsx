@@ -163,6 +163,17 @@ const Editor = ({ keyWord }) => {
     updateActivePoemLine();
   };
 
+  // Update active line when caret moves without text change
+  const handlePoemSelect = () => {
+    if (isPoemFocused) updateActivePoemLine();
+  };
+  const handlePoemClick = () => {
+    if (isPoemFocused) updateActivePoemLine();
+  };
+  const handlePoemKeyUp = () => {
+    if (isPoemFocused) updateActivePoemLine();
+  };
+
   // save the text periodically even if the textarea remains in focus
   useEffect(() => {
     if (!poemDirty) return;
@@ -171,6 +182,29 @@ const Editor = ({ keyWord }) => {
     }, 1000); // 1s after last keystroke
     return () => clearTimeout(t);
   }, [poemText, poemDirty]);
+
+  // Render like: "aaa d g h l n o p ss u"
+  const formatRemainingLetters = (remainingCounts) => {
+    const groups = [];
+    for (let i = 0; i < 26; i++) {
+      const ch = String.fromCharCode("a".charCodeAt(0) + i);
+      const n = remainingCounts[ch] || 0;
+      if (n > 0) groups.push(ch.repeat(n));
+    }
+    return groups.join(" ");
+  };
+
+  // Remaining letters for the current line (blank line => full budget)
+  const remainingLettersString = React.useMemo(() => {
+    const line = isPoemFocused ? activePoemLineText || "" : "";
+    const used = countLetters(line);
+    const remaining = Object.create(null);
+    for (const k in poemKeyCounts) {
+      const rem = (poemKeyCounts[k] || 0) - (used[k] || 0);
+      if (rem > 0) remaining[k] = rem;
+    }
+    return formatRemainingLetters(remaining);
+  }, [isPoemFocused, activePoemLineText, poemKeyCounts]);
 
   const [excludedWords, setExcludedWords] = useState([]);
   const [showExcludedWords, setShowExcludedWords] = useState(true);
@@ -325,6 +359,9 @@ const Editor = ({ keyWord }) => {
           onChange={handlePoemTextChange}
           onBlur={handlePoemBlur}
           onFocus={handlePoemFocus}
+          onSelect={handlePoemSelect}
+          onClick={handlePoemClick}
+          onKeyUp={handlePoemKeyUp}
           inputRef={poemRef}
           error={Boolean(poemError)}
           helperText={
@@ -355,6 +392,28 @@ const Editor = ({ keyWord }) => {
       >
         <CircularProgress />
       </Backdrop>
+
+      {/* Letters section */}
+      <Grid item xs={12}>
+        <Typography
+          variant="h2"
+          component="h2"
+          className="center-align"
+          id="letters-heading"
+        >
+          Letters
+        </Typography>
+        <Typography
+          variant="h5"
+          component="div"
+          className="center-align"
+          id="letters-remaining"
+          sx={{ fontFamily: "monospace", marginTop: 8 }}
+          aria-live="polite"
+        >
+          {remainingLettersString || "\u00A0"}
+        </Typography>
+      </Grid>
 
       <Grid item xs={6} className="grid-item">
         <Typography
