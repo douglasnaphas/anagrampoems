@@ -338,61 +338,6 @@ const Editor = ({ keyWord }) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Typography
-          variant="h2"
-          component="h2"
-          className="center-align"
-          id="poem-heading"
-        >
-          Poem
-        </Typography>
-
-        <TextField
-          id="poem-textarea"
-          label={`Type an anagram line for “${keyWord}”`}
-          placeholder="Type your poem here…"
-          multiline
-          minRows={4}
-          fullWidth
-          value={poemText}
-          onChange={handlePoemTextChange}
-          onBlur={handlePoemBlur}
-          onFocus={handlePoemFocus}
-          onSelect={handlePoemSelect}
-          onClick={handlePoemClick}
-          onKeyUp={handlePoemKeyUp}
-          inputRef={poemRef}
-          error={Boolean(poemError)}
-          helperText={
-            poemError ||
-            "Letters must fit the key (case-insensitive). Punctuation and spaces are allowed. Rule applies to the active line."
-          }
-        />
-
-        {/* Subtle save indicator */}
-        <Typography
-          variant="caption"
-          sx={{ display: "block", mt: 0.5, opacity: 0.8 }}
-        >
-          {saving
-            ? "saving…"
-            : poemDirty
-            ? "changes unsaved"
-            : saveOk
-            ? "✓ changes saved"
-            : " "}
-        </Typography>
-      </Grid>
-
-      {/* Page-wide lock while saving */}
-      <Backdrop
-        open={saving}
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }}
-      >
-        <CircularProgress />
-      </Backdrop>
-
       {/* Letters section */}
       <Grid item xs={12}>
         <Typography
@@ -415,119 +360,134 @@ const Editor = ({ keyWord }) => {
         </Typography>
       </Grid>
 
-      <Grid item xs={6} className="grid-item">
-        <Typography
-          variant="h2"
-          component="h2"
-          className="center-align"
-          id="dictionary-heading"
-        >
-          Dictionary
-        </Typography>
-        <div id="controls">
-          <Button onClick={() => setShowCommonWords(!showCommonWords)}>
-            {showCommonWords ? "Hide" : "Show"} Common words
-          </Button>
-          <Button onClick={() => setShowManyWords(!showManyWords)}>
-            {showManyWords ? "Hide" : "Show"} Many words
-          </Button>
-          <Button onClick={() => setShowExcludedWords(!showExcludedWords)}>
-            {showExcludedWords ? "Hide" : "Show"} Excluded words
-          </Button>
-          {selectedWord && !excludedWords.includes(selectedWord) && (
-            <Button onClick={handleExcludeWord} id="exclude-word-button">
-              Exclude Word
-            </Button>
-          )}
-          {selectedWord && excludedWords.includes(selectedWord) && (
-            <Button
-              onClick={async () => {
-                // Un-exclude word logic
-                try {
-                  await fetch("/backend/excluded-word", {
-                    method: "DELETE",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ key: keyWord, word: selectedWord }),
-                  });
-                  setExcludedWords(
-                    excludedWords.filter((w) => w !== selectedWord)
-                  );
-                  setSelectedWord(null);
-                } catch (err) {
-                  console.error("Error un-excluding word", err);
-                }
-              }}
-              id="unexclude-word-button"
+      {/* TWO-COLUMN ROW */}
+      <Grid item xs={12}>
+        <Grid container spacing={2} alignItems="flex-start">
+          {/* LEFT: POEM */}
+          <Grid item xs={6}>
+            <Typography
+              variant="h2"
+              component="h2"
+              className="center-align"
+              id="poem-heading"
             >
-              Un-exclude Word
-            </Button>
-          )}
-        </div>
-        <div className="scrollable-dictionary">
-          <Typography
-            variant="h3"
-            component="h3"
-            className="center-align"
-            id="common-words-heading"
+              Poem
+            </Typography>
+
+            <TextField
+              id="poem-textarea"
+              label={`Type an anagram line for “${keyWord}”`}
+              placeholder="Type your poem here…"
+              multiline
+              minRows={4}
+              fullWidth
+              value={poemText}
+              onChange={handlePoemTextChange}
+              onBlur={handlePoemBlur}
+              onFocus={handlePoemFocus}
+              onSelect={handlePoemSelect}
+              onClick={handlePoemClick}
+              onKeyUp={handlePoemKeyUp}
+              inputRef={poemRef}
+              error={Boolean(poemError)}
+              helperText={
+                poemError ||
+                "Letters must fit the key (case-insensitive). Punctuation and spaces are allowed. Rule applies to the active line."
+              }
+            />
+
+            {/* Subtle save indicator */}
+            <Typography
+              variant="caption"
+              sx={{ display: "block", mt: 0.5, opacity: 0.8 }}
+            >
+              {saving
+                ? "saving…"
+                : poemDirty
+                ? "changes unsaved"
+                : saveOk
+                ? "✓ changes saved"
+                : " "}
+            </Typography>
+          </Grid>
+
+          {/* Page-wide lock while saving */}
+          <Backdrop
+            open={saving}
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }}
           >
-            Common words
-          </Typography>
-          {showCommonWords && (
-            <ul className="dictionary left-align">
-              {filteredCommonWords.map((word, index) => (
-                <li
-                  key={`${index}-${word}`}
-                  id={`common-word-${word}`}
-                  className={`pill ${
-                    selectedWord === word ? "selected-word" : ""
-                  }`}
-                  onClick={() => handleWordClick(word)}
+            <CircularProgress />
+          </Backdrop>
+
+          {/* RIGHT: DICTIONARY */}
+          <Grid item xs={6} className="grid-item">
+            <Typography
+              variant="h2"
+              component="h2"
+              className="center-align"
+              id="dictionary-heading"
+            >
+              Dictionary
+            </Typography>
+            <div id="controls">
+              <Button onClick={() => setShowCommonWords(!showCommonWords)}>
+                {showCommonWords ? "Hide" : "Show"} Common words
+              </Button>
+              <Button onClick={() => setShowManyWords(!showManyWords)}>
+                {showManyWords ? "Hide" : "Show"} Many words
+              </Button>
+              <Button onClick={() => setShowExcludedWords(!showExcludedWords)}>
+                {showExcludedWords ? "Hide" : "Show"} Excluded words
+              </Button>
+              {selectedWord && !excludedWords.includes(selectedWord) && (
+                <Button onClick={handleExcludeWord} id="exclude-word-button">
+                  Exclude Word
+                </Button>
+              )}
+              {selectedWord && excludedWords.includes(selectedWord) && (
+                <Button
+                  onClick={async () => {
+                    // Un-exclude word logic
+                    try {
+                      await fetch("/backend/excluded-word", {
+                        method: "DELETE",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          key: keyWord,
+                          word: selectedWord,
+                        }),
+                      });
+                      setExcludedWords(
+                        excludedWords.filter((w) => w !== selectedWord)
+                      );
+                      setSelectedWord(null);
+                    } catch (err) {
+                      console.error("Error un-excluding word", err);
+                    }
+                  }}
+                  id="unexclude-word-button"
                 >
-                  {word}
-                </li>
-              ))}
-            </ul>
-          )}
-          <Typography
-            variant="h3"
-            component="h3"
-            className="center-align"
-            id="many-words-heading"
-          >
-            Many words
-          </Typography>
-          {showManyWords && (
-            <ul className="dictionary left-align">
-              {filteredManyWords.map((word, index) => (
-                <li
-                  key={`${index}-${word}`}
-                  id={`many-word-${word}`}
-                  className={`pill ${
-                    selectedWord === word ? "selected-word" : ""
-                  }`}
-                  onClick={() => handleWordClick(word)}
-                >
-                  {word}
-                </li>
-              ))}
-            </ul>
-          )}
-          <Typography
-            variant="h3"
-            component="h3"
-            className="center-align"
-            id="excluded-words-heading"
-          >
-            Excluded words
-          </Typography>
-          {showExcludedWords && (
-            <ul className="dictionary left-align" id="excluded-words-section">
-              {excludedWords.length > 0
-                ? excludedWords.map((word, index) => (
+                  Un-exclude Word
+                </Button>
+              )}
+            </div>
+            <div className="scrollable-dictionary">
+              <Typography
+                variant="h3"
+                component="h3"
+                className="center-align"
+                id="common-words-heading"
+              >
+                Common words
+              </Typography>
+              {showCommonWords && (
+                <ul className="dictionary left-align">
+                  {filteredCommonWords.map((word, index) => (
                     <li
-                      key={`${index}-excluded-${word}`}
+                      key={`${index}-${word}`}
+                      id={`common-word-${word}`}
                       className={`pill ${
                         selectedWord === word ? "selected-word" : ""
                       }`}
@@ -535,11 +495,64 @@ const Editor = ({ keyWord }) => {
                     >
                       {word}
                     </li>
-                  ))
-                : "No excluded words"}
-            </ul>
-          )}
-        </div>
+                  ))}
+                </ul>
+              )}
+              <Typography
+                variant="h3"
+                component="h3"
+                className="center-align"
+                id="many-words-heading"
+              >
+                Many words
+              </Typography>
+              {showManyWords && (
+                <ul className="dictionary left-align">
+                  {filteredManyWords.map((word, index) => (
+                    <li
+                      key={`${index}-${word}`}
+                      id={`many-word-${word}`}
+                      className={`pill ${
+                        selectedWord === word ? "selected-word" : ""
+                      }`}
+                      onClick={() => handleWordClick(word)}
+                    >
+                      {word}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <Typography
+                variant="h3"
+                component="h3"
+                className="center-align"
+                id="excluded-words-heading"
+              >
+                Excluded words
+              </Typography>
+              {showExcludedWords && (
+                <ul
+                  className="dictionary left-align"
+                  id="excluded-words-section"
+                >
+                  {excludedWords.length > 0
+                    ? excludedWords.map((word, index) => (
+                        <li
+                          key={`${index}-excluded-${word}`}
+                          className={`pill ${
+                            selectedWord === word ? "selected-word" : ""
+                          }`}
+                          onClick={() => handleWordClick(word)}
+                        >
+                          {word}
+                        </li>
+                      ))
+                    : "No excluded words"}
+                </ul>
+              )}
+            </div>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
