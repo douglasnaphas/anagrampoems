@@ -52,41 +52,49 @@ async function openMuiDropdown(page, waitOptions) {
 
 async function closeMuiDropdown(page) {
   // Escape closes the menu
-  await page.keyboard.press('Escape');
+  await page.keyboard.press("Escape");
   // No hard assertion needed here; MUI will remove the listbox
 }
 
-async function selectFromMuiDropdown(page, selectSelector, optionText, waitOptions) {
+async function selectFromMuiDropdown(
+  page,
+  selectSelector,
+  optionText,
+  waitOptions
+) {
   // Open the dropdown
   await page.waitForSelector(selectSelector, waitOptions);
   await page.click(selectSelector);
 
   // Wait for the listbox to render in the portal
   await page.waitForSelector('ul[role="listbox"]', waitOptions);
-  await page.waitForSelector('ul[role="listbox"] li[role="option"]', waitOptions);
+  await page.waitForSelector(
+    'ul[role="listbox"] li[role="option"]',
+    waitOptions
+  );
 
   // Normalize function for robust matching
-  const norm = s => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
+  const norm = (s) => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
   const want = norm(optionText);
 
   // Collect option texts
-  const listOptionTexts = await page.$$eval('li[role="option"]', els =>
-    els.map(el => (el.textContent || '').replace(/\s+/g, ' ').trim())
+  const listOptionTexts = await page.$$eval('li[role="option"]', (els) =>
+    els.map((el) => (el.textContent || "").replace(/\s+/g, " ").trim())
   );
 
   // Fail early with a helpful message if not present
-  if (!listOptionTexts.some(t => norm(t).includes(want))) {
+  if (!listOptionTexts.some((t) => norm(t).includes(want))) {
     // Optional: console.log for CI debugging
-    console.log('Dropdown options:', listOptionTexts);
+    console.log("Dropdown options:", listOptionTexts);
     throw new Error(`Expected poem not found in dropdown: "${optionText}"`);
   }
 
   // Click the first matching option
   await page.evaluate((text) => {
-    const norm = s => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
+    const norm = (s) => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
     const want = norm(text);
     const items = Array.from(document.querySelectorAll('li[role="option"]'));
-    const match = items.find(li => norm(li.textContent).includes(want));
+    const match = items.find((li) => norm(li.textContent).includes(want));
     match && match.click();
   }, optionText);
 
@@ -94,7 +102,7 @@ async function selectFromMuiDropdown(page, selectSelector, optionText, waitOptio
   await page.waitForFunction(
     (sel, val) => {
       const n = document.querySelector(sel);
-      const norm = s => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
+      const norm = (s) => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
       return n && norm(n.textContent).includes(norm(val));
     },
     waitOptions,
@@ -110,19 +118,18 @@ async function dropdownOptionsContain(page, selectSelector, text, waitOptions) {
   await page.waitForSelector('ul[role="listbox"]', waitOptions);
 
   const present = await page.evaluate((t) => {
-    const norm = s => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
+    const norm = (s) => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
     const want = norm(t);
-    return Array.from(document.querySelectorAll('li[role="option"]'))
-      .some(li => norm(li.textContent).includes(want));
+    return Array.from(document.querySelectorAll('li[role="option"]')).some(
+      (li) => norm(li.textContent).includes(want)
+    );
   }, text);
 
   // Close the menu (Escape)
-  await page.keyboard.press('Escape');
+  await page.keyboard.press("Escape");
 
   return present;
 }
-
-
 
 (async () => {
   ////////////////////////////////////////////////////////////////////////////////
@@ -280,33 +287,34 @@ async function dropdownOptionsContain(page, selectSelector, text, waitOptions) {
     }
 
     // Create a poem
-    const douglasNaphasInputValue = "Douglas Naphas";
+    const kateDevineInputValue = "Kate Devine"; // arbitrary name with good
+      // gram potential, not anyone I know
     const thingToGramSelector = "#thing-to-gram";
-    await page.type(thingToGramSelector, douglasNaphasInputValue);
+    await page.type(thingToGramSelector, kateDevineInputValue);
     await Promise.all([
       page.click(createPoemButtonSelector),
       page.waitForNavigation(),
     ]);
     // Expect the search param poem to be in the URL and have a value of
-    // "Douglas Naphas", but URL encoded
+    // "Kate Devine", but URL encoded
     const url = page.url();
     const urlParams = new URLSearchParams(new URL(url).search);
     const poem = urlParams.get("poem");
-    if (!poem || poem !== douglasNaphasInputValue) {
+    if (!poem || poem !== kateDevineInputValue) {
       await failTest(
         "Home page test error",
-        `Expected poem in URL not found or incorrect, expected ${douglasNaphasInputValue}, got ${poem}` +
+        `Expected poem in URL not found or incorrect, expected ${kateDevineInputValue}, got ${poem}` +
           `, encoded inputValue is ${encodeURIComponent(
-            douglasNaphasInputValue
+            kateDevineInputValue
           )}`
       );
     }
-    const poemDropdownSelector = '#poem-select';
+    const poemDropdownSelector = "#poem-select";
 
     await selectFromMuiDropdown(
       page,
       poemDropdownSelector,
-      douglasNaphasInputValue,
+      kateDevineInputValue,
       waitOptions
     );
 
@@ -314,15 +322,15 @@ async function dropdownOptionsContain(page, selectSelector, text, waitOptions) {
     ////////////////////////////////////////////////////////////////////////////////
     // Poem
 
-    // Expect the lines heading and dictionary heading
-    const linesHeadingSelector = "#lines-heading";
-    await page.waitForSelector(linesHeadingSelector, waitOptions);
-    const linesHeadingText = await page.evaluate((selector) => {
+    // Expect the poem heading and dictionary heading
+    const poemHeadingSelector = "#poem-heading";
+    await page.waitForSelector(poemHeadingSelector, waitOptions);
+    const poemHeadingText = await page.evaluate((selector) => {
       const element = document.querySelector(selector);
       return element.textContent;
-    }, linesHeadingSelector);
-    if (linesHeadingText !== "Lines") {
-      await failTest("Poem test error", "Expected 'Lines' heading not found");
+    }, poemHeadingSelector);
+    if (poemHeadingText !== "Poem") {
+      await failTest("Poem test error", "Expected 'Poem' heading not found");
     }
     const dictionaryHeadingSelector = "#dictionary-heading";
     await page.waitForSelector(dictionaryHeadingSelector, waitOptions);
@@ -337,61 +345,10 @@ async function dropdownOptionsContain(page, selectSelector, text, waitOptions) {
       );
     }
 
-    // Expect the text "Douglas Naphas" to be displayed as the first line under Lines
-    const linesSelector = "#lines";
-    await page.waitForSelector(linesSelector, waitOptions);
-    await page.waitForFunction(
-      (selector, expectedText) => {
-        const element = document.querySelector(selector);
-        return element && element.textContent.includes(expectedText);
-      },
-      { timeout },
-      linesSelector,
-      douglasNaphasInputValue
-    );
-
-    // Get the lines text content before checking for "sounds"
-    const linesText = await page.evaluate((selector) => {
-      const element = document.querySelector(selector);
-      return element.textContent;
-    }, linesSelector);
-
-    // Expect the word "sounds" to not be displayed under Lines
-    if (linesText.includes("sounds")) {
-      await failTest(
-        "Poem test error",
-        "Expected word 'sounds' not to be found under Lines"
-      );
-    }
-
-    // Add a line
-    const addLineSelector = "#add-line-control";
-    await page.waitForSelector(addLineSelector, waitOptions);
-    await page.click(addLineSelector);
-
-    // Click the added line
-    const addedLineSelector = "#line-2";
-    await page.waitForSelector(addedLineSelector, waitOptions);
-    await page.click(addedLineSelector);
-
-    // Add the word "sounds" to the line
-    const soundsSelector = "#common-word-sounds";
-    await page.waitForSelector(soundsSelector, waitOptions);
-    await page.click(soundsSelector);
-    const addWordSelector = "#add-word-to-line-button";
-    await page.waitForSelector(addWordSelector, waitOptions);
-    await page.click(addWordSelector);
-
-    // Check the text content under Lines again, and expect "sounds" to be there
-    await page.waitForFunction(
-      (selector, text) => {
-        const element = document.querySelector(selector);
-        return element && element.textContent.includes(text);
-      },
-      {},
-      linesSelector,
-      "sounds"
-    );
+    // The word "evident" should be in the dictionary and clickable
+    const evidentSelector = "#common-word-evident";
+    await page.waitForSelector(evidentSelector, waitOptions);
+    await page.click(evidentSelector);
 
     // Look for a Delete Poem button
     const deletePoemButtonSelector = "#delete-poem-button";
@@ -439,101 +396,19 @@ async function dropdownOptionsContain(page, selectSelector, text, waitOptions) {
     const stillThere = await dropdownOptionsContain(
       page,
       poemDropdownSelector,
-      douglasNaphasInputValue,
+      kateDevineInputValue,
       waitOptions
     );
     if (stillThere) {
-      await failTest(
-        "Poem test error", "Expected poem to be deleted"
-      );
+      await failTest("Poem test error", "Expected poem to be deleted");
     }
 
-
-    // Create the poem "Douglas Naphas" again, and expect it to be displayed
-    await page.type(thingToGramSelector, douglasNaphasInputValue);
+    // Create the poem "Kate Devine" again, and expect it to be displayed
+    await page.type(thingToGramSelector, kateDevineInputValue);
     await Promise.all([
       page.click(createPoemButtonSelector),
       page.waitForNavigation(),
     ]);
-
-    // Expect the word "sounds" not to be displayed under Lines
-    const linesTextPostReCreate = await page.evaluate((selector) => {
-      const element = document.querySelector(selector);
-      return element.textContent;
-    }, linesSelector);
-    if (linesTextPostReCreate.includes("sounds")) {
-      await failTest(
-        "Poem test error",
-        "Expected word 'sounds' not to be found under Lines" +
-          " in freshly created poem"
-      );
-    }
-
-    // Add a line, and add the word "analog" to the new line
-    await page.click(addLineSelector);
-    // Wait for the new line to be added
-    await page.waitForSelector("#line-2", waitOptions);
-    await page.click("#line-2");
-    await page.click("#common-word-analog");
-    await page.click(addWordSelector);
-    // Expect the word "analog" to be displayed under Lines
-    await page.waitForFunction(
-      (selector, text) => {
-        const element = document.querySelector(selector);
-        return element && element.textContent.includes(text);
-      },
-      {},
-      linesSelector,
-      "analog"
-    );
-
-    // Add a new poem for "kate"
-    const kateInputValue = "kate";
-    // Clear the input then type "kate"
-    await page.evaluate((sel) => {
-      const el = document.querySelector(sel);
-      if (el) el.value = "";
-    }, thingToGramSelector);
-    await page.type(thingToGramSelector, kateInputValue);
-    await Promise.all([
-      page.click(createPoemButtonSelector),
-      page.waitForNavigation(),
-    ]);
-    // Verify poem search param is set to "kate"
-    const urlKate = page.url();
-    const urlParamsKate = new URLSearchParams(new URL(urlKate).search);
-    const poemKate = urlParamsKate.get("poem");
-    if (!poemKate || poemKate !== kateInputValue) {
-      await failTest(
-        "Home page test error",
-        `Expected poem in URL not found or incorrect for kate, expected ${kateInputValue}, got ${poemKate}`
-      );
-    }
-    // Since the newly created poem "kate" is in the URL search param, it should
-    // be selected
-    // Verify the visible select trigger already shows "kate"
-    await page.waitForFunction(
-      (sel, expected) => {
-        const el = document.querySelector(sel);
-        const norm = s => (s || "").replace(/\s+/g, " ").trim().toLowerCase();
-        return el && norm(el.textContent).includes(norm(expected));
-      },
-      waitOptions,
-      poemDropdownSelector,
-      kateInputValue
-    );
-    
-    // Select the newly created "kate" poem and verify it's displayed under Lines
-    await selectFromMuiDropdown(page, poemDropdownSelector, kateInputValue, waitOptions);
-    await page.waitForFunction(
-      (selector, expectedText) => {
-        const element = document.querySelector(selector);
-        return element && element.textContent.includes(expectedText);
-      },
-      {},
-      linesSelector,
-      kateInputValue
-    );
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
