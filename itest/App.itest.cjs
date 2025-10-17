@@ -314,15 +314,15 @@ async function dropdownOptionsContain(page, selectSelector, text, waitOptions) {
     ////////////////////////////////////////////////////////////////////////////////
     // Poem
 
-    // Expect the lines heading and dictionary heading
-    const linesHeadingSelector = "#lines-heading";
-    await page.waitForSelector(linesHeadingSelector, waitOptions);
-    const linesHeadingText = await page.evaluate((selector) => {
+    // Expect the poem heading and dictionary heading
+    const poemHeadingSelector = "#poem-heading";
+    await page.waitForSelector(poemHeadingSelector, waitOptions);
+    const poemHeadingText = await page.evaluate((selector) => {
       const element = document.querySelector(selector);
       return element.textContent;
-    }, linesHeadingSelector);
-    if (linesHeadingText !== "Lines") {
-      await failTest("Poem test error", "Expected 'Lines' heading not found");
+    }, poemHeadingSelector);
+    if (poemHeadingText !== "Poem") {
+      await failTest("Poem test error", "Expected 'Poem' heading not found");
     }
     const dictionaryHeadingSelector = "#dictionary-heading";
     await page.waitForSelector(dictionaryHeadingSelector, waitOptions);
@@ -337,61 +337,10 @@ async function dropdownOptionsContain(page, selectSelector, text, waitOptions) {
       );
     }
 
-    // Expect the text "Douglas Naphas" to be displayed as the first line under Lines
-    const linesSelector = "#lines";
-    await page.waitForSelector(linesSelector, waitOptions);
-    await page.waitForFunction(
-      (selector, expectedText) => {
-        const element = document.querySelector(selector);
-        return element && element.textContent.includes(expectedText);
-      },
-      { timeout },
-      linesSelector,
-      douglasNaphasInputValue
-    );
-
-    // Get the lines text content before checking for "sounds"
-    const linesText = await page.evaluate((selector) => {
-      const element = document.querySelector(selector);
-      return element.textContent;
-    }, linesSelector);
-
-    // Expect the word "sounds" to not be displayed under Lines
-    if (linesText.includes("sounds")) {
-      await failTest(
-        "Poem test error",
-        "Expected word 'sounds' not to be found under Lines"
-      );
-    }
-
-    // Add a line
-    const addLineSelector = "#add-line-control";
-    await page.waitForSelector(addLineSelector, waitOptions);
-    await page.click(addLineSelector);
-
-    // Click the added line
-    const addedLineSelector = "#line-2";
-    await page.waitForSelector(addedLineSelector, waitOptions);
-    await page.click(addedLineSelector);
-
-    // Add the word "sounds" to the line
+    // The word "sounds" should be in the dictionary and clickable
     const soundsSelector = "#common-word-sounds";
     await page.waitForSelector(soundsSelector, waitOptions);
     await page.click(soundsSelector);
-    const addWordSelector = "#add-word-to-line-button";
-    await page.waitForSelector(addWordSelector, waitOptions);
-    await page.click(addWordSelector);
-
-    // Check the text content under Lines again, and expect "sounds" to be there
-    await page.waitForFunction(
-      (selector, text) => {
-        const element = document.querySelector(selector);
-        return element && element.textContent.includes(text);
-      },
-      {},
-      linesSelector,
-      "sounds"
-    );
 
     // Look for a Delete Poem button
     const deletePoemButtonSelector = "#delete-poem-button";
@@ -455,53 +404,6 @@ async function dropdownOptionsContain(page, selectSelector, text, waitOptions) {
       page.click(createPoemButtonSelector),
       page.waitForNavigation(),
     ]);
-
-    // Expect the word "sounds" not to be displayed under Lines
-    const linesTextPostReCreate = await page.evaluate((selector) => {
-      const element = document.querySelector(selector);
-      return element.textContent;
-    }, linesSelector);
-    if (linesTextPostReCreate.includes("sounds")) {
-      await failTest(
-        "Poem test error",
-        "Expected word 'sounds' not to be found under Lines" +
-          " in freshly created poem"
-      );
-    }
-
-    // Add a line, and add the word "analog" to the new line
-    await page.click(addLineSelector);
-    // Wait for the new line to be added
-    await page.waitForSelector("#line-2", waitOptions);
-    await page.click("#line-2");
-    await page.click("#common-word-analog");
-    await page.click(addWordSelector);
-    // Expect the word "analog" to be displayed under Lines
-    await page.waitForFunction(
-      (selector, text) => {
-        const element = document.querySelector(selector);
-        return element && element.textContent.includes(text);
-      },
-      {},
-      linesSelector,
-      "analog"
-    );
-
-    // Delete the selected line
-    const deleteLineSelector = "#delete-line-control";
-    await page.waitForSelector(deleteLineSelector, waitOptions);
-    await page.click(deleteLineSelector);
-
-    // Expect the word "analog" not to be found under Lines
-    await page.waitForFunction(
-      (selector, text) => {
-        const element = document.querySelector(selector);
-        return element && !element.textContent.includes(text);
-      },
-      {},
-      linesSelector,
-      "analog"
-    );
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
